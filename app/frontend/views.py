@@ -1,5 +1,5 @@
-from . import frontend
 from flask import render_template
+from . import frontend
 
 
 @frontend.route('/')

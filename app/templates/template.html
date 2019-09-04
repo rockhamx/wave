@@ -1,0 +1,57 @@
+{% extends "bootstrap/base.html" %}
+
+{% block title %}Surf{% endblock %}
+
+{% block head %}
+{{ super() }}
+<link rel="shortcut icon" href="{{ url_for('static', filename='icons/favicon.ico') }}" type="image/x-icon">
+<link rel="icon" href="{{ url_for('static', filename='icons/favicon.ico') }}" type="image/x-icon">
+
+<link href="{{ url_for('static', filename='css/cover.css') }}" rel="stylesheet"> 
+{% endblock %}
+
+{% block content %}
+<div class="site-wrapper">
+
+  <div class="site-wrapper-inner">
+
+    <div class="cover-container">
+
+      <div class="masthead clearfix">
+        <div class="inner">
+          <h3 class="masthead-brand">Surf</h3>
+          <nav>
+            <ul class="nav masthead-nav">
+              <li class="active"><a href="#">Home</a></li>
+              <li><a href="#">Features</a></li>
+              <li><a href="#">Contact</a></li>
+            </ul>
+          </nav>
+        </div>
+      </div>
+
+      <div class="inner cover">
+        <h1 class="cover-heading">Surf</h1>
+        <p class="lead">Surf是一个自定义程度非常高的博客搭建网站，在这里，创造一个属于自己的博客只需要动动手指，
+            你除了能体验到任何博客搭建网站提供的基础功能外，还能任意选择Surf提供的各式主题，甚至选择自己制作的主题。</p>
+        <p class="lead">
+          <a href="{{ url_for(surfer.get_on_board) }}" class="btn btn-lg btn-info">马上开始</a>
+        </p>
+      </div>
+
+      <div class="mastfoot">
+        <div class="inner">
+          <p>Cover template for <a href="https://getbootstrap.com/">Bootstrap</a>, by <a href="https://twitter.com/mdo">@mdo</a>.</p>
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+
+</div>
+{% endblock %}
+
+{% block script %}
+{{ super() }}
+{% endblock %}
