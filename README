@@ -1,0 +1,10 @@
+# setting up environment variables
+FLASK_APP=Wave
+FLASK_ENV=development
+
+# setting up email
+MAIL_USERNAME=youremail
+MAIL_PASSWORD=yourpassword
+
+
+
