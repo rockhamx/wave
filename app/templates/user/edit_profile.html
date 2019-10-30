@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% import "bootstrap/wtf.html" as wtf %}
+
+{% block title %}编辑我的个人信息{% endblock %}
+
+{% block content %}
+
+    <div class="container" style="padding-top: 48px;">
+
+        <div class="page-header">
+            <h1>编辑我的个人信息</h1>
+        </div>
+
+        {{ super() }}
+
+        <div class="col-md-4">
+            {{ wtf.quick_form(form) }}
+        </div>
+
+    </div>
+
+
+{% endblock %}

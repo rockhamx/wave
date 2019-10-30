@@ -1,18 +1,20 @@
 {% extends "base.html" %}
 
-{% block title %}Welcome - Surf{% endblock %}
+{% block title %}Welcome - Wave{% endblock %}
 
 {% block content %}
-{{ super() }}
 <div class="jumbotron">
 
   <div class="container">
     <h1>欢迎来“浪”，朋友</h1>
-    <p>　　Surf是一个自定义程度非常高的博客搭建网站，在这里，创造一个属于自己的博客只需要动动手指，
-        你除了能体验到任何博客搭建网站提供的基础功能外，还能任意选择Surf提供的各式主题，甚至选择自己制作的主题。<strong>心动了吗？</strong></p>
-    <p><a href="{{ url_for('surfer.getting_on_board') }}" class="btn btn-lg btn-primary" role="button">开始冲浪-></a></p>
+    <p>　　Wave是一个自定义程度非常高的博客搭建网站，在这里，创造一个属于自己的博客只需要动动手指，
+        你除了能体验到任何博客搭建网站提供的基础功能外，还能任意选择Wave提供的各式主题，甚至选择自己制作的主题。<strong>心动了吗？</strong></p>
+    <p><a href="{{ url_for('auth.register') }}" class="btn btn-lg btn-primary" role="button">
+        <span class="glyphicon glyphicon-sunglasses" aria-hidden="true"></span>开始浪=></a></p>
   </div>
 
 </div>
+
+{{ super() }}
 
 {% endblock %}

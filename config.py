@@ -5,8 +5,16 @@ base_dir = os.path.abspath(os.path.dirname(__file__))
 
 class Config:
     SECRET_KEY = os.getenv('PATH') or 'secret hard to guess string'
-    # SQLALCHEMY_COMMIT_ON_TEARDOWN = True
+    MAIL_SERVER = 'smtp.gmail.com'
+    MAIL_PORT = 465
+    MAIL_USE_SSL = True
+    MAIL_USERNAME = os.environ.get('MAIL_USERNAME')
+    MAIL_PASSWORD = os.environ.get('MAIL_PASSWORD')
+    WAVE_MAIL_SENDER = 'Wave <rockhamx@gmail.com>'
+    WAVE_MAIL_SUFFIX = 'Wave'
     SQLALCHEMY_TRACK_MODIFICATIONS = False
+    # the following comment will be deprecated due to the insecurity
+    # SQLALCHEMY_COMMIT_ON_TEARDOWN = True
 
 
 class DevelopmentConfig(Config):

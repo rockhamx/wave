@@ -1,0 +1,16 @@
+body > container:first-child {
+    margin-top: 40px;
+}
+.content {
+  padding: 40px 15px;
+}
+h1 {
+  text-align: center;
+}
+.thumbnail .avatar {
+    padding: 15px;
+    display: inline-block;
+}
+.thumbnail .caption {
+    padding-left: 20px;
+}

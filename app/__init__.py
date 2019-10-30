@@ -13,7 +13,8 @@ mail = Mail()
 migrate = Migrate()
 moment = Moment()
 login_manager = LoginManager()
-login_manager.login_view = 'surfer.login'
+login_manager.login_view = 'auth.login'
+
 
 def create_app(config_name):
     app = Flask(__name__)
@@ -27,8 +28,8 @@ def create_app(config_name):
     moment.init_app(app)
 
     from .frontend import frontend
-    from .surfer import surfer
+    from .auth import auth
     app.register_blueprint(frontend)
-    app.register_blueprint(surfer)
+    app.register_blueprint(auth)
 
     return app
