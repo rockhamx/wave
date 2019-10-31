@@ -6,6 +6,7 @@ from flask_bootstrap import Bootstrap
 from flask_mail import Mail
 from flask_migrate import Migrate
 from flask_moment import Moment
+from flask_babel import Babel
 
 db = SQLAlchemy()
 bootstrap = Bootstrap()
@@ -14,18 +15,20 @@ migrate = Migrate()
 moment = Moment()
 login_manager = LoginManager()
 login_manager.login_view = 'auth.login'
+babel = Babel()
 
 
 def create_app(config_name):
     app = Flask(__name__)
     app.config.from_object(config[config_name])
 
-    bootstrap.init_app(app)
     db.init_app(app)
-    login_manager.init_app(app)
+    bootstrap.init_app(app)
     mail.init_app(app)
-    migrate.init_app(app, db)
+    migrate.init_app(app, db, render_as_batch=True)
     moment.init_app(app)
+    login_manager.init_app(app)
+    babel.init_app(app)
 
     from .frontend import frontend
     from .auth import auth

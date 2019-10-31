@@ -1,5 +1,5 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, PasswordField, SubmitField, BooleanField, TextAreaField
+from wtforms import StringField, SubmitField, BooleanField, TextAreaField
 from wtforms.validators import InputRequired, Length, Email, Regexp, EqualTo, ValidationError
 
 
@@ -11,7 +11,10 @@ class EditProfileForm(FlaskForm):
 
 
 class PostForm(FlaskForm):
-    content = StringField('说点什么：')
+    title = StringField('标题')
+    content = TextAreaField('说点什么：')
+    is_public = BooleanField('是否公开')
+    # tags =
     submit = SubmitField('发布')
 
 

@@ -16,18 +16,6 @@ follows = db.Table('follows',
                    )
 
 
-users_tags = db.Table('users_tags',
-                      db.Column('user_id', db.Integer, db.ForeignKey('users.id'), primary_key=True),
-                      db.Column('tag_id', db.Integer, db.ForeignKey('tags.id'), primary_key=True)
-                      )
-
-
-posts_tags = db.Table('posts_tags',
-                      db.Column('post_id', db.Integer, db.ForeignKey('posts.id'), primary_key=True),
-                      db.Column('tag_id', db.Integer, db.ForeignKey('tags.id'), primary_key=True)
-                      )
-
-
 class User(UserMixin, db.Model):
     __tablename__ = 'users'
     id = db.Column(db.Integer, primary_key=True)
@@ -42,7 +30,7 @@ class User(UserMixin, db.Model):
     last_seen = db.Column(db.DateTime(), default=datetime.utcnow)
     email_hash = db.Column(db.String(32))
     is_administrator = db.Column(db.Boolean, default=False)
-    posts = db.relationship('Post', lazy=True, backref=db.backref('user', lazy='select'))
+    posts = db.relationship('Post', lazy='dynamic', backref=db.backref('author', lazy='select'))
     tags = db.relationship('Tag', secondary='users_tags', lazy='subquery',
                            backref=db.backref('users', lazy=True))
     followed = db.relationship('User', secondary='follows', lazy='dynamic',
@@ -102,6 +90,7 @@ class User(UserMixin, db.Model):
         if self.query.filter_by(email=new_email).first() is not None:
             return False
         self.email = new_email
+        self.email_hash = self.gravatar_hash()
         db.session.add(self)
         return True
 
@@ -110,9 +99,15 @@ class User(UserMixin, db.Model):
         db.session.add(self)
         db.session.commit()
 
+    def gravatar_hash(self):
+        return md5(self.email.lower().encode('utf-8')).hexdigest()
+
     def avatar(self, size):
-        digest = md5(self.email.lower().encode('utf-8')).hexdigest()
-        return 'https://www.gravatar.com/avatar/{}?d=identicon&s={}'.format(digest, size)
+        # if self.email_hash is None:
+        #     self.email_hash = self.gravatar_hash()
+        #     db.session.add(self)
+        #     db.session.commit()
+        return 'https://www.gravatar.com/avatar/{}?d=identicon&s={}'.format(self.email_hash, size)
 
     def is_following(self, user):
         return self.followed.filter(
@@ -126,12 +121,30 @@ class User(UserMixin, db.Model):
         if self.is_following(user):
             self.followed.remove(user)
 
+    def followed_post(self):
+        return Post.query.join(
+            follows, (follows.c.followed_id == Post.author_id)).filter(
+                follows.c.follower_id == self.id).order_by(
+                Post.pub_timestamp.desc())
+
 
 class AnonymousUser(AnonymousUserMixin):
     is_administrator = False
 
 
 login_manager.anonymous_user = AnonymousUser
+
+
+Users_Tags = db.Table('users_tags',
+                      db.Column('user_id', db.Integer, db.ForeignKey('users.id'), primary_key=True),
+                      db.Column('tag_id', db.Integer, db.ForeignKey('tags.id'), primary_key=True)
+                      )
+
+
+Posts_Tags = db.Table('posts_tags',
+                      db.Column('post_id', db.Integer, db.ForeignKey('posts.id'), primary_key=True),
+                      db.Column('tag_id', db.Integer, db.ForeignKey('tags.id'), primary_key=True)
+                      )
 
 
 class Tag(db.Model):
@@ -144,11 +157,11 @@ class Post(db.Model):
     __tablename__ = 'posts'
     id = db.Column(db.Integer, primary_key=True)
     tittle = db.Column(db.String(80), nullable=False)
-    body = db.Column(db.Text, nullable=False)
+    body = db.Column(db.Text(), nullable=False)
     is_public = db.Column(db.Boolean(), nullable=False)
-    pub_date = db.Column(db.DateTime(), default=datetime.utcnow)
-    edit_date = db.Column(db.DateTime(), default=datetime.utcnow)
-    user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
+    pub_timestamp = db.Column(db.DateTime(), default=datetime.utcnow)
+    edit_timestamp = db.Column(db.DateTime(), default=datetime.utcnow, index=True)
+    author_id = db.Column(db.Integer, db.ForeignKey('users.id'))
     tags = db.relationship('Tag', secondary='posts_tags', lazy='subquery',
                            backref=db.backref('posts', lazy=True))
 
