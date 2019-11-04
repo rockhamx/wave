@@ -7,6 +7,7 @@ from flask_mail import Mail
 from flask_migrate import Migrate
 from flask_moment import Moment
 from flask_babel import Babel
+from flask_pagedown import PageDown
 
 db = SQLAlchemy()
 bootstrap = Bootstrap()
@@ -16,6 +17,7 @@ moment = Moment()
 login_manager = LoginManager()
 login_manager.login_view = 'auth.login'
 babel = Babel()
+pagedown = PageDown()
 
 
 def create_app(config_name):
@@ -29,6 +31,7 @@ def create_app(config_name):
     moment.init_app(app)
     login_manager.init_app(app)
     babel.init_app(app)
+    pagedown.init_app(app)
 
     from .frontend import frontend
     from .auth import auth

@@ -1,21 +1,29 @@
 {% extends "bootstrap/base.html" %}
 
 {% block html_attribs %} lang="zh-cmn-hans"{% endblock %}
+{#{% block html_attribs %} lang="en"{% endblock %}#}
 
-{% block title %}Home - Wave{% endblock %}
+{% block title %}{{ _('Home | Wave') }}{% endblock %}
+
+{% block metas %}
+    {{ super() }}
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+    <meta name="author" content="Rockham">
+    <meta name="description" content="">
+    <link rel="shortcut icon" href="{{ url_for('static', filename='icons/favicon.ico') }}" type="image/x-icon">
+    <link rel="icon" href="{{ url_for('static', filename='icons/favicon.ico') }}" type="image/x-icon">
+{% endblock %}
+
+{% block styles %}
+    {{ super() }}
+    <!-- Custom styles -->
+    <link href="{{ url_for('static', filename='css/wave.css') }}" rel="stylesheet">
+{% endblock %}
 
 {% block head %}
-<meta charset="utf-8">
-<meta http-equiv="X-UA-Compatible" content="IE=edge">
-{{ super() }}
-<!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
-<meta name="description" content="">
-<meta name="author" content="Rockham">
-<link rel="shortcut icon" href="{{ url_for('static', filename='icons/favicon.ico') }}" type="image/x-icon">
-<link rel="icon" href="{{ url_for('static', filename='icons/favicon.ico') }}" type="image/x-icon">
-
-<!-- Custom styles -->
-<link href="{{ url_for('static', filename='css/wave.css') }}" rel="stylesheet">
+    {{ super() }}
 {% endblock %}
 
 {% block navbar %}
@@ -28,12 +36,12 @@
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
       </button>
-      <a class="navbar-brand" href="#">🌊Wave</a>
+      <a class="navbar-brand" href="{{ url_for('frontend.index') }}">🌊{{ _('Wave') }}</a>
     </div>
     <div id="navbar" class="collapse navbar-collapse">
       <ul class="nav navbar-nav">
-        <li class="active"><a href="{{ url_for('frontend.index') }}">Home</a></li>
-        <li><a href="#about">About</a></li>
+        <li class="active"><a href="{{ url_for('frontend.user', username=current_user.username) }}">{{ _('Home') }}</a></li>
+        <li><a href="#about">{{ _('About') }}</a></li>
         <li><a href="#contact">Contact Me</a></li>
       </ul>
 {#      user dropdown menu#}
@@ -44,28 +52,60 @@
                 <img src="{{ current_user.avatar(size=19) }}" alt="avatar" class="avatar"><b class="caret"></b>
             </a>
             <ul class="dropdown-menu">
+{#                <li>#}
+{#                    <a href="#">{{ 'signed in as %s' %current_user.username }}</a>#}
+{#                </li>#}
                 <li>
-                    <a href="#">登录为：{{ current_user.username }}</a>
+                    <a href="{{ url_for('frontend.write') }}">
+                        <span class="glyphicon glyphicon-edit" aria-hidden="true"></span>{{ _('Write a article') }}
+                    </a>
                 </li>
                 <li>
                     <a href="{{ url_for('frontend.user', username=current_user.username) }}">
-                        <span class="glyphicon glyphicon-user" aria-hidden="true"></span>个人信息
+                        <span class="glyphicon glyphicon-user" aria-hidden="true"></span>{{ _('Your profile') }}
                     </a>
                 </li>
+                <li>
+                    <a href="{{ url_for('frontend.user', username=current_user.username) }}">
+                        <span class="glyphicon glyphicon-user" aria-hidden="true"></span>{{ _('Your posts') }}
+                    </a>
+                </li>
+                <li>
+                    <a href="{{ url_for('frontend.user', username=current_user.username) }}">
+                        <span class="glyphicon glyphicon-eject" aria-hidden="true"></span>{{ _('Your follows') }}
+                    </a>
+                </li>
+                <li>
+                    <a href="{{ url_for('frontend.user', username=current_user.username) }}">
+                        <span class="glyphicon glyphicon-user" aria-hidden="true"></span>{{ _('Your followers') }}
+                    </a>
+                </li>
+                <li role="separator" class="divider"></li>
                 <li><a href="{{ url_for('auth.change_password') }}">
-                    <span class="glyphicon glyphicon-pencil" aria-hidden="true"></span>修改密码</a></li>
+                    <span class="glyphicon glyphicon-pencil" aria-hidden="true"></span>{{ _('Change password') }}</a></li>
 {#                <li><a href="{{ url_for('auth.password_reset_request') }}">重置密码</a></li>#}
                 <li><a href="{{ url_for('auth.change_email_request') }}">
-                    <span class="glyphicon glyphicon-pencil" aria-hidden="true"></span>修改电子邮箱</a></li>
+                    <span class="glyphicon glyphicon-pencil" aria-hidden="true"></span>{{ _('Change email') }}</a></li>
+                <li role="separator" class="divider"></li>
+                <li>
+                    <a href="{{ url_for('frontend.user', username=current_user.username) }}">
+                        <span class="glyphicon glyphicon-book" aria-hidden="true"></span>{{ _('Help') }}
+                    </a>
+                </li>
+                <li>
+                    <a href="{{ url_for('frontend.user', username=current_user.username) }}">
+                        <span class="glyphicon glyphicon-cog" aria-hidden="true"></span>{{ _('Settings') }}
+                    </a>
+                </li>
                 <li>
                     <a href="{{ url_for('auth.logout') }}">
-                        <span class="glyphicon glyphicon-log-out" aria-hidden="true"></span>退出
+                        <span class="glyphicon glyphicon-log-out" aria-hidden="true"></span>{{ _('Sign out') }}
                     </a>
                 </li>
             </ul>
           </li>
         {% else %}
-            <li><a href="{{ url_for('auth.login') }}">登录</a></li>
+            <li><a href="{{ url_for('auth.login') }}">{{ _('Sign in') }}</a></li>
         {% endif %}
       </ul>
     </div><!--/.nav-collapse -->
@@ -74,13 +114,31 @@
 {% endblock %}
 
 {% block content %}
-<div class="container">
-  {% for message in get_flashed_messages() %}
-  <div class="alert alert-info">
-    <button class="close" type="button" data-dismiss="alert">x</button>
-    {{ message }}
-  </div>
-  {% endfor %}
-</div>
 
+    <div class="container">
+      {% for message in get_flashed_messages() %}
+      <div class="alert alert-info">
+        <button class="close" type="button" data-dismiss="alert">x</button>
+        {{ message }}
+      </div>
+      {% endfor %}
+    </div>
+{% endblock %}
+
+{% block scripts %}
+{{ super() }}
+{#    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment-with-locales.js"></script>#}
+{#    <script src="{{ url_for('static', filename='js/moment-with-locales.js') }}"></script>#}
+{#    <script>moment.locale('zh-CN');</script>#}
+    {{ pagedown.html_head() }}
+
+    {{ moment.include_moment() }}
+    {% if current_user.is_authenticated %}
+        {{ moment.locale(current_user.locale) }}
+    {% else %}
+        {{ moment.locale(auto_detect=True) }}
+    {% endif %}
+{#    <script>moment.locale('zh-CN');</script>#}
+
+    <script src="{{ url_for('static', filename='js/wave.js') }}"></script>
 {% endblock %}

@@ -1,8 +1,10 @@
+from markdown import markdown
 from werkzeug.security import generate_password_hash, check_password_hash
 from itsdangerous import TimedJSONWebSignatureSerializer as Serializer, SignatureExpired
 import jwt
-from flask import current_app
+from flask import current_app, request
 from flask_login import UserMixin, AnonymousUserMixin
+from flask_babel import get_locale
 
 from app import db, login_manager
 from datetime import datetime
@@ -25,10 +27,12 @@ class User(UserMixin, db.Model):
     confirmed = db.Column(db.Boolean, default=False)
     name = db.Column(db.String(64))
     location = db.Column(db.String(64))
-    motto = db.Column(db.Text)
+    description = db.Column(db.Text)
     member_since = db.Column(db.DateTime(), default=datetime.utcnow)
     last_seen = db.Column(db.DateTime(), default=datetime.utcnow)
     email_hash = db.Column(db.String(32))
+    locale = db.Column(db.String(8), default='')
+    timezone = db.Column(db.String(8), default='UTC+8')
     is_administrator = db.Column(db.Boolean, default=False)
     posts = db.relationship('Post', lazy='dynamic', backref=db.backref('author', lazy='select'))
     tags = db.relationship('Tag', secondary='users_tags', lazy='subquery',
@@ -38,8 +42,8 @@ class User(UserMixin, db.Model):
                                secondaryjoin=(follows.c.followed_id == id),
                                backref=db.backref('followers', lazy='dynamic'))
 
-    def __init__(self, *args, **kwargs):
-        super(self, User).__init__(*args, **kwargs)
+    def __init__(self, **kwargs):
+        super(User, self).__init__(**kwargs)
         if self.email is not None and self.email_hash is None:
             self.email_hash = self.gravatar_hash()
 
@@ -151,21 +155,52 @@ class Tag(db.Model):
     __tablename__ = 'tags'
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(64), unique=True, index=True)
+    description = db.Column(db.String(128))
 
 
 class Post(db.Model):
     __tablename__ = 'posts'
     id = db.Column(db.Integer, primary_key=True)
-    tittle = db.Column(db.String(80), nullable=False)
+    title = db.Column(db.String(80), nullable=False)
     body = db.Column(db.Text(), nullable=False)
+    html = db.Column(db.Text())
     is_public = db.Column(db.Boolean(), nullable=False)
     pub_timestamp = db.Column(db.DateTime(), default=datetime.utcnow)
     edit_timestamp = db.Column(db.DateTime(), default=datetime.utcnow, index=True)
-    author_id = db.Column(db.Integer, db.ForeignKey('users.id'))
+    language = db.Column(db.String(5), default='')
+    clicked = db.Column(db.Integer, default=0)
+    hearts = db.Column(db.Integer, default=0)
+
+    author_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
+    comments = db.relationship('Comment', lazy='dynamic',
+                               backref=db.backref('post', lazy='select'))
     tags = db.relationship('Tag', secondary='posts_tags', lazy='subquery',
                            backref=db.backref('posts', lazy=True))
 
+    def click(self):
+        self.clicked += 1
 
+    # @db.event.listen_for(Post.body, 'set', Post.on_cha)
+    @staticmethod
+    def on_changed_body(target, value, oldvalue, initiator):
+        target.html = markdown(value, output_format='xhtml')
+
+
+db.event.listen(Post.body, 'set', Post.on_changed_body)
+
+
+class Comment(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    content = db.Column(db.Text, nullable=False)
+    timestamp = db.Column(db.DateTime, default=datetime.utcnow, nullable=False, index=True)
+    author_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
+    post_id = db.Column(db.Integer, db.ForeignKey('posts.id'), nullable=False)
+
+# TODO: draft table
+# class Draft(db.Model):
+
+
+# TODO: preference table
 # class UserPreference(db.Model):
     # pass
 

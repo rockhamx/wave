@@ -13,8 +13,11 @@ class Config:
     WAVE_MAIL_SENDER = 'Wave <rockhamx@gmail.com>'
     WAVE_MAIL_SUFFIX = 'Wave'
     SQLALCHEMY_TRACK_MODIFICATIONS = False
-    BABEL_DEFAULT_LOCALE = 'en'
+    # flask_babel
+    SUPPORTED_LANGUAGES = ['en', 'zh_CN']
+    BABEL_DEFAULT_LOCALE = SUPPORTED_LANGUAGES[1]
     BABEL_DEFAULT_TIMEZONE = 'UTC'
+
     # the following comment will be deprecated due to the insecurity
     # SQLALCHEMY_COMMIT_ON_TEARDOWN = True
 

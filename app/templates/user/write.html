@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+{% import "bootstrap/wtf.html" as wtf %}
+
+{% block title %}{{ _('Writting | %s' %current_user.username) }}{% endblock %}
+
+{% block content %}
+
+    {{ super() }}
+
+    <div class="container">
+    <div class="col-xs-6 col-md-12">
+        <form action="" class="form" method="post" role="form">
+            {{ form.hidden_tag() }}
+
+            {{ wtf.form_field(form.title) }}
+{#            {{ wtf.form_field(form.body) }}#}
+            <div class="form-group">
+                {{ form.body.label }}
+                <div class="editor">
+                    {{ form.body(only_input=True, cols=60, rows=30) }}
+                    {{ form.body(only_preview=True) }}
+                </div>
+            </div>
+            {{ wtf.form_field(form.is_public) }}
+            {{ wtf.form_field(form.submit) }}
+        </form>
+{#        {{ wtf.quick_form(form) }}#}
+    </div>
+    </div>
+
+{% endblock %}
+

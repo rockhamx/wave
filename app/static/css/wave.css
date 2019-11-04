@@ -1,34 +1,109 @@
-body > container:first-child {
-    margin-top: 40px;
+/*general*/
+body > div.container:first-of-type {
+    margin-top: 68px;
 }
 .content {
   padding: 40px 15px;
 }
 h1 {
-  text-align: center;
+  /*text-align: center;*/
 }
 .avatar {
     border-radius: 50%;
 }
+.flex-box {
+    display: flex;
+}
+.flex-box-column {
+    flex-direction: column;
+}
+.btn-xxs {
+    padding: 0px 5px;
+    font-size: 12px;
+    line-height: 18px;
+    border-radius: 3px;
+}
+/*.flex-box-column div {*/
+/*    flex-grow: 1;*/
+/*}*/
+
+/*thumbnail*/
 .thumbnail {
-    /*min-height: 309px;*/
     padding-left: 25px;
     padding-right: 25px;
 }
-.thumbnail .avatar {
-    /*display: inline-block;*/
-    margin-top: 15px;
-    float: right;
+.profile {
+    min-height: 300px;
+    align-items: center;
+    display: flex;
 }
-.thumbnail .caption {
+.profile .avatar {
+    flex-grow: 1;
+    /*margin-top: 18px;*/
+    /*margin-right: 60px;*/
+    /*float: left;*/
+}
+.profile .text {
+    flex-grow: 2;
+}
+.profile .caption {
     display: inline-block;
-}
-.dummy {
-    height: 48px;
-    margin-bottom: 20px;
 }
 .row {
     max-width: 900px;
     margin-left: auto;
     margin-right: auto;
+}
+li .glyphicon {
+    margin-right: 1rem;
+}
+.toolbar .glyphicon {
+    margin-right: 0.5rem;
+}
+.toolbar>a {
+    text-decoration: none;
+    padding: 3px 1rem 3px 0;
+}
+
+/*editor*/
+.editor {
+    display: flex;
+}
+.flask-pagedown {
+    margin-right: 1rem;
+}
+.flask-pagedown-preview {
+
+}
+.flask-pagedown-preview h1,
+.flask-pagedown-preview h2,
+.flask-pagedown-preview h3 {
+    margin-top: 0!important;
+}
+
+/*article details*/
+.article-preview a {
+    /*text-decoration: none;*/
+}
+.author-bar {
+    margin-top: 10px;
+    align-items: center;
+}
+.author-bar p {
+    margin-bottom: 0;
+}
+.author-bar .avatar {
+
+}
+.author-bar-right {
+    margin-left: 15px;
+}
+.author-bar-name {
+    margin-bottom: 2px;
+}
+.btn-follow {
+    margin-left: 8px;
+}
+.article-detail>h1 {
+    text-align: center;
 }
