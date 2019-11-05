@@ -8,9 +8,12 @@
             <div><a href="{{ url_for('.user', username=post.author.username) }}">{{ post.author.name }}</a></div>
             {% if current_user.id != post.author_id %}
                 {% if not current_user.is_following(post.author) %}
-                    <a href="#" id="follow{{ post.author.username }}" class="btn btn-default btn-xxs btn-follow" role="button" onclick="follow(this, '{{ post.author.username }}' )">{{ _('Follow') }}</a>
+                    <button class="btn btn-default btn-xxs btn-follow follow{{ post.author.username }}"
+                            onclick="follow('{{ current_user.username }}', '{{ post.author.username }}' )">{{ _('Follow') }}</button>
                 {% else %}
-                    <a href="#" id="un_follow{{ post.author.username }}" class="btn btn-primary btn-xxs btn-follow" role="button" onclick="unfollow(this, '{{ post.author.username }}' )">{{ _('Following') }}</a>
+                    <button class="btn btn-primary btn-xxs btn-follow un_follow{{ post.author.username }}"
+                            onclick="unfollow('{{ current_user.username }}','{{ post.author.username }}' )">{{ _('Following') }}</button>
+
                 {% endif %}
             {% endif %}
 

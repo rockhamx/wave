@@ -1,29 +1,31 @@
 //
-function follow(elementid, username) {
+function follow(org_username, dst_username) {
     $.post('/follow', {
-        'username': username
+        'username': dst_username
     }).done(function (response) {
-        $(elementid).text(response['status']);
+        const elementclass = '.follow' + dst_username
+        $(elementclass).text(response['status'])
+        $(elementclass).attr('onclick', `unfollow("${org_username}", "${dst_username}")`)
+        $(elementclass).toggleClass('btn-default btn-primary')
         $('#followers').text(function (index, text) {
             return parseInt(text) + 1
         })
-        $(elementid).attr('onclick', `unfollow(this, "${username}")`)
-        $(elementid).toggleClass('btn-default btn-primary')
     }).fail(function () {
         alert('fail');
         //flash a message
     });
 }
-function unfollow(elementid, username) {
+function unfollow(org_username, dst_username) {
     $.post('/unfollow', {
-        'username': username
+        'username': dst_username
     }).done(function (response) {
-        $(elementid).text(response['status']);
+        const elementclass = '.follow' + dst_username
+        $(elementclass).text(response['status'])
+        $(elementclass).attr('onclick', `follow("${org_username}", "${dst_username}")`)
+        $(elementclass).toggleClass('btn-default btn-primary')
         $('#followers').text(function (index, text) {
             return parseInt(text) - 1
         })
-        $(elementid).attr('onclick', `follow(this, "${username}")`)
-        $(elementid).toggleClass('btn-default btn-primary')
     }).fail(function () {
         alert('fail');
         //flash a message

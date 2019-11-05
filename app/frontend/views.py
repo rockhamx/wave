@@ -126,7 +126,11 @@ def article(id):
 
 @frontend.route('/recent')
 def recent():
-    posts = Post.query.order_by(Post.pub_timestamp.desc()).all()
+    page = request.args.get('page', 1, type=int)
+    posts = Post.query.order_by(Post.pub_timestamp.desc()).paginate(
+        page, per_page=current_app.config['WAVE_POSTS_PER_PAGE'],
+        error_out=False
+    ).items
     return render_template('recent.html', posts=posts)
 
 
