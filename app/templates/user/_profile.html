@@ -21,7 +21,7 @@
 
             <p>
 {#                Following#}
-                <a href="{{ url_for('frontend.follows', username=user.username) }}">
+                <a href="{{ url_for('frontend.following', username=user.username) }}">
                     {{ _('<b>%(following)d</b> following', following = user.following.count() ) }}
                 </a>
                 {{ _(', ') }}

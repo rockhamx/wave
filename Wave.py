@@ -1,5 +1,5 @@
 import os, click
-from app import create_app, bootstrap, db, mail, migrate, babel, moment
+from app import create_app, bootstrap, db, mail, migrate, babel, moment, fake
 from app.models import User, Tag, Post, Users_Tags, Posts_Tags
 from app.email import send_email
 
@@ -15,6 +15,7 @@ def shell():
                 mail=mail,
                 moment=moment,
                 babel=babel,
+                fake=fake,
                 User=User, Tag=Tag, Post=Post, UT=Users_Tags, PT=Posts_Tags,
                 send_email=send_email)
 

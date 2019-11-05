@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2019-11-05 21:47+0800\n"
+"POT-Creation-Date: 2019-11-05 22:51+0800\n"
 "PO-Revision-Date: 2019-11-05 16:23+0800\n"
 "Last-Translator: \n"
 "Language: zh\n"
@@ -238,54 +238,62 @@ msgstr "主页"
 msgid "Wave"
 msgstr ""
 
-#: app/templates/base.html:44
+#: app/templates/base.html:45
 msgid "Profile"
 msgstr "个人信息"
 
-#: app/templates/base.html:45
-msgid "About"
-msgstr "关于"
-
-#: app/templates/base.html:61
+#: app/templates/base.html:46 app/templates/base.html:63
 msgid "Write a article"
 msgstr "写文章"
 
-#: app/templates/base.html:66
+#: app/templates/base.html:47
+msgid "About"
+msgstr "关于"
+
+#: app/templates/base.html:68
 msgid "My profile"
 msgstr "我的个人信息"
 
-#: app/templates/base.html:76
-msgid "My follows"
+#: app/templates/base.html:78
+msgid "My following"
 msgstr "我的关注"
 
-#: app/templates/base.html:81
+#: app/templates/base.html:83
 msgid "My followers"
 msgstr "我的粉丝"
 
+#: app/templates/base.html:88
+msgid "Notifications"
+msgstr "提醒"
+
+#: app/templates/base.html:93
+msgid "Messages"
+msgstr "消息"
+
 #: app/templates/auth/change_password.html:4
-#: app/templates/auth/change_password.html:11 app/templates/base.html:86
+#: app/templates/auth/change_password.html:11 app/templates/base.html:98
 msgid "Change password"
 msgstr "更改密码"
 
 #: app/templates/auth/change_email.html:4
-#: app/templates/auth/change_email.html:11 app/templates/base.html:89
+#: app/templates/auth/change_email.html:11 app/templates/base.html:101
 msgid "Change email"
 msgstr "更改邮箱"
 
-#: app/templates/base.html:93
+#: app/templates/base.html:105
 msgid "Help"
 msgstr "帮助"
 
-#: app/templates/base.html:98
+#: app/templates/base.html:110
 msgid "Settings"
 msgstr "设置"
 
-#: app/templates/base.html:103
+#: app/templates/base.html:115
 msgid "Sign out"
 msgstr "登出"
 
 #: app/templates/auth/login.html:4 app/templates/auth/login.html:11
-#: app/templates/base.html:109
+#: app/templates/base.html:121
 msgid "Sign in"
 msgstr "登录"
 
@@ -334,7 +342,7 @@ msgstr "关注 <b>%(following)d</b> 人"
 
 #: app/templates/user/_profile.html:27
 msgid ", "
-msgstr ""
+msgstr "，"
 
 #: app/templates/user/_profile.html:30
 #, python-format
@@ -574,5 +582,4 @@ msgstr ""
 #: venv/lib/python3.7/site-packages/wtforms/fields/core.py:779
 msgid "Not a valid time value"
 msgstr ""
-
 

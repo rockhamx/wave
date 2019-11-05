@@ -4,7 +4,7 @@ from flask_login import login_required, current_user
 
 from . import frontend
 from app import db, babel
-from app.models import User, Post, Users_Tags
+from app.models import User, Post, follows
 from .forms import EditProfileForm, PostForm
 
 
@@ -84,7 +84,7 @@ def write():
     form = PostForm()
     if form.validate_on_submit():
         post = Post(title=form.title.data, body=form.body.data,
-                    is_public=form.is_public.data, author_id=current_user.id)
+                    is_public=form.is_public.data, author=current_user)
         db.session.add(post)
         db.session.commit()
         flash(_(u'Your post has been published.'))
@@ -124,6 +124,12 @@ def article(id):
     return render_template('article.html', post=post)
 
 
+@frontend.route('/recent')
+def recent():
+    posts = Post.query.order_by(Post.pub_timestamp.desc()).all()
+    return render_template('recent.html', posts=posts)
+
+
 @frontend.route('/follow', methods=['POST'])
 @login_required
 def follow():
@@ -148,16 +154,15 @@ def unfollow():
     return {'status': status}
 
 
-@frontend.route('/<username>/follows')
-def follows(username):
+@frontend.route('/<username>/following')
+def following(username):
     u = User.query.filter_by(username=username).first_or_404()
-    users = u.following.all()
-    # posts = Post.query.filter_by(author_id=current_user.id).order_by(Post.pub_timestamp.desc()).all()
+    users = u.following_desc_by_time()
     return render_template('user/following.html', username=username, users=users)
 
 
 @frontend.route('/<username>/followers')
 def followers(username):
     u = User.query.filter_by(username=username).first_or_404()
-    users = u.followers.all()
+    users = u.followers_desc_by_time()
     return render_template('user/followers.html', username=username, users=users)

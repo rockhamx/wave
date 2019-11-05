@@ -1,13 +1,11 @@
 import bleach
 from langdetect import detect
 from markdown import markdown
-from sqlalchemy import text
 from werkzeug.security import generate_password_hash, check_password_hash
 from itsdangerous import TimedJSONWebSignatureSerializer as Serializer, SignatureExpired
 import jwt
 from flask import current_app, request
 from flask_login import UserMixin, AnonymousUserMixin
-from flask_babel import get_locale
 
 from app import db, login_manager
 from datetime import datetime
@@ -129,6 +127,12 @@ class User(UserMixin, db.Model):
         if self.is_following(user):
             self.following.remove(user)
 
+    def following_desc_by_time(self):
+        return self.following.order_by(follows.c.timestamp).all()
+
+    def followers_desc_by_time(self):
+        return self.followers.order_by(follows.c.timestamp).all()
+
     def recent_posts(self):
         followed = Post.query.join(
             follows, (follows.c.following_id == Post.author_id)).filter(
@@ -177,8 +181,8 @@ class Post(db.Model):
     language = db.Column(db.String(5), default='en')
     clicked = db.Column(db.Integer, default=0)
     hearts = db.Column(db.Integer, default=0)
-
     author_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
+
     comments = db.relationship('Comment', lazy='dynamic',
                                backref=db.backref('post', lazy='select'))
     tags = db.relationship('Tag', secondary='posts_tags', lazy='subquery',
