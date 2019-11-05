@@ -14,7 +14,7 @@ def register():
     form = RegistrationForm()
     if form.validate_on_submit():
         u = User(email=form.email.data.lower(),
-                 username=form.username.data,
+                 username=form.username.data.lower(),
                  password=form.password.data)
         db.session.add(u)
         db.session.commit()
@@ -40,7 +40,7 @@ def login():
             refresh()    # refresh locale & timezone
             if next_url is None or not next_url.startswith('/'):
                 next_url = url_for('frontend.user', username=current_user.username)
-            flash(_(u'Welcome back %s!' %current_user.username))
+            flash(_(u'Welcome back, %(name)s!', name=current_user.username))
             return redirect(next_url)
         flash(_(u'Invalid username or password.'))
     return render_template('auth/login.html', form=form)

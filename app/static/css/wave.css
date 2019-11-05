@@ -11,10 +11,17 @@ h1 {
 .avatar {
     border-radius: 50%;
 }
+.float-left {
+    float: left;
+}
+.float-right {
+    float: right;
+}
 .flex-box {
     display: flex;
 }
 .flex-box-column {
+    display: flex;
     flex-direction: column;
 }
 .btn-xxs {
@@ -29,8 +36,8 @@ h1 {
 
 /*thumbnail*/
 .thumbnail {
-    padding-left: 25px;
-    padding-right: 25px;
+    padding-left: 24px;
+    padding-right: 24px;
 }
 .profile {
     min-height: 300px;
@@ -45,6 +52,7 @@ h1 {
 }
 .profile .text {
     flex-grow: 2;
+    margin-left: 2rem;
 }
 .profile .caption {
     display: inline-block;
@@ -57,12 +65,16 @@ h1 {
 li .glyphicon {
     margin-right: 1rem;
 }
-.toolbar .glyphicon {
+/*p.statusbar {*/
+/*    margin: 0;*/
+/*}*/
+.statusbar .glyphicon {
     margin-right: 0.5rem;
 }
-.toolbar>a {
+.statusbar>a {
     text-decoration: none;
-    padding: 3px 1rem 3px 0;
+    padding-right: 1rem;
+    /*padding: 3px 1rem 3px 0;*/
 }
 
 /*editor*/
@@ -80,20 +92,23 @@ li .glyphicon {
 .flask-pagedown-preview h3 {
     margin-top: 0!important;
 }
+/*article preview*/
+.article-preview,
+.article-detail {
+    padding-top: 23px;
+    padding-bottom: 23px;
+    margin-bottom: 24px;
+}
 
 /*article details*/
-.article-preview a {
-    /*text-decoration: none;*/
+.article-detail>h1 {
+    text-align: center;
 }
-.author-bar {
-    margin-top: 10px;
-    align-items: center;
-}
-.author-bar p {
-    margin-bottom: 0;
-}
-.author-bar .avatar {
 
+/*author-bar*/
+.author-bar {
+    /*margin-top: 10px;*/
+    align-items: center;
 }
 .author-bar-right {
     margin-left: 15px;
@@ -104,6 +119,12 @@ li .glyphicon {
 .btn-follow {
     margin-left: 8px;
 }
-.article-detail>h1 {
-    text-align: center;
+
+/*user-preview*/
+.user-preview {
+    margin-bottom: 10px;
+    padding: 0 20px;
+}
+.u-flex2 {
+    margin-left: 15px;
 }

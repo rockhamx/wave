@@ -3,7 +3,7 @@
 {% block html_attribs %} lang="zh-cmn-hans"{% endblock %}
 {#{% block html_attribs %} lang="en"{% endblock %}#}
 
-{% block title %}{{ _('Home | Wave') }}{% endblock %}
+{% block title %}{{ _('Home') }} | {{ 'Wave' }}{% endblock %}
 
 {% block metas %}
     {{ super() }}
@@ -40,9 +40,12 @@
     </div>
     <div id="navbar" class="collapse navbar-collapse">
       <ul class="nav navbar-nav">
-        <li class="active"><a href="{{ url_for('frontend.user', username=current_user.username) }}">{{ _('Home') }}</a></li>
+        <li class="active"><a href="{{ url_for('frontend.home') }}">{{ _('Home') }}</a></li>
+{#          TODO: Trending#}
+          <li><a href="{{ url_for('frontend.user', username=current_user.username) }}">{{ _('Profile') }}</a></li>
+          <li><a href="{{ url_for('frontend.write') }}">{{ _('Write a article') }}</a></li>
         <li><a href="#about">{{ _('About') }}</a></li>
-        <li><a href="#contact">Contact Me</a></li>
+{#        <li><a href="#contact">Contact Me</a></li>#}
       </ul>
 {#      user dropdown menu#}
       <ul class="nav navbar-nav navbar-right">
@@ -62,22 +65,32 @@
                 </li>
                 <li>
                     <a href="{{ url_for('frontend.user', username=current_user.username) }}">
-                        <span class="glyphicon glyphicon-user" aria-hidden="true"></span>{{ _('Your profile') }}
+                        <span class="glyphicon glyphicon-user" aria-hidden="true"></span>{{ _('My profile') }}
+                    </a>
+                </li>
+{#                <li>#}
+{#                    <a href="{{ url_for('frontend.user', username=current_user.username) }}">#}
+{#                        <span class="glyphicon glyphicon-user" aria-hidden="true"></span>{{ _('My posts') }}#}
+{#                    </a>#}
+{#                </li>#}
+                <li>
+                    <a href="{{ url_for('frontend.follows', username=current_user.username) }}">
+                        <span class="glyphicon glyphicon-user" aria-hidden="true"></span>{{ _('My follows') }}
+                    </a>
+                </li>
+                <li>
+                    <a href="{{ url_for('frontend.followers', username=current_user.username) }}">
+                        <span class="glyphicon glyphicon-user" aria-hidden="true"></span>{{ _('My followers') }}
                     </a>
                 </li>
                 <li>
                     <a href="{{ url_for('frontend.user', username=current_user.username) }}">
-                        <span class="glyphicon glyphicon-user" aria-hidden="true"></span>{{ _('Your posts') }}
+                        <span class="glyphicon glyphicon-bell" aria-hidden="true"></span>{{ _('Notifications') }}
                     </a>
                 </li>
                 <li>
                     <a href="{{ url_for('frontend.user', username=current_user.username) }}">
-                        <span class="glyphicon glyphicon-eject" aria-hidden="true"></span>{{ _('Your follows') }}
-                    </a>
-                </li>
-                <li>
-                    <a href="{{ url_for('frontend.user', username=current_user.username) }}">
-                        <span class="glyphicon glyphicon-user" aria-hidden="true"></span>{{ _('Your followers') }}
+                        <span class="glyphicon glyphicon-envelope" aria-hidden="true"></span>{{ _('Messages') }}
                     </a>
                 </li>
                 <li role="separator" class="divider"></li>
@@ -131,8 +144,10 @@
 {#    <script src="{{ url_for('static', filename='js/moment-with-locales.js') }}"></script>#}
 {#    <script>moment.locale('zh-CN');</script>#}
     {{ pagedown.html_head() }}
-
     {{ moment.include_moment() }}
+
+    <script src="{{ url_for('static', filename='js/wave.js') }}"></script>
+
     {% if current_user.is_authenticated %}
         {{ moment.locale(current_user.locale) }}
     {% else %}
@@ -140,5 +155,4 @@
     {% endif %}
 {#    <script>moment.locale('zh-CN');</script>#}
 
-    <script src="{{ url_for('static', filename='js/wave.js') }}"></script>
 {% endblock %}

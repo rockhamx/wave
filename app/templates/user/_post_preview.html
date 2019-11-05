@@ -1,0 +1,13 @@
+
+<div class="thumbnail article-preview">
+
+    {% include "_author_bar.html" %}
+
+    <h3><a href="{{ url_for('frontend.article', id=post.id) }}">{{ post.title }}</a>
+
+    </h3>
+    <p>{{ post.preview | safe }}</p>
+
+    {% include "user/_post_statusbar.html" %}
+</div>
+

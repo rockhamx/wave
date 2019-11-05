@@ -1,0 +1,21 @@
+
+<div class="thumbnail user-preview flex-box">
+
+    <div class="u-flex1">
+        <img src="{{ user.avatar(60) }}" alt="avatar">
+    </div>
+
+    <div class="u-flex2 flex-box-column">
+        <span><a href="{{ url_for('frontend.user', username=user.username) }}">{{ user.username }}</a></span>
+        <span class="u-description">{{ user.description }}</span>
+        {% if not current_user.is_following(user) %}
+            <a href="#" id="follow{{ user.username }}" class="btn btn-default btn-xxs btn-follow" role="button" onclick="follow(this, '{{ user.username }}' )">{{ _('Follow') }}</a>
+        {% else %}
+            <a href="#" id="un_follow{{ user.username }}" class="btn btn-primary btn-xxs btn-follow" role="button" onclick="unfollow(this, '{{ user.username }}' )">{{ _('Following') }}</a>
+        {% endif %}
+
+    </div>
+
+{#    {% include "user/_post_statusbar.html" %}#}
+</div>
+

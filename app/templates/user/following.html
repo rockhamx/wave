@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+
+{% block title %}{{ _('People followed by %(name)s', name = username) }}{% endblock %}
+
+{% block content %}
+
+    {{ super() }}
+
+    <div class="row">
+        <div class="col-xs-12 col-md-12">
+            <h1>{{ _('%(name)s Follows', name = username) }}</h1>
+            {% for user in users %}
+                {% include "user/_user_preview.html" %}
+            {% endfor %}
+        </div>
+    </div>
+
+{% endblock %}

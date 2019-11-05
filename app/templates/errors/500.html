@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 
-{% block title %}{{ _('Internal Server Error | Wave') }}{% endblock %}
+{% block title %}{{ _('Internal Server Error') }} | Wave{% endblock %}
 
 {% block content %}
 
@@ -14,7 +14,7 @@
         {{ super() }}
 {#        TODO: send email to adnimistrator#}
         <p>{{ _('The administrator has been notified. Sorry for the inconvenience!') }}</p>
-        <p><a href="{{ url_for('.index') }}">Back</a></p>
+        <p><a href="{{ url_for('frontend.index') }}">Back</a></p>
 
     </div>
 {% endblock %}

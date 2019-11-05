@@ -1,4 +1,7 @@
+import bleach
+from langdetect import detect
 from markdown import markdown
+from sqlalchemy import text
 from werkzeug.security import generate_password_hash, check_password_hash
 from itsdangerous import TimedJSONWebSignatureSerializer as Serializer, SignatureExpired
 import jwt
@@ -14,16 +17,17 @@ from hashlib import md5
 
 follows = db.Table('follows',
                    db.Column('follower_id', db.Integer, db.ForeignKey('users.id'), primary_key=True),
-                   db.Column('followed_id', db.Integer, db.ForeignKey('users.id'), primary_key=True)
+                   db.Column('following_id', db.Integer, db.ForeignKey('users.id'), primary_key=True),
+                   db.Column('timestamp', db.DateTime, default=datetime.utcnow)
                    )
 
 
 class User(UserMixin, db.Model):
     __tablename__ = 'users'
     id = db.Column(db.Integer, primary_key=True)
-    email = db.Column(db.String(64), unique=True, index=True)
-    username = db.Column(db.String(64), unique=True, index=True)
-    password_hash = db.Column(db.String(128))
+    email = db.Column(db.String(64), unique=True, nullable=False, index=True)
+    username = db.Column(db.String(64), unique=True, nullable=False, index=True)
+    password_hash = db.Column(db.String(128), nullable=False)
     confirmed = db.Column(db.Boolean, default=False)
     name = db.Column(db.String(64))
     location = db.Column(db.String(64))
@@ -37,9 +41,9 @@ class User(UserMixin, db.Model):
     posts = db.relationship('Post', lazy='dynamic', backref=db.backref('author', lazy='select'))
     tags = db.relationship('Tag', secondary='users_tags', lazy='subquery',
                            backref=db.backref('users', lazy=True))
-    followed = db.relationship('User', secondary='follows', lazy='dynamic',
+    following = db.relationship('User', secondary='follows', lazy='dynamic',
                                primaryjoin=(follows.c.follower_id == id),
-                               secondaryjoin=(follows.c.followed_id == id),
+                               secondaryjoin=(follows.c.following_id == id),
                                backref=db.backref('followers', lazy='dynamic'))
 
     def __init__(self, **kwargs):
@@ -114,22 +118,23 @@ class User(UserMixin, db.Model):
         return 'https://www.gravatar.com/avatar/{}?d=identicon&s={}'.format(self.email_hash, size)
 
     def is_following(self, user):
-        return self.followed.filter(
-            follows.c.followed_id == user.id).count() > 0
+        return self.following.filter(
+            follows.c.following_id == user.id).count() > 0
 
     def follows(self, user):
         if not self.is_following(user):
-            self.followed.append(user)
+            self.following.append(user)
 
     def un_follows(self, user):
         if self.is_following(user):
-            self.followed.remove(user)
+            self.following.remove(user)
 
-    def followed_post(self):
-        return Post.query.join(
-            follows, (follows.c.followed_id == Post.author_id)).filter(
-                follows.c.follower_id == self.id).order_by(
-                Post.pub_timestamp.desc())
+    def recent_posts(self):
+        followed = Post.query.join(
+            follows, (follows.c.following_id == Post.author_id)).filter(
+                follows.c.follower_id == self.id)
+        own = Post.query.filter_by(author_id=self.id)
+        return followed.union(own).order_by(Post.pub_timestamp.desc())
 
 
 class AnonymousUser(AnonymousUserMixin):
@@ -164,10 +169,12 @@ class Post(db.Model):
     title = db.Column(db.String(80), nullable=False)
     body = db.Column(db.Text(), nullable=False)
     html = db.Column(db.Text())
+    # TODO: abbreviation html 50 words.
+    preview = db.Column(db.Text())
     is_public = db.Column(db.Boolean(), nullable=False)
     pub_timestamp = db.Column(db.DateTime(), default=datetime.utcnow)
     edit_timestamp = db.Column(db.DateTime(), default=datetime.utcnow, index=True)
-    language = db.Column(db.String(5), default='')
+    language = db.Column(db.String(5), default='en')
     clicked = db.Column(db.Integer, default=0)
     hearts = db.Column(db.Integer, default=0)
 
@@ -183,18 +190,49 @@ class Post(db.Model):
     # @db.event.listen_for(Post.body, 'set', Post.on_cha)
     @staticmethod
     def on_changed_body(target, value, oldvalue, initiator):
-        target.html = markdown(value, output_format='xhtml')
+        # add languages guessing
+        target.language = detect(value)
+        # rendering html
+        allowed_tags = current_app.config['ALLOWED_TAGS']
+        md = markdown(value, output_format='html')
+        target.html = bleach.linkify(bleach.clean(md, tags=allowed_tags))
+        # preview of post, extract first 30 words
+        nth_words = 100
+        cleaned = bleach.linkify(bleach.clean(md[:1000], tags=['a'], strip=True))
+        # 中文
+        if 'zh' in target.language:
+            preview = cleaned[:nth_words]
+        # latin
+        else:
+            index = 0
+            for _ in range(nth_words):
+                try:
+                    index = cleaned.index(' ', index + 1)
+                except ValueError:
+                    index = 500
+            preview = cleaned[:index]
+        target.preview = preview + '...'
 
 
 db.event.listen(Post.body, 'set', Post.on_changed_body)
 
 
 class Comment(db.Model):
+    __tablename__ = 'comments'
     id = db.Column(db.Integer, primary_key=True)
     content = db.Column(db.Text, nullable=False)
-    timestamp = db.Column(db.DateTime, default=datetime.utcnow, nullable=False, index=True)
     author_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
     post_id = db.Column(db.Integer, db.ForeignKey('posts.id'), nullable=False)
+    timestamp = db.Column(db.DateTime, default=datetime.utcnow, nullable=False, index=True)
+
+
+class Hearts(db.Model):
+    __tablename__ = 'hearts'
+    id = db.Column(db.Integer, primary_key=True)
+    amount = db.Column(db.Integer, default=1)
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
+    post_id = db.Column(db.Integer, db.ForeignKey('posts.id'))
+    timestamp = db.Column(db.DateTime, default=datetime.utcnow, nullable=False)
 
 # TODO: draft table
 # class Draft(db.Model):

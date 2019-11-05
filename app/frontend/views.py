@@ -29,20 +29,23 @@ def index():
     return render_template('index.html')
 
 
+# TODO: list all posts
 @frontend.route('/home')
 @login_required
 def home():
-    form = PostForm()
-    if form.validate_on_submit():
-        pass
-    posts = current_user.posts.order_by(Post.edit_timestamp.desc()).all()
-    return render_template('home.html', form=form, posts=posts)
+    # form = PostForm()
+    # if form.validate_on_submit():
+    #     pass
+    posts = current_user.recent_posts()
+    return render_template('user/home.html', posts=posts)
 
 
+# User Profile
 @frontend.route('/<username>')
 def user(username):
     u = User.query.filter_by(username=username).first_or_404()
-    return render_template('user/profile.html', user=u)
+    posts = u.posts.order_by(Post.edit_timestamp.desc()).all()
+    return render_template('user/profile.html', user=u, posts=posts)
 
 
 @frontend.route('/edit-profile', methods=['GET', 'POST'])
@@ -80,12 +83,11 @@ def edit_profile():
 def write():
     form = PostForm()
     if form.validate_on_submit():
-        # TODO: add languages guessing
         post = Post(title=form.title.data, body=form.body.data,
                     is_public=form.is_public.data, author_id=current_user.id)
         db.session.add(post)
         db.session.commit()
-        flash(_(u'You post has been published.'))
+        flash(_(u'Your post has been published.'))
         return redirect(url_for('.user', username=current_user.username))
     return render_template('user/write.html', form=form)
 
@@ -122,15 +124,40 @@ def article(id):
     return render_template('article.html', post=post)
 
 
-@frontend.route('/follows')
+@frontend.route('/follow', methods=['POST'])
 @login_required
-def follows():
-    posts = Post.query.filter_by(author_id=current_user.id).order_by(Post.pub_timestamp.desc()).all()
-    return render_template('user/posts.html', posts=posts)
+def follow():
+    status = _('Follow')
+    u = User.query.filter_by(username=request.form['username']).first()
+    if u and current_user != u:
+        current_user.follows(u)
+        db.session.commit()
+        status = _('Following')
+    return {'status': status}
 
 
-@frontend.route('/followed')
+@frontend.route('/unfollow', methods=['POST'])
 @login_required
-def followed():
-    posts = Post.query.filter_by(author_id=current_user.id).order_by(Post.pub_timestamp.desc()).all()
-    return render_template('user/posts.html', posts=posts)
+def unfollow():
+    status = _('Following')
+    u = User.query.filter_by(username=request.form['username']).first()
+    if u and current_user != u:
+        current_user.un_follows(u)
+        db.session.commit()
+        status = _('Follow')
+    return {'status': status}
+
+
+@frontend.route('/<username>/follows')
+def follows(username):
+    u = User.query.filter_by(username=username).first_or_404()
+    users = u.following.all()
+    # posts = Post.query.filter_by(author_id=current_user.id).order_by(Post.pub_timestamp.desc()).all()
+    return render_template('user/following.html', username=username, users=users)
+
+
+@frontend.route('/<username>/followers')
+def followers(username):
+    u = User.query.filter_by(username=username).first_or_404()
+    users = u.followers.all()
+    return render_template('user/followers.html', username=username, users=users)

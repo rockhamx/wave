@@ -4,7 +4,7 @@ base_dir = os.path.abspath(os.path.dirname(__file__))
 
 
 class Config:
-    SECRET_KEY = os.getenv('PATH') or 'secret hard to guess string'
+    SECRET_KEY = b'M\xf7CX\x16$\xb7-\x1bi\xe9\x86T\xebm\xda'
     MAIL_SERVER = 'smtp.gmail.com'
     MAIL_PORT = 465
     MAIL_USE_SSL = True
@@ -17,6 +17,10 @@ class Config:
     SUPPORTED_LANGUAGES = ['en', 'zh_CN']
     BABEL_DEFAULT_LOCALE = SUPPORTED_LANGUAGES[1]
     BABEL_DEFAULT_TIMEZONE = 'UTC'
+    # website global
+    ALLOWED_TAGS = ['h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'p', 'a',
+                    'ol', 'ul', 'li', 'pre', 'code', 'blockquote',
+                    'i',  'abbr', 'acronym', 'b', 'strong', 'em']
 
     # the following comment will be deprecated due to the insecurity
     # SQLALCHEMY_COMMIT_ON_TEARDOWN = True

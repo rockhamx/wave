@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 
-{% block title %}{{ _('Not Found | Wave') }}{% endblock %}
+{% block title %}{{ _('Not Found') }} | Wave{% endblock %}
 
 {% block content %}
 
@@ -14,7 +14,7 @@
         {{ super() }}
 
         <p>{{ _('...') }}</p>
-        <p><a href="{{ url_for('.index') }}"></a></p>
+        <p><a href="{{ url_for('frontend.index') }}"></a></p>
 
     </div>
 

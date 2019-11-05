@@ -1,37 +1,22 @@
 {% extends "base.html" %}
 
 {% block title %}
-    {{ _('%s | Wave' %post.title) }}
+    {{ post.title }} | {{ 'Wave' }}
 {% endblock %}
 
 {% block content %}
     {{ super() }}
 
-{#    div.row>div.col-xs-12.col-md-12>div.thumbnail#}
     <div class="row">
         <div class="col-xs-12 col-md-12">
             <div class="thumbnail article-detail">
-{#                autthor#}
-                <div class="author-bar clearfix flex-box">
-                    <div><a href="{{ url_for('.user', username=post.author.username) }}">
-                        <img src="{{ post.author.avatar(48) }}" alt="avatar" class="avatar">
-                    </a></div>
 
-                    <div class="author-bar-right">
-                        <div class="author-bar-name flex-box">
-                            <div><a href="{{ url_for('.user', username=post.author.username) }}">{{ post.author.name }}</a></div>
-                            <button class="btn btn-default btn-xxs btn-follow">{{ _('Follow') }}</button>
-                        </div>
-
-                        <div class="timestamp">{{ moment(post.pub_timestamp).calendar() }}</div>
-                    </div>
-
-                </div>
+                {% include "_author_bar.html" %}
 
                 <h1>{{ post.title }}</h1>
                 {{ post.html | safe }}
 
-                {% include "user/_post_toolbar.html" %}
+                {% include "user/_post_statusbar.html" %}
             </div>
         </div>
     </div>
