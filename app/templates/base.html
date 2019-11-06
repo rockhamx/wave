@@ -40,8 +40,8 @@
     </div>
     <div id="navbar" class="collapse navbar-collapse">
       <ul class="nav navbar-nav">
-          <li class="active"><a href="{{ url_for('frontend.recent') }}">{{ _('Recent') }}</a></li>
-        <li><a href="{{ url_for('frontend.home') }}">{{ _('Home') }}</a></li>
+          <li class="active"><a href="{{ url_for('frontend.newest') }}">{{ _('Newest') }}</a></li>
+          <li><a href="{{ url_for('frontend.home') }}">{{ _('My Followed Article') }}</a></li>
 {#          TODO: Trending#}
           <li><a href="{{ url_for('frontend.user', username=current_user.username) }}">{{ _('Profile') }}</a></li>
           <li><a href="{{ url_for('frontend.write') }}">{{ _('Write a article') }}</a></li>

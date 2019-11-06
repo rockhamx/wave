@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2019-11-05 22:51+0800\n"
+"POT-Creation-Date: 2019-11-06 09:50+0800\n"
 "PO-Revision-Date: 2019-11-05 16:23+0800\n"
 "Last-Translator: \n"
 "Language: zh\n"
@@ -202,35 +202,35 @@ msgstr "只对我可见"
 msgid "Publish"
 msgstr "发布"
 
-#: app/frontend/views.py:65
+#: app/frontend/views.py:64
 msgid "Your profile has been updated."
 msgstr "您的个人信息已更新。"
 
-#: app/frontend/views.py:90
+#: app/frontend/views.py:89
 msgid "Your post has been published."
 msgstr "您的文章已发布"
 
-#: app/frontend/views.py:101
+#: app/frontend/views.py:100
 msgid "You have not authorized to this operation."
 msgstr "您没有权限执行此项操作。"
 
-#: app/frontend/views.py:110
+#: app/frontend/views.py:109
 msgid "You post has been updated."
 msgstr "您的文章已更新。"
 
-#: app/frontend/views.py:130 app/frontend/views.py:147
-#: app/templates/_author_bar.html:11 app/templates/user/_profile.html:46
+#: app/frontend/views.py:139 app/frontend/views.py:156
+#: app/templates/_author_bar.html:12 app/templates/user/_profile.html:45
 #: app/templates/user/_user_preview.html:12
 msgid "Follow"
 msgstr "关注"
 
-#: app/frontend/views.py:135 app/frontend/views.py:142
-#: app/templates/_author_bar.html:13 app/templates/user/_profile.html:49
+#: app/frontend/views.py:144 app/frontend/views.py:151
+#: app/templates/_author_bar.html:15 app/templates/user/_profile.html:47
 #: app/templates/user/_user_preview.html:14
 msgid "Following"
 msgstr "已关注"
 
-#: app/templates/base.html:6 app/templates/base.html:43
+#: app/templates/base.html:6
 msgid "Home"
 msgstr "主页"
 
@@ -238,68 +238,80 @@ msgstr "主页"
 msgid "Wave"
 msgstr ""
 
-#: app/templates/base.html:45
+#: app/templates/base.html:43 app/templates/recent.html:12
+msgid "Newest"
+msgstr "最新"
+
+#: app/templates/base.html:44 app/templates/user/Followed_posts.html:21
+msgid "My Followed Article"
+msgstr "我关注的文章"
+
+#: app/templates/base.html:46
 msgid "Profile"
 msgstr "个人信息"
 
-#: app/templates/base.html:46 app/templates/base.html:63
+#: app/templates/base.html:47 app/templates/base.html:64
 msgid "Write a article"
 msgstr "写文章"
 
-#: app/templates/base.html:47
+#: app/templates/base.html:48
 msgid "About"
 msgstr "关于"
 
-#: app/templates/base.html:68
+#: app/templates/base.html:69
 msgid "My profile"
 msgstr "我的个人信息"
 
-#: app/templates/base.html:78
+#: app/templates/base.html:79
 msgid "My following"
 msgstr "我的关注"
 
-#: app/templates/base.html:83
+#: app/templates/base.html:84
 msgid "My followers"
 msgstr "我的粉丝"
 
-#: app/templates/base.html:88
+#: app/templates/base.html:89
 msgid "Notifications"
 msgstr "提醒"
 
-#: app/templates/base.html:93
+#: app/templates/base.html:94
 msgid "Messages"
 msgstr "消息"
 
 #: app/templates/auth/change_password.html:4
-#: app/templates/auth/change_password.html:11 app/templates/base.html:98
+#: app/templates/auth/change_password.html:11 app/templates/base.html:99
 msgid "Change password"
 msgstr "更改密码"
 
 #: app/templates/auth/change_email.html:4
-#: app/templates/auth/change_email.html:11 app/templates/base.html:101
+#: app/templates/auth/change_email.html:11 app/templates/base.html:102
 msgid "Change email"
 msgstr "更改邮箱"
 
-#: app/templates/base.html:105
+#: app/templates/base.html:106
 msgid "Help"
 msgstr "帮助"
 
-#: app/templates/base.html:110
+#: app/templates/base.html:111
 msgid "Settings"
 msgstr "设置"
 
-#: app/templates/base.html:115
+#: app/templates/base.html:116
 msgid "Sign out"
 msgstr "登出"
 
 #: app/templates/auth/login.html:4 app/templates/auth/login.html:11
-#: app/templates/base.html:121
+#: app/templates/base.html:122
 msgid "Sign in"
 msgstr "登录"
 
 #: app/templates/index.html:3
 msgid "Welcome to Wave"
 msgstr "欢迎来浪"
+
+#: app/templates/recent.html:3
+msgid "Newest article"
+msgstr "最新文章"
 
 #: app/templates/auth/getting-on-board.html:4
 #: app/templates/auth/getting-on-board.html:11
@@ -334,6 +346,11 @@ msgstr ""
 #: app/templates/errors/500.html:16
 msgid "The administrator has been notified. Sorry for the inconvenience!"
 msgstr ""
+
+#: app/templates/user/Followed_posts.html:3
+#, python-format
+msgid "%(name)s's HomePage"
+msgstr "%(name)s的主页"
 
 #: app/templates/user/_profile.html:25
 #, python-format
@@ -389,22 +406,17 @@ msgstr "这些人被%(name)s关注"
 msgid "%(name)s Follows"
 msgstr "%(name)s关注了"
 
-#: app/templates/user/home.html:3
-#, python-format
-msgid "%(name)s's HomePage"
-msgstr "%(name)s的主页"
-
-#: app/templates/user/home.html:21 app/templates/user/profile.html:21
-msgid "Latest"
-msgstr "最近"
-
 #: app/templates/user/profile.html:3
 #, python-format
 msgid "%(name)s's profile"
 msgstr "%(name)s的个人信息"
 
+#: app/templates/user/profile.html:21
+msgid "Latest"
+msgstr "最近"
+
 #: app/templates/user/write.html:4
-msgid "Writting"
+msgid "Writing"
 msgstr "写作"
 
 #: venv/lib/python3.7/site-packages/flask_wtf/file.py:51
@@ -582,4 +594,10 @@ msgstr ""
 #: venv/lib/python3.7/site-packages/wtforms/fields/core.py:779
 msgid "Not a valid time value"
 msgstr ""
+
+#~ msgid "My Followed Ariticle"
+#~ msgstr ""
+
+#~ msgid "Writting"
+#~ msgstr "写作"
 

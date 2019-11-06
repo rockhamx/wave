@@ -133,6 +133,12 @@ class User(UserMixin, db.Model):
     def followers_desc_by_time(self):
         return self.followers.order_by(follows.c.timestamp).all()
 
+    def followed_posts(self):
+        followed = Post.query.join(
+            follows, (follows.c.following_id == Post.author_id)).filter(
+            follows.c.follower_id == self.id)
+        return followed.order_by(Post.pub_timestamp.desc())
+
     def recent_posts(self):
         followed = Post.query.join(
             follows, (follows.c.following_id == Post.author_id)).filter(

@@ -29,15 +29,14 @@ def index():
     return render_template('index.html')
 
 
-# TODO: list all posts
 @frontend.route('/home')
 @login_required
 def home():
     # form = PostForm()
     # if form.validate_on_submit():
     #     pass
-    posts = current_user.recent_posts()
-    return render_template('user/home.html', posts=posts)
+    posts = current_user.followed_posts()
+    return render_template('user/Followed_posts.html', posts=posts)
 
 
 # User Profile
@@ -124,8 +123,8 @@ def article(id):
     return render_template('article.html', post=post)
 
 
-@frontend.route('/recent')
-def recent():
+@frontend.route('/newest')
+def newest():
     page = request.args.get('page', 1, type=int)
     posts = Post.query.order_by(Post.pub_timestamp.desc()).paginate(
         page, per_page=current_app.config['WAVE_POSTS_PER_PAGE'],
