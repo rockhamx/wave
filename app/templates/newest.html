@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+
+{% block title %}{{ _('Newest article') }}{% endblock %}
+
+{% block content %}
+
+    {{ super() }}
+
+    {% if posts %}
+        <div class="row">
+            <div class="col-xs-12 col-md-12 articles">
+                <h1>{{ _('Newest') }}</h1>
+                {% for post in posts %}
+                    {% include "user/_post_preview.html" %}
+                {% endfor %}
+            </div>
+            <a class="pagination__next" href="{{ url_for('post.newest') }}?page=2"></a>
+        </div>
+    {% endif %}
+
+{% endblock %}
+
+{% block scripts %}
+    {{ super() }}
+    <script src="{{ url_for('static', filename='js/infinite-scroll.pkgd.min.js') }}"></script>
+{% endblock %}

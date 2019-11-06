@@ -1,5 +1,6 @@
 import bleach
 from langdetect import detect
+from langdetect.lang_detect_exception import LangDetectException
 from markdown import markdown
 from werkzeug.security import generate_password_hash, check_password_hash
 from itsdangerous import TimedJSONWebSignatureSerializer as Serializer, SignatureExpired
@@ -133,11 +134,14 @@ class User(UserMixin, db.Model):
     def followers_desc_by_time(self):
         return self.followers.order_by(follows.c.timestamp).all()
 
-    def followed_posts(self):
-        followed = Post.query.join(
+    def followed_posts(self, page):
+        return Post.query.join(
             follows, (follows.c.following_id == Post.author_id)).filter(
-            follows.c.follower_id == self.id)
-        return followed.order_by(Post.pub_timestamp.desc())
+            follows.c.follower_id == self.id).order_by(
+            Post.pub_timestamp.desc()).paginate(
+            page=page, per_page=current_app.config['WAVE_POSTS_PER_PAGE'],
+            error_out=False
+        ).items
 
     def recent_posts(self):
         followed = Post.query.join(
@@ -197,11 +201,21 @@ class Post(db.Model):
     def click(self):
         self.clicked += 1
 
+    @staticmethod
+    def newest(page):
+        return Post.query.order_by(Post.pub_timestamp.desc()).paginate(
+            page, per_page=current_app.config['WAVE_POSTS_PER_PAGE'],
+            error_out=False
+        ).items
+
     # @db.event.listen_for(Post.body, 'set', Post.on_cha)
     @staticmethod
     def on_changed_body(target, value, oldvalue, initiator):
         # add languages guessing
-        target.language = detect(value)
+        try:
+            target.language = detect(value)
+        except LangDetectException:
+            target.language = ''
         # rendering html
         allowed_tags = current_app.config['WAVE_ALLOWED_TAGS']
         md = markdown(value, output_format='html')
@@ -221,7 +235,7 @@ class Post(db.Model):
                 except ValueError:
                     index = 500
             preview = cleaned[:index]
-        target.preview = preview + '...'
+        target.preview = preview + '<b>...</b>'
 
 
 db.event.listen(Post.body, 'set', Post.on_changed_body)

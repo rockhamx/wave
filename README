@@ -6,5 +6,5 @@ FLASK_ENV=development
 MAIL_USERNAME=youremail
 MAIL_PASSWORD=yourpassword
 
-
-
+# setting up flask-babel
+flask trans compile

@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2019-11-06 09:50+0800\n"
+"POT-Creation-Date: 2019-11-07 00:55+0800\n"
 "PO-Revision-Date: 2019-11-05 16:23+0800\n"
 "Last-Translator: \n"
 "Language: zh\n"
@@ -166,69 +166,86 @@ msgstr "您的电子邮箱地址已更新。"
 msgid "Invalid request."
 msgstr "验证链接无效或已过期。"
 
-#: app/frontend/forms.py:9
+#: app/frontend/forms.py:8
 msgid "Nickname"
 msgstr "昵称"
 
-#: app/frontend/forms.py:10
+#: app/frontend/forms.py:9
 msgid "Location"
 msgstr "地区"
 
-#: app/frontend/forms.py:11
+#: app/frontend/forms.py:10
 msgid "description"
 msgstr "描述"
 
-#: app/frontend/forms.py:12
+#: app/frontend/forms.py:11
 msgid "Locale"
 msgstr "语言选择"
 
-#: app/frontend/forms.py:13
+#: app/frontend/forms.py:12
 msgid "Save profile"
 msgstr "保存"
 
-#: app/frontend/forms.py:17
-msgid "Tittle"
-msgstr "标题"
-
-#: app/frontend/forms.py:18
-msgid "Enter your Markdown"
-msgstr "输入Markdown"
-
-#: app/frontend/forms.py:19
-msgid "Only visible for myself"
-msgstr "只对我可见"
-
-#: app/frontend/forms.py:22
-msgid "Publish"
-msgstr "发布"
-
-#: app/frontend/views.py:64
+#: app/frontend/views.py:58
 msgid "Your profile has been updated."
 msgstr "您的个人信息已更新。"
 
-#: app/frontend/views.py:89
-msgid "Your post has been published."
-msgstr "您的文章已发布"
-
-#: app/frontend/views.py:100
-msgid "You have not authorized to this operation."
-msgstr "您没有权限执行此项操作。"
-
-#: app/frontend/views.py:109
-msgid "You post has been updated."
-msgstr "您的文章已更新。"
-
-#: app/frontend/views.py:139 app/frontend/views.py:156
-#: app/templates/_author_bar.html:12 app/templates/user/_profile.html:45
+#: app/frontend/views.py:70 app/frontend/views.py:87
+#: app/templates/_author_bar.html:28 app/templates/user/_profile.html:45
 #: app/templates/user/_user_preview.html:12
 msgid "Follow"
 msgstr "关注"
 
-#: app/frontend/views.py:144 app/frontend/views.py:151
-#: app/templates/_author_bar.html:15 app/templates/user/_profile.html:47
+#: app/frontend/views.py:75 app/frontend/views.py:82
+#: app/templates/_author_bar.html:31 app/templates/user/_profile.html:47
 #: app/templates/user/_user_preview.html:14
 msgid "Following"
 msgstr "已关注"
+
+#: app/post/forms.py:9
+msgid "Tittle"
+msgstr "标题"
+
+#: app/post/forms.py:10
+msgid "Enter your Markdown"
+msgstr "输入Markdown"
+
+#: app/post/forms.py:11
+msgid "Only visible for myself"
+msgstr "只对我可见"
+
+#: app/post/forms.py:14
+msgid "Publish"
+msgstr "发布"
+
+#: app/post/views.py:20
+msgid "Your post has been published."
+msgstr "您的文章已发布"
+
+#: app/post/views.py:31
+msgid "You have not authorized to this operation."
+msgstr "您没有权限执行此项操作。"
+
+#: app/post/views.py:40
+msgid "You post has been updated."
+msgstr "您的文章已更新。"
+
+#: app/templates/Followed_posts.html:3
+#, python-format
+msgid "%(name)s's HomePage"
+msgstr "%(name)s的主页"
+
+#: app/templates/Followed_posts.html:21 app/templates/base.html:44
+msgid "My Followed Article"
+msgstr "我关注的文章"
+
+#: app/templates/_author_bar.html:10
+msgid "Edit"
+msgstr "编辑"
+
+#: app/templates/_author_bar.html:11
+msgid "Delete"
+msgstr "删除"
 
 #: app/templates/base.html:6
 msgid "Home"
@@ -238,13 +255,9 @@ msgstr "主页"
 msgid "Wave"
 msgstr ""
 
-#: app/templates/base.html:43 app/templates/recent.html:12
+#: app/templates/base.html:43 app/templates/newest.html:12
 msgid "Newest"
 msgstr "最新"
-
-#: app/templates/base.html:44 app/templates/user/Followed_posts.html:21
-msgid "My Followed Article"
-msgstr "我关注的文章"
 
 #: app/templates/base.html:46
 msgid "Profile"
@@ -309,7 +322,7 @@ msgstr "登录"
 msgid "Welcome to Wave"
 msgstr "欢迎来浪"
 
-#: app/templates/recent.html:3
+#: app/templates/newest.html:3
 msgid "Newest article"
 msgstr "最新文章"
 
@@ -346,11 +359,6 @@ msgstr ""
 #: app/templates/errors/500.html:16
 msgid "The administrator has been notified. Sorry for the inconvenience!"
 msgstr ""
-
-#: app/templates/user/Followed_posts.html:3
-#, python-format
-msgid "%(name)s's HomePage"
-msgstr "%(name)s的主页"
 
 #: app/templates/user/_profile.html:25
 #, python-format
@@ -600,4 +608,7 @@ msgstr ""
 
 #~ msgid "Writting"
 #~ msgstr "写作"
+
+#~ msgid "Are you sure to delete this post?"
+#~ msgstr "您确定要删除这篇文章吗？"
 

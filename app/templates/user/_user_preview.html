@@ -9,9 +9,9 @@
         <span><a href="{{ url_for('frontend.user', username=user.username) }}">{{ user.username }}</a></span>
         <span class="u-description">{{ user.description }}</span>
         {% if not current_user.is_following(user) %}
-            <button href="#" class="btn btn-default btn-xxs btn-follow follow{{ user.username }}" onclick="follow(this, '{{ user.username }}' )">{{ _('Follow') }}</button>
+            <button href="#" class="btn btn-default btn-xxs f{{ user.username }}" onclick="follow('{{ current_user.username }}', '{{ user.username }}' )">{{ _('Follow') }}</button>
         {% else %}
-            <button href="#" class="btn btn-primary btn-xxs btn-follow follow{{ user.username }}"  onclick="unfollow(this, '{{ user.username }}' )">{{ _('Following') }}</button>
+            <button href="#" class="btn btn-primary btn-xxs f{{ user.username }}"  onclick="unfollow('{{ current_user.username }}', '{{ user.username }}' )">{{ _('Following') }}</button>
         {% endif %}
 
     </div>

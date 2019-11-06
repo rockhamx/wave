@@ -30,9 +30,10 @@ h1 {
     line-height: 18px;
     border-radius: 3px;
 }
-/*.flex-box-column div {*/
-/*    flex-grow: 1;*/
-/*}*/
+.navbar-brand {
+    /*padding: 2px 2px;*/
+    padding: 0 0;
+}
 
 /*thumbnail*/
 .thumbnail {
@@ -65,9 +66,6 @@ h1 {
 li .glyphicon {
     margin-right: 1rem;
 }
-/*p.statusbar {*/
-/*    margin: 0;*/
-/*}*/
 .statusbar .glyphicon {
     margin-right: 0.5rem;
 }
@@ -109,6 +107,9 @@ li .glyphicon {
 .author-bar {
     /*margin-top: 10px;*/
     align-items: center;
+}
+.author-menu {
+    float: right;
 }
 .author-bar-right {
     margin-left: 15px;

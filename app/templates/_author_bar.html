@@ -1,17 +1,33 @@
+{% if current_user == user %}
+    {#                                <button class="close" type="button" onclick="">#}
+    {#                                    <span class="glyphicon glyphicon-collapse-down" aria-hidden="true"></span>#}
+    {#                                </button>#}
+    <div class="btn-group author-menu">
+        <button class="close dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            <span class="glyphicon glyphicon-menu-down" aria-hidden="true"></span>
+        </button>
+        <ul class="dropdown-menu">
+            <li><a class="btn-link" href="{{ url_for('post.edit', id=post.id) }}"><button class="btn-link">{{ _('Edit') }}</button></a></li>
+            <li><a><button id="{{ post.id }}" class="btn-link delete_post">{{ _('Delete') }}</button></a></li>
+{#            <li><a href=""></a></li>#}
+        </ul>
+    </div>
+{% endif %}
+
 <div class="author-bar clearfix flex-box">
-    <div><a href="{{ url_for('.user', username=post.author.username) }}">
+    <div><a href="{{ url_for('frontend.user', username=post.author.username) }}">
         <img src="{{ post.author.avatar(42) }}" alt="avatar" class="avatar">
     </a></div>
 
     <div class="author-bar-right">
         <div class="author-bar-name flex-box">
-            <div><a href="{{ url_for('.user', username=post.author.username) }}">{{ post.author.name }}</a></div>
+            <div><a href="{{ url_for('frontend.user', username=post.author.username) }}">{{ post.author.name }}</a></div>
             {% if current_user.is_authenticated and current_user.id != post.author_id %}
                 {% if not current_user.is_following(post.author) %}
-                    <button class="btn btn-default btn-xxs btn-follow follow{{ post.author.username }}"
+                    <button class="btn btn-default btn-xxs btn-follow f{{ post.author.username }}"
                             onclick="follow('{{ current_user.username }}', '{{ post.author.username }}' )">{{ _('Follow') }}</button>
                 {% else %}
-                    <button class="btn btn-primary btn-xxs btn-follow un_follow{{ post.author.username }}"
+                    <button class="btn btn-primary btn-xxs btn-follow f{{ post.author.username }}"
                             onclick="unfollow('{{ current_user.username }}','{{ post.author.username }}' )">{{ _('Following') }}</button>
                 {% endif %}
             {% endif %}
@@ -21,16 +37,5 @@
         <div class="timestamp">{{ moment(post.pub_timestamp).calendar() }}</div>
     </div>
 
-
-    {% if current_user == user %}
-        {#                                <button class="close" type="button" onclick="">#}
-        {#                                    <span class="glyphicon glyphicon-collapse-down" aria-hidden="true"></span>#}
-        {#                                </button>#}
-        <div class="author-menu">
-            <button class="close" type="button" onclick="window.location.href = '{{ url_for('.edit', id=post.id) }}';">
-                <span class="glyphicon glyphicon-menu-down" aria-hidden="true"></span>
-            </button>
-        </div>
-    {% endif %}
-
 </div>
+

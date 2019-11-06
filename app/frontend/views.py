@@ -1,11 +1,11 @@
-from flask import render_template, flash, redirect, url_for, request, current_app, abort
+from flask import render_template, flash, redirect, url_for, request, current_app
 from flask_babel import refresh, gettext as _
 from flask_login import login_required, current_user
 
 from . import frontend
 from app import db, babel
-from app.models import User, Post, follows
-from .forms import EditProfileForm, PostForm
+from app.models import User, Post
+from .forms import EditProfileForm
 
 
 # @login_required
@@ -29,21 +29,15 @@ def index():
     return render_template('index.html')
 
 
-@frontend.route('/home')
-@login_required
-def home():
-    # form = PostForm()
-    # if form.validate_on_submit():
-    #     pass
-    posts = current_user.followed_posts()
-    return render_template('user/Followed_posts.html', posts=posts)
-
-
 # User Profile
 @frontend.route('/<username>')
 def user(username):
     u = User.query.filter_by(username=username).first_or_404()
-    posts = u.posts.order_by(Post.edit_timestamp.desc()).all()
+    page = request.args.get('page', 1, type=int)
+    posts = u.posts.order_by(Post.edit_timestamp.desc()).paginate(
+        page=page, per_page=current_app.config['WAVE_POSTS_PER_PAGE'],
+        error_out=False
+    ).items
     return render_template('user/profile.html', user=u, posts=posts)
 
 
@@ -70,91 +64,28 @@ def edit_profile():
     return render_template('user/edit_profile.html', form=form)
 
 
-# @frontend.route('/tags', methods=['GET'])
-# @login_required
-# def my_tags():
-#     tags_id = current_user.tags
-#     return render_template('user/tags.html', tags=tags_id)
-
-
-@frontend.route('/write', methods=['GET', 'POST'])
-@login_required
-def write():
-    form = PostForm()
-    if form.validate_on_submit():
-        post = Post(title=form.title.data, body=form.body.data,
-                    is_public=form.is_public.data, author=current_user)
-        db.session.add(post)
-        db.session.commit()
-        flash(_(u'Your post has been published.'))
-        return redirect(url_for('.user', username=current_user.username))
-    return render_template('user/write.html', form=form)
-
-
-@frontend.route('/edit_post/<int:id>', methods=['GET', 'POST'])
-@login_required
-def edit(id):
-    form = PostForm()
-    post = Post.query.filter_by(id=id).first_or_404()
-    if current_user.id != post.author_id:
-        flash(_('You have not authorized to this operation.', 'error'))
-        return redirect(url_for('.user', username=current_user.username))
-
-    if form.validate_on_submit():
-        post.title = form.title.data
-        post.body = form.body.data
-        post.is_public = form.is_public.data
-        db.session.add(post)
-        db.session.commit()
-        flash(_(u'You post has been updated.'))
-        return redirect(url_for('.user', username=current_user.username))
-    form.title.data = post.title
-    form.body.data = post.body
-    form.is_public.data = post.is_public
-    return render_template('user/write.html', form=form)
-
-
-@frontend.route('/article/<int:id>')
-def article(id):
-    post = Post.query.filter_by(id=id).first()
-    post.click()
-    db.session.add(post)
-    db.session.commit()
-    return render_template('article.html', post=post)
-
-
-@frontend.route('/newest')
-def newest():
-    page = request.args.get('page', 1, type=int)
-    posts = Post.query.order_by(Post.pub_timestamp.desc()).paginate(
-        page, per_page=current_app.config['WAVE_POSTS_PER_PAGE'],
-        error_out=False
-    ).items
-    return render_template('recent.html', posts=posts)
-
-
 @frontend.route('/follow', methods=['POST'])
 @login_required
 def follow():
-    status = _('Follow')
     u = User.query.filter_by(username=request.form['username']).first()
-    if u and current_user != u:
+    if u and current_user != u and not current_user.is_following(u):
         current_user.follows(u)
         db.session.commit()
         status = _('Following')
-    return {'status': status}
+        return {'status': status}
+    return {}
 
 
 @frontend.route('/unfollow', methods=['POST'])
 @login_required
 def unfollow():
-    status = _('Following')
     u = User.query.filter_by(username=request.form['username']).first()
-    if u and current_user != u:
+    if u and current_user != u and current_user.is_following(u):
         current_user.un_follows(u)
         db.session.commit()
         status = _('Follow')
-    return {'status': status}
+        return {'status': status}
+    return {}
 
 
 @frontend.route('/<username>/following')
@@ -169,3 +100,10 @@ def followers(username):
     u = User.query.filter_by(username=username).first_or_404()
     users = u.followers_desc_by_time()
     return render_template('user/followers.html', username=username, users=users)
+
+
+# @frontend.route('/tags', methods=['GET'])
+# @login_required
+# def my_tags():
+#     tags_id = current_user.tags
+#     return render_template('user/tags.html', tags=tags_id)

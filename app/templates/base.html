@@ -12,8 +12,15 @@
     <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
     <meta name="author" content="Rockham">
     <meta name="description" content="">
-    <link rel="shortcut icon" href="{{ url_for('static', filename='icons/favicon.ico') }}" type="image/x-icon">
-    <link rel="icon" href="{{ url_for('static', filename='icons/favicon.ico') }}" type="image/x-icon">
+    <meta name="msapplication-TileColor" content="#2d89ef">
+    <meta name="theme-color" content="#ffffff">
+{#    <link rel="shortcut icon" href="{{ url_for('static', filename='icons/favicon.ico') }}" type="image/x-icon">#}
+{#    <link rel="icon" href="{{ url_for('static', filename='icons/favicon.ico') }}" type="image/x-icon">#}
+    <link rel="apple-touch-icon" sizes="180x180" href="{{ url_for('static', filename='wave/apple-touch-icon.png') }}">
+    <link rel="icon" type="image/png" sizes="32x32" href="{{ url_for('static', filename='wave/favicon-32x32.png') }}">
+    <link rel="icon" type="image/png" sizes="16x16" href="{{ url_for('static', filename='wave/favicon-16x16.png') }}">
+    <link rel="manifest" href="{{ url_for('static', filename='wave/site.webmanifest') }}">
+    <link rel="mask-icon" href="{{ url_for('static', filename='wave/safari-pinned-tab.svg') }}" color="#5bbad5">
 {% endblock %}
 
 {% block styles %}
@@ -36,15 +43,16 @@
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
       </button>
-      <a class="navbar-brand" href="{{ url_for('frontend.index') }}">🌊{{ _('Wave') }}</a>
+      <a class="navbar-brand" href="{{ url_for('frontend.index') }}">🌊<img src="{{ url_for('static', filename='wave/favicon-50x50.png') }}" alt="brand"></a>
     </div>
     <div id="navbar" class="collapse navbar-collapse">
       <ul class="nav navbar-nav">
-          <li class="active"><a href="{{ url_for('frontend.newest') }}">{{ _('Newest') }}</a></li>
-          <li><a href="{{ url_for('frontend.home') }}">{{ _('My Followed Article') }}</a></li>
+          <li><a href="{{ url_for('frontend.index') }}">{{ _('Home') }}</a></li>
+          <li><a href="{{ url_for('post.newest') }}">{{ _('Newest') }}</a></li>
+          <li><a href="{{ url_for('post.followed') }}">{{ _('My Followed Article') }}</a></li>
 {#          TODO: Trending#}
           <li><a href="{{ url_for('frontend.user', username=current_user.username) }}">{{ _('Profile') }}</a></li>
-          <li><a href="{{ url_for('frontend.write') }}">{{ _('Write a article') }}</a></li>
+          <li><a href="{{ url_for('post.write') }}">{{ _('Write a article') }}</a></li>
         <li><a href="#about">{{ _('About') }}</a></li>
 {#        <li><a href="#contact">Contact Me</a></li>#}
       </ul>
@@ -60,7 +68,7 @@
 {#                    <a href="#">{{ 'signed in as %s' %current_user.username }}</a>#}
 {#                </li>#}
                 <li>
-                    <a href="{{ url_for('frontend.write') }}">
+                    <a href="{{ url_for('post.write') }}">
                         <span class="glyphicon glyphicon-edit" aria-hidden="true"></span>{{ _('Write a article') }}
                     </a>
                 </li>
@@ -144,7 +152,6 @@
 {#    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment-with-locales.js"></script>#}
 {#    <script src="{{ url_for('static', filename='js/moment-with-locales.js') }}"></script>#}
 {#    <script>moment.locale('zh-CN');</script>#}
-    {{ pagedown.html_head() }}
     {{ moment.include_moment() }}
 
     <script src="{{ url_for('static', filename='js/wave.js') }}"></script>
@@ -154,6 +161,5 @@
     {% else %}
         {{ moment.locale(auto_detect=True) }}
     {% endif %}
-{#    <script>moment.locale('zh-CN');</script>#}
 
 {% endblock %}

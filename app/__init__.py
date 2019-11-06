@@ -47,7 +47,9 @@ def create_app(config_name):
 
     from .frontend import frontend
     from .auth import auth
+    from .post import post
     app.register_blueprint(frontend)
     app.register_blueprint(auth)
+    app.register_blueprint(post)
 
     return app
