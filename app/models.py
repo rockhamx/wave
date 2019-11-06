@@ -197,7 +197,7 @@ class Post(db.Model):
         # add languages guessing
         target.language = detect(value)
         # rendering html
-        allowed_tags = current_app.config['ALLOWED_TAGS']
+        allowed_tags = current_app.config['WAVE_ALLOWED_TAGS']
         md = markdown(value, output_format='html')
         target.html = bleach.linkify(bleach.clean(md, tags=allowed_tags))
         # preview of post, extract first 30 words
