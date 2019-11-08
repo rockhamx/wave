@@ -8,12 +8,13 @@
     <div class="u-flex2 flex-box-column">
         <span><a href="{{ url_for('frontend.user', username=user.username) }}">{{ user.username }}</a></span>
         <span class="u-description">{{ user.description }}</span>
-        {% if not current_user.is_following(user) %}
-            <button href="#" class="btn btn-default btn-xxs f{{ user.username }}" onclick="follow('{{ current_user.username }}', '{{ user.username }}' )">{{ _('Follow') }}</button>
-        {% else %}
-            <button href="#" class="btn btn-primary btn-xxs f{{ user.username }}"  onclick="unfollow('{{ current_user.username }}', '{{ user.username }}' )">{{ _('Following') }}</button>
+        {% if current_user.is_authenticated %}
+            {% if not current_user.is_following(user) %}
+                <button class="btn btn-default btn-xxs f{{ user.username }}" onclick="follow('{{ current_user.username }}', '{{ user.username }}' )">{{ _('Follow') }}</button>
+            {% else %}
+                <button class="btn btn-primary btn-xxs f{{ user.username }}"  onclick="unfollow('{{ current_user.username }}', '{{ user.username }}' )">{{ _('Following') }}</button>
+            {% endif %}
         {% endif %}
-
     </div>
 
 {#    {% include "user/_post_statusbar.html" %}#}

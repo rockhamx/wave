@@ -22,7 +22,7 @@
     <div class="author-bar-right">
         <div class="author-bar-name flex-box">
             <div><a href="{{ url_for('frontend.user', username=post.author.username) }}">{{ post.author.name }}</a></div>
-            {% if current_user.is_authenticated and current_user.id != post.author_id %}
+            {% if current_user.is_authenticated and current_user != post.author %}
                 {% if not current_user.is_following(post.author) %}
                     <button class="btn btn-default btn-xxs btn-follow f{{ post.author.username }}"
                             onclick="follow('{{ current_user.username }}', '{{ post.author.username }}' )">{{ _('Follow') }}</button>
