@@ -5,7 +5,7 @@ base_dir = os.path.abspath(os.path.dirname(__file__))
 
 class Config:
     # website global
-    SECRET_KEY = b'M\xf7CX\x16$\xb7-\x1bi\xe9\x86T\xebm\xda'
+    SECRET_KEY = os.environ.get('SECRET_KEY') or b'M\xf7CX\x16$\xb7-\x1bi\xe9\x86T\xebm\xda'
     WAVE_MAIL_SENDER = 'Wave <rockhamx@gmail.com>'
     WAVE_MAIL_SUFFIX = 'Wave'
     WAVE_POSTS_PER_PAGE = 20

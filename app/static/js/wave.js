@@ -3,6 +3,10 @@ $( document ).ready(function () {
     // navbar-brand fixed
     $(".navbar-brand")[0].childNodes[0].textContent = "";
 
+    // progress bar
+    let progressBar = $('#progress-bar');
+    progressBar.css('display', 'none');
+
     // navbar activation
     var url = window.location["pathname"];
     // Will only work if string in href matches with location

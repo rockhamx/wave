@@ -29,10 +29,6 @@
     <link href="{{ url_for('static', filename='css/wave.css') }}" rel="stylesheet">
 {% endblock %}
 
-{% block head %}
-    {{ super() }}
-{% endblock %}
-
 {% block navbar %}
 <nav class="navbar navbar-default navbar-fixed-top">
   <div class="container">
@@ -147,6 +143,9 @@
       </div>
       {% endfor %}
     </div>
+
+
+    <div id="progress-bar"></div>
 {% endblock %}
 
 {% block scripts %}

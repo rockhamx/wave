@@ -170,6 +170,15 @@ Posts_Tags = db.Table('posts_tags',
                       )
 
 
+class Category(db.Model):
+    __tablename__ = "categories"
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(64), unique=True)
+    description = db.Column(db.String(128))
+    posts = db.relationship('Post', lazy='dynamic',
+                            backref=db.backref('category', lazy='select'))
+
+
 class Tag(db.Model):
     __tablename__ = 'tags'
     id = db.Column(db.Integer, primary_key=True)
@@ -183,7 +192,6 @@ class Post(db.Model):
     title = db.Column(db.String(80), nullable=False)
     body = db.Column(db.Text(), nullable=False)
     html = db.Column(db.Text())
-    # TODO: abbreviation html 50 words.
     preview = db.Column(db.Text())
     is_public = db.Column(db.Boolean(), nullable=False)
     pub_timestamp = db.Column(db.DateTime(), default=datetime.utcnow)
@@ -192,11 +200,11 @@ class Post(db.Model):
     clicked = db.Column(db.Integer, default=0)
     hearts = db.Column(db.Integer, default=0)
     author_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
-
-    comments = db.relationship('Comment', lazy='dynamic',
-                               backref=db.backref('post', lazy='select'))
+    category_id = db.Column(db.Integer, db.ForeignKey('categories.id'))
     tags = db.relationship('Tag', secondary='posts_tags', lazy='subquery',
                            backref=db.backref('posts', lazy=True))
+    comments = db.relationship('Comment', lazy='dynamic',
+                               backref=db.backref('post', lazy='select'))
 
     def click(self):
         self.clicked += 1

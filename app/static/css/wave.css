@@ -38,6 +38,29 @@ h1 {
     margin-left: 20px
 }
 
+/*progress bar*/
+@keyframes rainbow {
+  0% { background-position: 0% 100%; }
+  50% { background-position: 100% 200%; }
+  100% {background-position: 0% 100%; }
+}
+#progress-bar {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+
+    width: 100%;
+    height: 2px;
+    z-index: 9999;
+
+    background: linear-gradient(124deg, #ff2400, #e81d1d, #e8b71d, #e3e81d, #1de840, #1ddde8, #2b1de8, #dd00f3, #dd00f3);
+    background-size: 900% 900%;
+
+    animation: rainbow 9s ease infinite;
+}
+
 /*thumbnail*/
 .thumbnail {
     padding-left: 24px;
