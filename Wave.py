@@ -3,7 +3,7 @@ from app import create_app, bootstrap, db, mail, migrate, babel, moment
 from app.models import User, Tag, Post, Users_Tags, Posts_Tags
 from app.email import send_email
 
-app = create_app(os.getenv('FLASK_ENV') or 'default')
+app = create_app(os.getenv('FLASK_ENV'))
 
 
 @app.shell_context_processor

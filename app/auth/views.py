@@ -20,7 +20,7 @@ def register():
         db.session.commit()
         login_user(u)
         token = u.generate_confirmation_token()
-        email.send_email(form.email.data, _(u'Confirm your registration'), 'auth/email/confirm',
+        email.send_email((u.username, form.email.data), _(u'Confirm your registration'), 'auth/email/confirm',
                          user=u, token=token)
         flash(_(u'A confirmation email has been send to you by email.'))
         return redirect(url_for('auth.unconfirmed'))
