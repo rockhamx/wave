@@ -1,14 +1,11 @@
 {% if current_user == user %}
-    {#                                <button class="close" type="button" onclick="">#}
-    {#                                    <span class="glyphicon glyphicon-collapse-down" aria-hidden="true"></span>#}
-    {#                                </button>#}
     <div class="btn-group author-menu">
         <button class="close dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
             <span class="glyphicon glyphicon-menu-down" aria-hidden="true"></span>
         </button>
         <ul class="dropdown-menu">
-            <li><a class="btn-link" href="{{ url_for('post.edit', id=post.id) }}"><button class="btn-link">{{ _('Edit') }}</button></a></li>
-            <li><a><button id="{{ post.id }}" class="btn-link delete_post">{{ _('Delete') }}</button></a></li>
+            <li><a href="{{ url_for('post.edit', id=post.id) }}">{{ _('Edit') }}</a></li>
+            <li><a data-id="{{ post.id }}" data-toggle="modal" data-target="#confirmModal">{{ _('Delete') }}</a></li>
 {#            <li><a href=""></a></li>#}
         </ul>
     </div>
@@ -31,11 +28,8 @@
                             onclick="unfollow('{{ current_user.username }}','{{ post.author.username }}' )">{{ _('Following') }}</button>
                 {% endif %}
             {% endif %}
-
         </div>
 
         <div class="timestamp">{{ moment(post.pub_timestamp).calendar() }}</div>
     </div>
-
 </div>
-

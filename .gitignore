@@ -125,3 +125,6 @@ dmypy.json
 .pyre/
 
 # IDE
+
+# Dependency directories
+node_modules/

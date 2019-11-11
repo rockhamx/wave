@@ -1,4 +1,4 @@
-{% extends "base.html" %}
+{% extends "base_infinite_scroll.html" %}
 
 {% block title %}{{ _('%(name)s\'s profile', name = user.username) }}{% endblock %}
 
@@ -27,19 +27,22 @@
         </div>
     {% endif %}
 
+    <div class="modal fade" id="confirmModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="myModalLabel">{{ _('Confirm your deletion') }}</h4>
+                </div>
+                <div class="modal-body">
+                    {{_('Are you really sure to delete this post? This operation is not reversible!')}}
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">{{ _('Cancel') }}</button>
+                    <button type="button" class="btn btn-primary">{{ _('Confirm') }}</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
 {% endblock %}
-
-
-{% block scripts %}
-    {{ super() }}
-    <script src="{{ url_for('static', filename='js/infinite-scroll.pkgd.min.js') }}"></script>
-{% endblock %}
-
-{#<script>#}
-{#    $(document).ready(function () {#}
-{#        var since = "{{ user.member_since.strftime('%Y-%m-%dT%H:%M:%S' + 'Z') }}";#}
-{#        var last = "{{ user.last_seen.strftime('%Y-%m-%dT%H:%M:%S' + 'Z') }}";#}
-{#        $('span#member_since').text(moment(since).format('L'))#}
-{#        $('span#last_seen').text(moment(last).fromNow())#}
-{#    })#}
-{#</script>#}

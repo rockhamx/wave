@@ -49,7 +49,7 @@ def edit(id):
 @login_required
 def delete():
     result = "Failure"
-    id = request.form['id']
+    id = request.form.get('id', None)
     if id:
         p = Post.query.filter_by(id=id).first()
         if p:
@@ -75,6 +75,15 @@ def newest():
     page = request.args.get('page', 1, type=int)
     posts = Post.newest(page)
     return render_template('newest.html', posts=posts)
+
+
+@post.route('/search')
+def search():
+    query = request.args.get('q', default='')
+    query = '%{}%'.format(query)
+    page = request.args.get('page', 1, type=int)
+    posts = Post.search(page, query, query, query)
+    return render_template('search.html', posts=posts)
 
 
 @post.route('/followed')

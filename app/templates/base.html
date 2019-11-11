@@ -1,6 +1,6 @@
 {% extends "bootstrap/base.html" %}
 
-{% block html_attribs %} lang="zh-cmn-hans"{% endblock %}
+{#{% block html_attribs %} lang="zh-cmn-hans"{% endblock %}#}
 {#{% block html_attribs %} lang="en"{% endblock %}#}
 
 {% block title %}{{ _('Home') }} | {{ 'Wave' }}{% endblock %}
@@ -56,10 +56,11 @@
       </ul>
 {#      user dropdown menu#}
       <ul class="nav navbar-nav navbar-right">
+
         {% if current_user.is_authenticated %}
           <li class="dropdown">
             <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                <img src="{{ current_user.avatar(size=19) }}" alt="avatar" class="avatar"><b class="caret"></b>
+                <img src="{{ current_user.avatar(size=30) }}" alt="avatar" class="avatar"><b class="caret"></b>
             </a>
             <ul class="dropdown-menu">
 {#                <li>#}
@@ -128,6 +129,15 @@
             <li><a href="{{ url_for('auth.login') }}">{{ _('Sign in') }}</a></li>
         {% endif %}
       </ul>
+
+        <div class="col-sm-4 col-md-3 navbar-right">
+            <div class="input-group">
+                <input type="text" class="form-control" placeholder="{{ _('Search for...') }}">
+                <span class="input-group-btn">
+                    <button class="btn btn-default" id="search" type="button">{{ _('Go!') }}</button>
+                </span>
+            </div><!-- /input-group -->
+        </div>
     </div><!--/.nav-collapse -->
   </div>
 </nav>
@@ -137,7 +147,7 @@
 
     <div class="container">
       {% for message in get_flashed_messages() %}
-      <div class="alert alert-info">
+      <div class="alert alert-info fade in">
         <button class="close" type="button" data-dismiss="alert">x</button>
         {{ message }}
       </div>
@@ -162,5 +172,8 @@
     {% else %}
         {{ moment.locale(auto_detect=True) }}
     {% endif %}
+    <script type=text/javascript>
+      $URL_ROOT = {{ request.url_root|tojson|safe }};
+    </script>
 
 {% endblock %}

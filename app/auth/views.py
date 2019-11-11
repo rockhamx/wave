@@ -1,6 +1,6 @@
 from flask import render_template, redirect, request, url_for, flash, current_app
 from flask_login import login_user, logout_user, login_required, current_user
-from flask_babel import refresh, gettext as _
+from flask_babel import refresh, gettext as _, get_locale
 
 from app.email import send_email
 from . import auth, RegistrationForm, LoginForm, ChangePasswordForm, PasswordResetRequestForm, PasswordResetForm, \
@@ -9,13 +9,25 @@ from ..models import User
 from .. import db, email
 
 
+@auth.before_app_request
+def before_request():
+    if current_user.is_authenticated:
+        current_user.ping()
+        if not current_user.confirmed \
+            and request.endpoint \
+            and request.blueprint != 'auth' \
+            and request.endpoint != 'static':
+            return redirect(url_for('auth.unconfirmed'))
+
+
 @auth.route('/getting-on-board', methods=('GET', 'POST'))
 def register():
     form = RegistrationForm()
     if form.validate_on_submit():
         u = User(email=form.email.data.lower(),
                  username=form.username.data.lower(),
-                 password=form.password.data)
+                 password=form.password.data,
+                 locale=str(get_locale()))
         db.session.add(u)
         db.session.commit()
         login_user(u)
@@ -52,17 +64,6 @@ def logout():
     logout_user()
     flash(_(u'You have been logout. See you around!'))
     return redirect(url_for('frontend.index'))
-
-
-@auth.before_app_request
-def before_request():
-    if current_user.is_authenticated:
-        current_user.ping()
-        if not current_user.confirmed \
-            and request.endpoint \
-            and request.blueprint != 'auth' \
-            and request.endpoint != 'static':
-            return redirect(url_for('auth.unconfirmed'))
 
 
 @auth.route('/confirm/<token>')

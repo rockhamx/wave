@@ -11,8 +11,9 @@ from .forms import EditProfileForm
 # @login_required
 @babel.localeselector
 def get_locale():
-    if getattr(current_user, 'locale', None):
-        return current_user.locale
+    locale = getattr(current_user, 'locale', None)
+    if locale:
+        return locale
     return request.accept_languages.best_match(current_app.config['SUPPORTED_LANGUAGES'])
 
 
@@ -27,6 +28,11 @@ def get_timezone():
 @frontend.route('/')
 def index():
     return render_template('index.html')
+
+
+@frontend.route('/react')
+def react():
+    return render_template('react.html')
 
 
 # User Profile
@@ -101,6 +107,14 @@ def followers(username):
     users = u.followers_desc_by_time()
     return render_template('user/followers.html', username=username, users=users)
 
+
+@frontend.route('/search/user')
+def search():
+    query = request.args.get('q', default='')
+    query = '%{}%'.format(query)
+    page = request.args.get('page', 1, type=int)
+    users = User.search(page, query, query)
+    return render_template('user/search.html', users=users)
 
 # @frontend.route('/tags', methods=['GET'])
 # @login_required

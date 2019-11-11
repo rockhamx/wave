@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+
+{% block content %}
+{{ super() }}
+    <div class="row">
+        <div class="col-sm-12 col-md-12">
+
+            <div id="like_button_container"></div>
+        </div>
+    </div>
+{% endblock %}
+
+
+{% block scripts %}
+    {{ super() }}
+  <!-- Load React. -->
+  <!-- Note: when deploying, replace "development.js" with "production.min.js". -->
+  <script src="https://unpkg.com/react@16/umd/react.development.js" crossorigin></script>
+  <script src="https://unpkg.com/react-dom@16/umd/react-dom.development.js" crossorigin></script>
+
+{% endblock %}

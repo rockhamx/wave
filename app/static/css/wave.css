@@ -1,9 +1,28 @@
 /*general*/
+html {
+    overflow-x: hidden;
+    overflow-y: scroll;
+}
 body > div.container:first-of-type {
     margin-top: 68px;
 }
 .content {
   padding: 40px 15px;
+}
+.row {
+/*.navbar .container {*/
+    max-width: 1000px;
+    margin-left: auto;
+    margin-right: auto;
+}
+.dropdown-menu>li>a {
+    cursor: pointer;
+}
+.navbar-fixed-top {
+    box-shadow: 0 4px 12px 0 rgba(0,0,0,.05);
+}
+.nav-tabs {
+    margin-bottom: 20px;
 }
 h1 {
   /*text-align: center;*/
@@ -33,9 +52,13 @@ h1 {
 .navbar-brand {
     /*padding: 2px 2px;*/
     padding: 0 0;
+    margin-right: 20px;
 }
-.navbar-nav {
-    margin-left: 20px
+.navbar-right>li>a {
+    padding: 10px;
+}
+.navbar-right>.input-group {
+    margin-top: 8px;
 }
 
 /*progress bar*/
@@ -65,6 +88,7 @@ h1 {
 .thumbnail {
     padding-left: 24px;
     padding-right: 24px;
+    box-shadow: 0 1px 4px rgba(0,0,0,.04);
 }
 .profile {
     min-height: 300px;
@@ -83,12 +107,6 @@ h1 {
 }
 .profile .caption {
     display: inline-block;
-}
-.row {
-/*.navbar .container {*/
-    max-width: 900px;
-    margin-left: auto;
-    margin-right: auto;
 }
 li .glyphicon {
     margin-right: 1rem;

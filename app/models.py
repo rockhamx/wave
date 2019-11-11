@@ -2,6 +2,7 @@ import bleach
 from langdetect import detect
 from langdetect.lang_detect_exception import LangDetectException
 from markdown import markdown
+from sqlalchemy import or_
 from werkzeug.security import generate_password_hash, check_password_hash
 from itsdangerous import TimedJSONWebSignatureSerializer as Serializer, SignatureExpired
 import jwt
@@ -13,6 +14,7 @@ from datetime import datetime
 from time import time
 from hashlib import md5
 
+# per_page =
 
 follows = db.Table('follows',
                    db.Column('follower_id', db.Integer, db.ForeignKey('users.id'), primary_key=True),
@@ -34,7 +36,7 @@ class User(UserMixin, db.Model):
     member_since = db.Column(db.DateTime(), default=datetime.utcnow)
     last_seen = db.Column(db.DateTime(), default=datetime.utcnow)
     email_hash = db.Column(db.String(32))
-    locale = db.Column(db.String(8), default='')
+    locale = db.Column(db.String(8), default='en_US')
     timezone = db.Column(db.String(8), default='UTC+8')
     is_administrator = db.Column(db.Boolean, default=False)
     posts = db.relationship('Post', lazy='dynamic', backref=db.backref('author', lazy='select'))
@@ -150,6 +152,16 @@ class User(UserMixin, db.Model):
         own = Post.query.filter_by(author_id=self.id)
         return followed.union(own).order_by(Post.pub_timestamp.desc())
 
+    @staticmethod
+    def search(page=1, name_pattern='%%', description_pattern='%%'):
+        return User.query.filter(
+            User.name.ilike(name_pattern) |
+            User.description.ilike(description_pattern)
+        ).paginate(
+            page, per_page=10,
+            error_out=False
+        ).items
+
 
 class AnonymousUser(AnonymousUserMixin):
     is_administrator = False
@@ -190,6 +202,8 @@ class Post(db.Model):
     __tablename__ = 'posts'
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String(80), nullable=False)
+    subtitle = db.Column(db.String(80), nullable=True)
+    description = db.Column(db.String(256), nullable=True)
     body = db.Column(db.Text(), nullable=False)
     html = db.Column(db.Text())
     preview = db.Column(db.Text())
@@ -206,13 +220,27 @@ class Post(db.Model):
     comments = db.relationship('Comment', lazy='dynamic',
                                backref=db.backref('post', lazy='select'))
 
+    def __init__(self, **kwargs):
+        super(Post, self).__init__(**kwargs)
+
     def click(self):
         self.clicked += 1
 
     @staticmethod
-    def newest(page):
+    def newest(page=1):
         return Post.query.order_by(Post.pub_timestamp.desc()).paginate(
             page, per_page=current_app.config['WAVE_POSTS_PER_PAGE'],
+            error_out=False
+        ).items
+
+    @staticmethod
+    def search(page=1, title_pattern='%%', subtitle_pattern='%%', description_pattern='%%'):
+        return Post.query.filter(
+            Post.title.ilike(title_pattern) |
+            Post.subtitle.ilike(subtitle_pattern) |
+            Post.preview.ilike(description_pattern)
+        ).order_by(Post.pub_timestamp.desc()).paginate(
+            page, per_page=10,
             error_out=False
         ).items
 
@@ -228,22 +256,21 @@ class Post(db.Model):
         allowed_tags = current_app.config['WAVE_ALLOWED_TAGS']
         md = markdown(value, output_format='html')
         target.html = bleach.linkify(bleach.clean(md, tags=allowed_tags))
-        # preview of post, extract first 30 words
-        nth_words = 100
-        cleaned = bleach.linkify(bleach.clean(md[:1000], tags=['a'], strip=True))
+        # preview of post, extract first 64 words
+        cleaned = bleach.clean(md, tags=[], strip=True)
+        nth_words = 64
         # 中文
         if 'zh' in target.language:
             preview = cleaned[:nth_words]
         # latin
         else:
             index = 0
-            for _ in range(nth_words):
-                try:
+            try:
+                for _ in range(nth_words):
                     index = cleaned.index(' ', index + 1)
-                except ValueError:
-                    index = 500
-            preview = cleaned[:index]
-        target.preview = preview + '<b>...</b>'
+                target.preview = cleaned[:index] + '...'
+            except ValueError:
+                target.preview = cleaned[:index]
 
 
 db.event.listen(Post.body, 'set', Post.on_changed_body)
