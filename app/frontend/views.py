@@ -38,13 +38,13 @@ def react():
 # User Profile
 @frontend.route('/<username>')
 def user(username):
-    u = User.query.filter_by(username=username).first_or_404()
+    user = User.query.filter_by(username=username).first_or_404()
     page = request.args.get('page', 1, type=int)
-    posts = u.posts.order_by(Post.edit_timestamp.desc()).paginate(
+    posts = user.posts.order_by(Post.edit_timestamp.desc()).paginate(
         page=page, per_page=current_app.config['WAVE_POSTS_PER_PAGE'],
         error_out=False
     ).items
-    return render_template('user/profile.html', user=u, posts=posts)
+    return render_template('user/profile.html', user=user, posts=posts)
 
 
 @frontend.route('/edit-profile', methods=['GET', 'POST'])

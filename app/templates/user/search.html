@@ -13,6 +13,8 @@
                 {% for user in users %}
                     {% include "user/_user_preview.html" %}
                 {% endfor %}
+                <div class="tabs"></div>
+
             </div>
             {% if request.base_url == request.url %}
                 <a class="pagination__next" href="{{ url_for('frontend.search') }}?page=2"></a>

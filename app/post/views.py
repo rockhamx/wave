@@ -4,8 +4,8 @@ from flask_login import login_required, current_user
 
 from . import post
 from app import db
-from app.models import Post
-from .forms import PostForm
+from app.models import Post, Comment
+from .forms import PostForm, CommentForm
 
 
 @post.route('/write', methods=['GET', 'POST'])
@@ -20,6 +20,12 @@ def write():
         flash(_(u'Your post has been published.'))
         return redirect(url_for('frontend.user', username=current_user.username))
     return render_template('user/write.html', form=form)
+
+
+@post.route('/new')
+@login_required
+def new():
+    return render_template('new.html')
 
 
 @post.route('/edit_post/<int:id>', methods=['GET', 'POST'])
@@ -61,13 +67,20 @@ def delete():
     })
 
 
-@post.route('/article/<int:id>')
+@post.route('/article/<int:id>', methods=['GET', 'POST'])
 def article(id):
-    p = Post.query.filter_by(id=id).first()
-    p.click()
-    db.session.add(p)
-    db.session.commit()
-    return render_template('article.html', post=p)
+    form = CommentForm()
+    post = Post.query.filter_by(id=id).first()
+    if form.validate_on_submit():
+        if not current_user.is_authenticated:
+            redirect(url_for('frontend.login'))
+        comment = Comment(content=form.content.data,
+                          author_id=current_user.id,
+                          post_id=id)
+        db.session.add(comment)
+        db.session.commit()
+        flash(_(u'Your comment has been published.'))
+    return render_template('article.html', post=post, form=form)
 
 
 @post.route('/newest')

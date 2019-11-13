@@ -1,7 +1,7 @@
 from flask_babel import lazy_gettext as _l
 from flask_pagedown.fields import PageDownField
 from flask_wtf import FlaskForm
-from wtforms import StringField, SubmitField, BooleanField
+from wtforms import StringField, SubmitField, BooleanField, TextAreaField
 from wtforms.validators import InputRequired
 
 
@@ -11,6 +11,11 @@ class PostForm(FlaskForm):
     is_public = BooleanField(_l(u'Only visible for myself'))
     # TODO: add tags field
     # tags =
+    submit = SubmitField(_l(u'Publish now'))
+
+
+class CommentForm(FlaskForm):
+    content = TextAreaField(_l(u'Write a comment'), [InputRequired()])
     submit = SubmitField(_l(u'Publish'))
 
 

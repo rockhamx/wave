@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% import "bootstrap/wtf.html" as wtf %}
 
 {% block title %}
     {{ post.title }} | {{ 'Wave' }}
@@ -11,13 +12,28 @@
         <div class="col-xs-12 col-md-12">
             <div class="thumbnail article-detail">
 
+                {% with author = post.author, content = post %}
                 {% include "_author_bar.html" %}
+                {% endwith %}
 
                 <h1>{{ post.title }}</h1>
                 {{ post.html | safe }}
 
                 {% include "user/_post_statusbar.html" %}
             </div>
+        </div>
+    </div>
+
+    {% set comments = post.comments %}
+    <div class="row">
+        <div class="col-xs-12 col-md-12">
+            <div class="thumbnail">
+                {{ wtf.quick_form(form) }}
+            </div>
+            {% set type = "comment" %}
+            {% for comment in comments %}
+                {% include "_comment.html" %}
+            {% endfor %}
         </div>
     </div>
 {% endblock %}

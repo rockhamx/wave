@@ -124,6 +124,9 @@ dmypy.json
 # Pyre type checker
 .pyre/
 
+# databases
+*.sqlite
+
 # IDE
 
 # Dependency directories

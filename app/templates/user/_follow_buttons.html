@@ -1,0 +1,16 @@
+
+{% if current_user.is_authenticated and current_user != user %}
+
+    {% if current_user.is_following(user) %}
+
+        <button class="btn btn-primary btn-xxs btn-follow {{ user.username }}" data-state="following"
+                data-author='{{ user.username }}' >{{ _('Following') }}</button>
+
+    {% else %}
+
+        <button class="btn btn-default btn-xxs btn-follow {{ user.username }}" data-state="unfollow"
+                data-author='{{ user.username }}' >{{ _('Follow') }}</button>
+
+    {% endif %}
+
+{% endif %}

@@ -6,7 +6,6 @@
 
     {{ super() }}
 
-    {% if posts %}
         <div class="row">
             <div class="col-xs-12 col-md-12 articles">
                 <h1>{{ _('My Followed Article') }}</h1>
@@ -16,7 +15,6 @@
             </div>
             <a class="pagination__next" href="{{ url_for('post.followed') }}?page=2"></a>
         </div>
-    {% endif %}
 
 {% endblock %}
 

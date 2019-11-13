@@ -40,6 +40,8 @@ class User(UserMixin, db.Model):
     timezone = db.Column(db.String(8), default='UTC+8')
     is_administrator = db.Column(db.Boolean, default=False)
     posts = db.relationship('Post', lazy='dynamic', backref=db.backref('author', lazy='select'))
+    comments = db.relationship('Comment', lazy='dynamic',
+                               backref=db.backref('author', lazy='select'))
     tags = db.relationship('Tag', secondary='users_tags', lazy='subquery',
                            backref=db.backref('users', lazy=True))
     following = db.relationship('User', secondary='follows', lazy='dynamic',
@@ -247,6 +249,8 @@ class Post(db.Model):
     # @db.event.listen_for(Post.body, 'set', Post.on_cha)
     @staticmethod
     def on_changed_body(target, value, oldvalue, initiator):
+        # update edit timestamp
+        target.edit_timestamp = datetime.utcnow()
         # add languages guessing
         try:
             target.language = detect(value)
@@ -280,9 +284,10 @@ class Comment(db.Model):
     __tablename__ = 'comments'
     id = db.Column(db.Integer, primary_key=True)
     content = db.Column(db.Text, nullable=False)
+    pub_timestamp = db.Column(db.DateTime, default=datetime.utcnow, nullable=False, index=True)
+    edit_timestamp = db.Column(db.DateTime, default=datetime.utcnow)
     author_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
     post_id = db.Column(db.Integer, db.ForeignKey('posts.id'), nullable=False)
-    timestamp = db.Column(db.DateTime, default=datetime.utcnow, nullable=False, index=True)
 
 
 class Hearts(db.Model):

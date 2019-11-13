@@ -1,7 +1,9 @@
 
 <div class="thumbnail article-preview">
 
-    {% include "_author_bar.html" %}
+    {% with author = post.author, content = post, type = "post" %}
+        {% include "_author_bar.html" %}
+    {% endwith %}
 
     <h3><a href="{{ url_for('post.article', id=post.id) }}">{{ post.title }}</a>
 

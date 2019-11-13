@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2019-11-07 00:55+0800\n"
+"POT-Creation-Date: 2019-11-14 06:22+0800\n"
 "PO-Revision-Date: 2019-11-05 16:23+0800\n"
 "Last-Translator: \n"
 "Language: zh\n"
@@ -94,75 +94,75 @@ msgstr "您输入的电子邮箱与之前的相同。"
 msgid "Reset Password"
 msgstr "重置密码"
 
-#: app/auth/views.py:23 app/auth/views.py:96
+#: app/auth/views.py:35 app/auth/views.py:97
 #: app/templates/auth/unconfirmed.html:4 app/templates/auth/unconfirmed.html:10
 msgid "Confirm your registration"
 msgstr "认证您的注册"
 
-#: app/auth/views.py:25 app/auth/views.py:98
+#: app/auth/views.py:37 app/auth/views.py:99
 msgid "A confirmation email has been send to you by email."
 msgstr "一封包含验证链接的电子邮件已经发送到您的邮箱，请检查您的收件箱或垃圾邮件箱，该链接只在十分钟之内有效，请尽快验证。"
 
-#: app/auth/views.py:43
+#: app/auth/views.py:55
 #, python-format
 msgid "Welcome back, %(name)s!"
 msgstr "欢迎回来，%(name)s！"
 
-#: app/auth/views.py:45
+#: app/auth/views.py:57
 msgid "Invalid username or password."
 msgstr "无效的用户名或密码。"
 
-#: app/auth/views.py:53
+#: app/auth/views.py:65
 msgid "You have been logout. See you around!"
 msgstr "您已经登出，下次见！"
 
-#: app/auth/views.py:72
+#: app/auth/views.py:73
 msgid "You've already confirmed your account."
 msgstr "您之前已经认证过你的帐号。"
 
-#: app/auth/views.py:75
+#: app/auth/views.py:76
 msgid "You have confirmed your account.Thanks!"
 msgstr "您的帐号已经成功认证，谢谢！"
 
-#: app/auth/views.py:78
+#: app/auth/views.py:79
 msgid "The confirmation link is invalid or expired."
 msgstr "这个验证链接不可用或者已过期，点击此处重新获得一封验证邮件。"
 
-#: app/auth/views.py:111 app/auth/views.py:144
+#: app/auth/views.py:112 app/auth/views.py:145
 msgid "Your password has been updated."
 msgstr "您的密码已更新，请用新的密码登录。"
 
-#: app/auth/views.py:114
+#: app/auth/views.py:115
 msgid "Invalid password."
 msgstr "非常抱歉，您输入的密码不正确。"
 
-#: app/auth/views.py:127
+#: app/auth/views.py:128
 msgid "Reset Your Password"
 msgstr "重置您的密码"
 
-#: app/auth/views.py:130
+#: app/auth/views.py:131
 msgid "An email with instructions to reset your password has been sent to you."
 msgstr "一封包含重置密码说明的电子邮件已经发送到您的邮箱，请检查您的收件箱或垃圾邮件箱，该链接只在十分钟之内有效？请尽快验证。"
 
-#: app/auth/views.py:159
+#: app/auth/views.py:160
 msgid "Confirm your email address"
 msgstr "认证您的电子邮箱"
 
-#: app/auth/views.py:162
+#: app/auth/views.py:163
 msgid ""
 "An email with instructions to confirm your new email address has been "
 "sent to you."
 msgstr "一封包含认证新电子邮箱的说明的电子邮件已经发送到您的邮箱，请检查您的收件箱或垃圾邮件箱，该链接只在十分钟之内有效？请尽快验证。"
 
-#: app/auth/views.py:166
+#: app/auth/views.py:167
 msgid "Invalid email or password."
 msgstr "无效的电子邮箱或密码。"
 
-#: app/auth/views.py:175
+#: app/auth/views.py:176
 msgid "Your email address has been updated."
 msgstr "您的电子邮箱地址已更新。"
 
-#: app/auth/views.py:177
+#: app/auth/views.py:178
 msgid "Invalid request."
 msgstr "验证链接无效或已过期。"
 
@@ -186,21 +186,19 @@ msgstr "语言选择"
 msgid "Save profile"
 msgstr "保存"
 
-#: app/frontend/views.py:58
+#: app/frontend/views.py:64
 msgid "Your profile has been updated."
 msgstr "您的个人信息已更新。"
 
-#: app/frontend/views.py:70 app/frontend/views.py:87
-#: app/templates/_author_bar.html:28 app/templates/user/_profile.html:45
-#: app/templates/user/_user_preview.html:12
-msgid "Follow"
-msgstr "关注"
-
-#: app/frontend/views.py:75 app/frontend/views.py:82
-#: app/templates/_author_bar.html:31 app/templates/user/_profile.html:47
-#: app/templates/user/_user_preview.html:14
+#: app/frontend/views.py:80 app/templates/user/_follow_buttons.html:7
+#: app/templates/user/_profile.html:50
 msgid "Following"
 msgstr "已关注"
+
+#: app/frontend/views.py:92 app/templates/user/_follow_buttons.html:12
+#: app/templates/user/_profile.html:55
+msgid "Follow"
+msgstr "关注"
 
 #: app/post/forms.py:9
 msgid "Tittle"
@@ -215,6 +213,14 @@ msgid "Only visible for myself"
 msgstr "只对我可见"
 
 #: app/post/forms.py:14
+msgid "Publish now"
+msgstr "现在发布"
+
+#: app/post/forms.py:18
+msgid "Write a comment"
+msgstr "写一条评论吧"
+
+#: app/post/forms.py:19
 msgid "Publish"
 msgstr "发布"
 
@@ -222,105 +228,158 @@ msgstr "发布"
 msgid "Your post has been published."
 msgstr "您的文章已发布"
 
-#: app/post/views.py:31
+#: app/post/views.py:37
 msgid "You have not authorized to this operation."
 msgstr "您没有权限执行此项操作。"
 
-#: app/post/views.py:40
+#: app/post/views.py:46
 msgid "You post has been updated."
 msgstr "您的文章已更新。"
+
+#: app/post/views.py:82
+msgid "Your comment has been published."
+msgstr "您的评论已发布"
 
 #: app/templates/Followed_posts.html:3
 #, python-format
 msgid "%(name)s's HomePage"
 msgstr "%(name)s的主页"
 
-#: app/templates/Followed_posts.html:21 app/templates/base.html:44
+#: app/templates/Followed_posts.html:11 app/templates/base.html:53
 msgid "My Followed Article"
 msgstr "我关注的文章"
 
-#: app/templates/_author_bar.html:10
+#: app/templates/_author_bar.html:7
 msgid "Edit"
 msgstr "编辑"
 
-#: app/templates/_author_bar.html:11
+#: app/templates/_author_bar.html:8
 msgid "Delete"
 msgstr "删除"
+
+#: app/templates/_author_bar.html:27
+#, python-format
+msgid "Published on %(date)s"
+msgstr "发布与%(date)s"
+
+#: app/templates/_author_bar.html:29
+msgid ","
+msgstr "，"
+
+#: app/templates/_author_bar.html:30
+#, python-format
+msgid "Last edited on %(date)s"
+msgstr "最近一次修改在%(date)s"
 
 #: app/templates/base.html:6
 msgid "Home"
 msgstr "主页"
 
-#: app/templates/base.html:39
+#: app/templates/base.html:44
 msgid "Wave"
 msgstr ""
 
-#: app/templates/base.html:43 app/templates/newest.html:12
+#: app/templates/base.html:51 app/templates/newest.html:12
 msgid "Newest"
 msgstr "最新"
 
-#: app/templates/base.html:46
-msgid "Profile"
-msgstr "个人信息"
+#: app/templates/base.html:55 app/templates/base.html:84
+msgid "Me"
+msgstr "我"
 
-#: app/templates/base.html:47 app/templates/base.html:64
-msgid "Write a article"
-msgstr "写文章"
+#: app/templates/base.html:57 app/templates/base.html:78
+#: app/templates/user/write.html:4
+msgid "Writing"
+msgstr "写作"
 
-#: app/templates/base.html:48
+#: app/templates/base.html:59
 msgid "About"
 msgstr "关于"
 
-#: app/templates/base.html:69
-msgid "My profile"
-msgstr "我的个人信息"
+#: app/templates/base.html:72
+#, python-format
+msgid "Signed in as %(name)s"
+msgstr "登录用户为：%(name)s"
 
-#: app/templates/base.html:79
+#: app/templates/base.html:90
 msgid "My following"
 msgstr "我的关注"
 
-#: app/templates/base.html:84
+#: app/templates/base.html:96
 msgid "My followers"
 msgstr "我的粉丝"
 
-#: app/templates/base.html:89
+#: app/templates/base.html:102
 msgid "Notifications"
 msgstr "提醒"
 
-#: app/templates/base.html:94
+#: app/templates/base.html:108
 msgid "Messages"
 msgstr "消息"
 
 #: app/templates/auth/change_password.html:4
-#: app/templates/auth/change_password.html:11 app/templates/base.html:99
+#: app/templates/auth/change_password.html:11 app/templates/base.html:114
 msgid "Change password"
 msgstr "更改密码"
 
 #: app/templates/auth/change_email.html:4
-#: app/templates/auth/change_email.html:11 app/templates/base.html:102
+#: app/templates/auth/change_email.html:11 app/templates/base.html:117
 msgid "Change email"
 msgstr "更改邮箱"
 
-#: app/templates/base.html:106
+#: app/templates/base.html:121
 msgid "Help"
 msgstr "帮助"
 
-#: app/templates/base.html:111
+#: app/templates/base.html:127
 msgid "Settings"
 msgstr "设置"
 
-#: app/templates/base.html:116
+#: app/templates/base.html:133
 msgid "Sign out"
 msgstr "登出"
 
 #: app/templates/auth/login.html:4 app/templates/auth/login.html:11
-#: app/templates/base.html:122
+#: app/templates/base.html:139
 msgid "Sign in"
 msgstr "登录"
+
+#: app/templates/base.html:146
+msgid "Search for..."
+msgstr "搜索..."
+
+#: app/templates/base.html:148
+msgid "Go!"
+msgstr ""
+
+#: app/templates/base_search.html:4 app/templates/search.html:4
+#: app/templates/user/search.html:4
+msgid "Search and Find"
+msgstr "搜索与寻找"
+
+#: app/templates/base_search.html:13
+msgid "Articles"
+msgstr "文章"
+
+#: app/templates/base_search.html:14
+msgid "People"
+msgstr "人们"
+
+#: app/templates/base_search.html:15
+msgid "Publications"
+msgstr "专栏"
+
+#: app/templates/base_search.html:16
+msgid "Tags"
+msgstr "标签"
 
 #: app/templates/index.html:3
 msgid "Welcome to Wave"
 msgstr "欢迎来浪"
+
+#: app/templates/new.html:3
+msgid "New post"
+msgstr ""
 
 #: app/templates/newest.html:3
 msgid "Newest article"
@@ -342,7 +401,7 @@ msgstr "找不到你想要的"
 
 #: app/templates/errors/404.html:11
 msgid "Looks like you have reached a no mans land"
-msgstr ""
+msgstr "看起来你来到了一个没人的地方"
 
 #: app/templates/errors/404.html:16
 msgid "..."
@@ -360,39 +419,46 @@ msgstr ""
 msgid "The administrator has been notified. Sorry for the inconvenience!"
 msgstr ""
 
-#: app/templates/user/_profile.html:25
+#: app/templates/user/_post_statusbar.html:7
+#, python-format
+msgid "%(count)s comment"
+msgid_plural "%(count)s comments"
+msgstr[0] "%(count)s条评论"
+
+#: app/templates/user/_profile.html:26
 #, python-format
 msgid "<b>%(following)d</b> following"
 msgstr "关注 <b>%(following)d</b> 人"
 
-#: app/templates/user/_profile.html:27
+#: app/templates/user/_profile.html:28
 msgid ", "
 msgstr "，"
 
-#: app/templates/user/_profile.html:30
+#: app/templates/user/_profile.html:31
 #, python-format
 msgid "<b id=\"followers\">%(followers)d</b> follower"
 msgid_plural "<b id=\"followers\">%(followers)d</b> followers"
 msgstr[0] "粉丝 <b id=\"followers\">%(followers)d</b> 人"
 
-#: app/templates/user/_profile.html:36
+#: app/templates/user/_profile.html:37
 #, python-format
 msgid "Joined Wave since %(time)s."
 msgstr "于%(time)s加入Wave。"
 
-#: app/templates/user/_profile.html:37
+#: app/templates/user/_profile.html:38
 #, python-format
 msgid "Last seen %(time)s."
 msgstr "最近一次出现在%(time)s。"
 
-#: app/templates/user/_profile.html:41 app/templates/user/edit_profile.html:4
+#: app/templates/user/_profile.html:44 app/templates/user/edit_profile.html:4
 #: app/templates/user/edit_profile.html:11
 msgid "Edit Profile"
 msgstr "编辑个人信息"
 
 #: app/templates/user/_tags.html:3
-msgid "My tags"
-msgstr "我的标签"
+#, python-format
+msgid "%(name)s's tags"
+msgstr "%(name)s的标签"
 
 #: app/templates/user/followers.html:3
 #, python-format
@@ -419,13 +485,41 @@ msgstr "%(name)s关注了"
 msgid "%(name)s's profile"
 msgstr "%(name)s的个人信息"
 
-#: app/templates/user/profile.html:21
+#: app/templates/user/profile.html:18
 msgid "Latest"
 msgstr "最近"
 
-#: app/templates/user/write.html:4
-msgid "Writing"
-msgstr "写作"
+#: app/templates/user/profile.html:31
+msgid "Confirm your deletion"
+msgstr "确认删除"
+
+#: app/templates/user/profile.html:34
+msgid "Are you really sure to delete this post? This operation is not reversible!"
+msgstr "您确定要删除这篇文章吗？这个操作将不可逆转！"
+
+#: app/templates/user/profile.html:37
+msgid "Cancel"
+msgstr "取消"
+
+#: app/templates/user/profile.html:38
+msgid "Confirm"
+msgstr "确认"
+
+#: app/templates/user/write.html:10
+msgid "Ready to publish?"
+msgstr "准备发布？"
+
+#: app/templates/user/write.html:44
+msgid "Ready to publish"
+msgstr "准备发布"
+
+#: app/templates/user/write.html:47
+msgid "Article Preview"
+msgstr "文章预览"
+
+#: app/templates/user/write.html:52
+msgid "Close"
+msgstr "关闭"
 
 #: venv/lib/python3.7/site-packages/flask_wtf/file.py:51
 #: venv/lib/python3.7/site-packages/wtforms/validators.py:205
@@ -606,9 +700,21 @@ msgstr ""
 #~ msgid "My Followed Ariticle"
 #~ msgstr ""
 
-#~ msgid "Writting"
-#~ msgstr "写作"
-
 #~ msgid "Are you sure to delete this post?"
 #~ msgstr "您确定要删除这篇文章吗？"
+
+#~ msgid "Profile"
+#~ msgstr "个人信息"
+
+#~ msgid "Write a article"
+#~ msgstr "写文章"
+
+#~ msgid "My profile"
+#~ msgstr "我的个人信息"
+
+#~ msgid "My tags"
+#~ msgstr "我的标签"
+
+#~ msgid "signed in as %(name)s"
+#~ msgstr ""
 
