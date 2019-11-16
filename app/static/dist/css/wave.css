@@ -27,6 +27,10 @@ body > div.container:first-of-type {
 .nav-tabs {
     margin-bottom: 20px;
 }
+.btn-group.open .dropdown-toggle {
+    box-shadow: inherit;
+    -webkit-box-shadow: inherit;
+}
 h1 {
   /*text-align: center;*/
 }
@@ -117,17 +121,33 @@ h1 {
 li .glyphicon {
     margin-right: 1rem;
 }
+
+/*statusbar*/
 .statusbar {
     display: block;
+    line-height: 18px;
+    height: 18px;
     margin-top: 23px;
 }
-.statusbar .glyphicon {
-    margin-right: 0.5rem;
+.statusbar .glyphicon,
+.statusbar a {
+    margin-right: 5px;
+    /*font-size: 18px;*/
 }
-.statusbar>a {
+.statusbar>a,
+.statusbar button {
     text-decoration: none;
     margin-right: 1rem;
-    /*padding: 3px 1rem 3px 0;*/
+    display: inline-block;
+    outline: 0;
+    border: 0;
+    padding: 0;
+    font-size: 18px;
+    height: 18px;
+    line-height: 18px;
+}
+.statusbar button:hover {
+    text-decoration: none;
 }
 .statusbar>a.float-right {
     margin-right: 0;
@@ -178,6 +198,10 @@ li .glyphicon {
 }
 .btn-follow.btn-xxs {
     margin-left: 8px;
+}
+/*comments*/
+div#write-comment {
+
 }
 
 /*user-preview*/

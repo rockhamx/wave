@@ -24,10 +24,10 @@
         </div>
     </div>
 
-    {% set comments = post.comments %}
+{#    {% set comments = post.comments %}#}
     <div class="row">
         <div class="col-xs-12 col-md-12">
-            <div class="thumbnail">
+            <div class="thumbnail" id="write-comment">
                 {{ wtf.quick_form(form) }}
             </div>
             {% set type = "comment" %}

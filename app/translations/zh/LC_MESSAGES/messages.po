@@ -260,7 +260,7 @@ msgstr "删除"
 #: app/templates/_author_bar.html:27
 #, python-format
 msgid "Published on %(date)s"
-msgstr "发布与%(date)s"
+msgstr "发布于%(date)s"
 
 #: app/templates/_author_bar.html:29
 msgid ","

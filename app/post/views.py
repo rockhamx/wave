@@ -14,7 +14,7 @@ def write():
     form = PostForm()
     if form.validate_on_submit():
         p = Post(title=form.title.data, body=form.body.data,
-                 is_public=form.is_public.data, author=current_user)
+                 is_public=form.is_public.data, author=current_user._get_current_object())
         db.session.add(p)
         db.session.commit()
         flash(_(u'Your post has been published.'))
@@ -67,27 +67,19 @@ def delete():
     })
 
 
-@post.route('/article/<int:id>', methods=['GET', 'POST'])
-def article(id):
-    form = CommentForm()
-    post = Post.query.filter_by(id=id).first()
-    if form.validate_on_submit():
-        if not current_user.is_authenticated:
-            redirect(url_for('frontend.login'))
-        comment = Comment(content=form.content.data,
-                          author_id=current_user.id,
-                          post_id=id)
-        db.session.add(comment)
-        db.session.commit()
-        flash(_(u'Your comment has been published.'))
-    return render_template('article.html', post=post, form=form)
-
-
 @post.route('/newest')
 def newest():
     page = request.args.get('page', 1, type=int)
     posts = Post.newest(page)
     return render_template('newest.html', posts=posts)
+
+
+@post.route('/followed')
+@login_required
+def followed():
+    page = request.args.get('page', 1, type=int)
+    posts = current_user.followed_posts(page)
+    return render_template('Followed_posts.html', posts=posts)
 
 
 @post.route('/search')
@@ -99,9 +91,22 @@ def search():
     return render_template('search.html', posts=posts)
 
 
-@post.route('/followed')
-@login_required
-def followed():
-    page = request.args.get('page', 1, type=int)
-    posts = current_user.followed_posts(page)
-    return render_template('Followed_posts.html', posts=posts)
+@post.route('/article/<int:id>', methods=['GET', 'POST'])
+def article(id):
+    form = CommentForm()
+    post = Post.query.filter_by(id=id).first()
+    comments = post.comments_desc_by_time()
+    if form.validate_on_submit():
+        if not current_user.is_authenticated:
+            redirect(url_for('frontend.login'))
+        comment = Comment(content=form.content.data,
+                          author_id=current_user.id,
+                          post_id=id)
+        db.session.add(comment)
+        db.session.commit()
+        flash(_(u'Your comment has been published.'))
+        return redirect(url_for('post.article', id=id))
+    return render_template('article.html', post=post, comments=comments, form=form)
+
+
+# @post.route('/')

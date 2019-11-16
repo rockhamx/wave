@@ -2,19 +2,16 @@ import bleach
 from langdetect import detect
 from langdetect.lang_detect_exception import LangDetectException
 from markdown import markdown
-from sqlalchemy import or_
 from werkzeug.security import generate_password_hash, check_password_hash
 from itsdangerous import TimedJSONWebSignatureSerializer as Serializer, SignatureExpired
 import jwt
-from flask import current_app, request
+from flask import current_app
 from flask_login import UserMixin, AnonymousUserMixin
 
 from app import db, login_manager
 from datetime import datetime
 from time import time
 from hashlib import md5
-
-# per_page =
 
 follows = db.Table('follows',
                    db.Column('follower_id', db.Integer, db.ForeignKey('users.id'), primary_key=True),
@@ -36,18 +33,20 @@ class User(UserMixin, db.Model):
     member_since = db.Column(db.DateTime(), default=datetime.utcnow)
     last_seen = db.Column(db.DateTime(), default=datetime.utcnow)
     email_hash = db.Column(db.String(32))
-    locale = db.Column(db.String(8), default='en_US')
+    locale = db.Column(db.String(12), default='en_US')
     timezone = db.Column(db.String(8), default='UTC+8')
     is_administrator = db.Column(db.Boolean, default=False)
     posts = db.relationship('Post', lazy='dynamic', backref=db.backref('author', lazy='select'))
+    user_hearts = db.relationship('Post', secondary='hearts',
+                                  back_populates='hearts_users', lazy='dynamic')
     comments = db.relationship('Comment', lazy='dynamic',
                                backref=db.backref('author', lazy='select'))
     tags = db.relationship('Tag', secondary='users_tags', lazy='subquery',
                            backref=db.backref('users', lazy=True))
     following = db.relationship('User', secondary='follows', lazy='dynamic',
-                               primaryjoin=(follows.c.follower_id == id),
-                               secondaryjoin=(follows.c.following_id == id),
-                               backref=db.backref('followers', lazy='dynamic'))
+                                primaryjoin=(follows.c.follower_id == id),
+                                secondaryjoin=(follows.c.following_id == id),
+                                backref=db.backref('followers', lazy='dynamic'))
 
     def __init__(self, **kwargs):
         super(User, self).__init__(**kwargs)
@@ -150,7 +149,7 @@ class User(UserMixin, db.Model):
     def recent_posts(self):
         followed = Post.query.join(
             follows, (follows.c.following_id == Post.author_id)).filter(
-                follows.c.follower_id == self.id)
+            follows.c.follower_id == self.id)
         own = Post.query.filter_by(author_id=self.id)
         return followed.union(own).order_by(Post.pub_timestamp.desc())
 
@@ -164,6 +163,20 @@ class User(UserMixin, db.Model):
             error_out=False
         ).items
 
+    def like(self, post, amount=1):
+        heart = Heart.query.filter_by(post_id=post.id).first()
+        if heart:
+            heart.amount += 1
+            heart.timestamp = datetime.utcnow()
+            post.hearts = heart.amount
+            # return True
+        else:
+            heart = Heart(amount=amount,
+                          user_id=self.id,
+                          post_id=post.id)
+        db.session.add_all([heart, post])
+        db.session.commit()
+
 
 class AnonymousUser(AnonymousUserMixin):
     is_administrator = False
@@ -171,12 +184,10 @@ class AnonymousUser(AnonymousUserMixin):
 
 login_manager.anonymous_user = AnonymousUser
 
-
 Users_Tags = db.Table('users_tags',
                       db.Column('user_id', db.Integer, db.ForeignKey('users.id'), primary_key=True),
                       db.Column('tag_id', db.Integer, db.ForeignKey('tags.id'), primary_key=True)
                       )
-
 
 Posts_Tags = db.Table('posts_tags',
                       db.Column('post_id', db.Integer, db.ForeignKey('posts.id'), primary_key=True),
@@ -219,6 +230,8 @@ class Post(db.Model):
     category_id = db.Column(db.Integer, db.ForeignKey('categories.id'))
     tags = db.relationship('Tag', secondary='posts_tags', lazy='subquery',
                            backref=db.backref('posts', lazy=True))
+    hearts_users = db.relationship('User', secondary='hearts',
+                                   back_populates='user_hearts', lazy='dynamic')
     comments = db.relationship('Comment', lazy='dynamic',
                                backref=db.backref('post', lazy='select'))
 
@@ -276,6 +289,13 @@ class Post(db.Model):
             except ValueError:
                 target.preview = cleaned[:index]
 
+    def comments_desc_by_time(self, page=1):
+        return self.comments.order_by(
+            Comment.pub_timestamp.desc()).paginate(
+            page=page, per_page=current_app.config['WAVE_POSTS_PER_PAGE'],
+            error_out=False
+        ).items
+
 
 db.event.listen(Post.body, 'set', Post.on_changed_body)
 
@@ -290,7 +310,7 @@ class Comment(db.Model):
     post_id = db.Column(db.Integer, db.ForeignKey('posts.id'), nullable=False)
 
 
-class Hearts(db.Model):
+class Heart(db.Model):
     __tablename__ = 'hearts'
     id = db.Column(db.Integer, primary_key=True)
     amount = db.Column(db.Integer, default=1)
@@ -298,13 +318,14 @@ class Hearts(db.Model):
     post_id = db.Column(db.Integer, db.ForeignKey('posts.id'))
     timestamp = db.Column(db.DateTime, default=datetime.utcnow, nullable=False)
 
+
 # TODO: draft table
 # class Draft(db.Model):
 
 
 # TODO: preference table
 # class UserPreference(db.Model):
-    # pass
+# pass
 
 
 @login_manager.user_loader

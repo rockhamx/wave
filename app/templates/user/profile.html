@@ -20,6 +20,7 @@
                 {% include 'user/_post_preview.html' %}
             {% endfor %}
         </div>
+{#    TODO:add bootstrap pagination#}
         <a class="pagination__next" href="{{ url_for('frontend.user', username = user.username) }}?page=2"></a>
     </div>
 
