@@ -37,12 +37,13 @@ class User(UserMixin, db.Model):
     timezone = db.Column(db.String(8), default='UTC+8')
     is_administrator = db.Column(db.Boolean, default=False)
     posts = db.relationship('Post', lazy='dynamic', backref=db.backref('author', lazy='select'))
-    user_hearts = db.relationship('Post', secondary='hearts',
-                                  back_populates='hearts_users', lazy='dynamic')
+    # user_hearts = db.relationship('Post', secondary='hearts',
+    #                               back_populates='hearts_users', lazy='dynamic')
     comments = db.relationship('Comment', lazy='dynamic',
                                backref=db.backref('author', lazy='select'))
     tags = db.relationship('Tag', secondary='users_tags', lazy='subquery',
                            backref=db.backref('users', lazy=True))
+    # publications = db.relationship('Publication', backref=db.backref('authors', lazy='dynamic'))
     following = db.relationship('User', secondary='follows', lazy='dynamic',
                                 primaryjoin=(follows.c.follower_id == id),
                                 secondaryjoin=(follows.c.following_id == id),
@@ -50,7 +51,7 @@ class User(UserMixin, db.Model):
 
     def __init__(self, **kwargs):
         super(User, self).__init__(**kwargs)
-        if self.email is not None and self.email_hash is None:
+        if self.email and self.email_hash is None:
             self.email_hash = self.gravatar_hash()
 
     @property
@@ -113,11 +114,13 @@ class User(UserMixin, db.Model):
         return md5(self.email.lower().encode('utf-8')).hexdigest()
 
     def avatar(self, size):
-        # if self.email_hash is None:
-        #     self.email_hash = self.gravatar_hash()
-        #     db.session.add(self)
-        #     db.session.commit()
         return 'https://www.gravatar.com/avatar/{}?d=identicon&s={}'.format(self.email_hash, size)
+
+    def latest_posts(self, page=1):
+        return self.posts.order_by(Post.edit_timestamp.desc()).paginate(
+            page=page, per_page=current_app.config['WAVE_POSTS_PER_PAGE'],
+            # error_out=False
+        ).items
 
     def is_following(self, user):
         return self.following.filter(
@@ -137,13 +140,28 @@ class User(UserMixin, db.Model):
     def followers_desc_by_time(self):
         return self.followers.order_by(follows.c.timestamp).all()
 
+    def bookmarks_desc_by_time(self, page):
+        return Post.query.join(
+            Bookmark, (Post.id == Bookmark.post_id)
+        ).filter(
+            Bookmark.user_id == self.id
+        ).order_by(
+            Bookmark.timestamp
+        ).paginate(
+            page=page, per_page=current_app.config['WAVE_POSTS_PER_PAGE'],
+            # error_out=False
+        ).items
+
     def followed_posts(self, page):
         return Post.query.join(
-            follows, (follows.c.following_id == Post.author_id)).filter(
-            follows.c.follower_id == self.id).order_by(
-            Post.pub_timestamp.desc()).paginate(
+            follows, (Post.author_id == follows.c.following_id)
+        ).filter(
+            follows.c.follower_id == self.id
+        ).order_by(
+            Post.pub_timestamp.desc()
+        ).paginate(
             page=page, per_page=current_app.config['WAVE_POSTS_PER_PAGE'],
-            error_out=False
+            # error_out=False
         ).items
 
     def recent_posts(self):
@@ -160,21 +178,33 @@ class User(UserMixin, db.Model):
             User.description.ilike(description_pattern)
         ).paginate(
             page, per_page=10,
-            error_out=False
+            # error_out=False
         ).items
 
     def like(self, post, amount=1):
-        heart = Heart.query.filter_by(post_id=post.id).first()
+        heart = Heart.query.filter_by(user_id=self.id, post_id=post.id).first()
         if heart:
             heart.amount += 1
+            post.hearts += 1
             heart.timestamp = datetime.utcnow()
-            post.hearts = heart.amount
             # return True
         else:
             heart = Heart(amount=amount,
                           user_id=self.id,
                           post_id=post.id)
+            post.hearts += 1
         db.session.add_all([heart, post])
+        db.session.commit()
+
+    def add_bookmark(self, post):
+        # associate with bookmark instance
+        # bookmarks = Bookmark.query.filter_by(user_id=self.id).first()
+        # if not bookmarks:
+        #     bookmarks = Bookmark(timestamp=datetime.utcnow())
+        # bookmarks.user = self
+        # self.bookmarks.append(post)
+        bookmarks = Bookmark(user_id=self.id, post_id=post.id)
+        db.session.add(bookmarks)
         db.session.commit()
 
 
@@ -184,31 +214,10 @@ class AnonymousUser(AnonymousUserMixin):
 
 login_manager.anonymous_user = AnonymousUser
 
-Users_Tags = db.Table('users_tags',
-                      db.Column('user_id', db.Integer, db.ForeignKey('users.id'), primary_key=True),
-                      db.Column('tag_id', db.Integer, db.ForeignKey('tags.id'), primary_key=True)
-                      )
 
-Posts_Tags = db.Table('posts_tags',
-                      db.Column('post_id', db.Integer, db.ForeignKey('posts.id'), primary_key=True),
-                      db.Column('tag_id', db.Integer, db.ForeignKey('tags.id'), primary_key=True)
-                      )
-
-
-class Category(db.Model):
-    __tablename__ = "categories"
-    id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(64), unique=True)
-    description = db.Column(db.String(128))
-    posts = db.relationship('Post', lazy='dynamic',
-                            backref=db.backref('category', lazy='select'))
-
-
-class Tag(db.Model):
-    __tablename__ = 'tags'
-    id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(64), unique=True, index=True)
-    description = db.Column(db.String(128))
+@login_manager.user_loader
+def load_user(id):
+    return User.query.get(int(id))
 
 
 class Post(db.Model):
@@ -222,18 +231,18 @@ class Post(db.Model):
     preview = db.Column(db.Text())
     is_public = db.Column(db.Boolean(), nullable=False)
     pub_timestamp = db.Column(db.DateTime(), default=datetime.utcnow)
-    edit_timestamp = db.Column(db.DateTime(), default=datetime.utcnow, index=True)
+    edit_timestamp = db.Column(db.DateTime(), index=True)
     language = db.Column(db.String(5), default='en')
     clicked = db.Column(db.Integer, default=0)
     hearts = db.Column(db.Integer, default=0)
     author_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
-    category_id = db.Column(db.Integer, db.ForeignKey('categories.id'))
+    publication_id = db.Column(db.Integer, db.ForeignKey('publications.id'))
+    comments = db.relationship('Comment', lazy='dynamic', cascade="all, delete-orphan",
+                               backref=db.backref('post', lazy='select'))
+    publication = db.relationship('Publication', lazy='select',
+                                  backref=db.backref('posts', lazy='dynamic', uselist=True))
     tags = db.relationship('Tag', secondary='posts_tags', lazy='subquery',
                            backref=db.backref('posts', lazy=True))
-    hearts_users = db.relationship('User', secondary='hearts',
-                                   back_populates='user_hearts', lazy='dynamic')
-    comments = db.relationship('Comment', lazy='dynamic',
-                               backref=db.backref('post', lazy='select'))
 
     def __init__(self, **kwargs):
         super(Post, self).__init__(**kwargs)
@@ -245,7 +254,7 @@ class Post(db.Model):
     def newest(page=1):
         return Post.query.order_by(Post.pub_timestamp.desc()).paginate(
             page, per_page=current_app.config['WAVE_POSTS_PER_PAGE'],
-            error_out=False
+            # error_out=False
         ).items
 
     @staticmethod
@@ -256,14 +265,17 @@ class Post(db.Model):
             Post.preview.ilike(description_pattern)
         ).order_by(Post.pub_timestamp.desc()).paginate(
             page, per_page=10,
-            error_out=False
+            # error_out=False
         ).items
 
     # @db.event.listen_for(Post.body, 'set', Post.on_cha)
     @staticmethod
     def on_changed_body(target, value, oldvalue, initiator):
-        # update edit timestamp
-        target.edit_timestamp = datetime.utcnow()
+        # set or update edit timestamp
+        if target.edit_timestamp:
+            target.edit_timestamp = target.pub_timestamp
+        else:
+            target.edit_timestamp = datetime.utcnow()
         # add languages guessing
         try:
             target.language = detect(value)
@@ -293,7 +305,7 @@ class Post(db.Model):
         return self.comments.order_by(
             Comment.pub_timestamp.desc()).paginate(
             page=page, per_page=current_app.config['WAVE_POSTS_PER_PAGE'],
-            error_out=False
+            # error_out=False
         ).items
 
 
@@ -314,10 +326,50 @@ class Heart(db.Model):
     __tablename__ = 'hearts'
     id = db.Column(db.Integer, primary_key=True)
     amount = db.Column(db.Integer, default=1)
-    user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
-    post_id = db.Column(db.Integer, db.ForeignKey('posts.id'))
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'), primary_key=True)
+    post_id = db.Column(db.Integer, db.ForeignKey('posts.id'), primary_key=True)
     timestamp = db.Column(db.DateTime, default=datetime.utcnow, nullable=False)
+    user = db.relationship('User', single_parent=True,
+                           backref=db.backref('hearted', lazy='dynamic', cascade="all, delete-orphan"))
+    post = db.relationship('Post', single_parent=True,
+                           backref=db.backref('hearted_users', lazy='dynamic', cascade="all, delete-orphan"))
 
+
+class Bookmark(db.Model):
+    __tablename__ = 'bookmarks'
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
+    post_id = db.Column(db.Integer, db.ForeignKey('posts.id'), nullable=False)
+    timestamp = db.Column(db.DateTime, default=datetime.utcnow)
+    user = db.relationship('User', single_parent=True,
+                           backref=db.backref('bookmarks', lazy='dynamic', cascade="all, delete-orphan"))
+    post = db.relationship('Post', single_parent=True,
+                           backref=db.backref('bookmarked_users', lazy='dynamic', cascade="all, delete-orphan"))
+
+
+class Publication(db.Model):
+    __tablename__ = "publications"
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(64), nullable=False, unique=True)
+    description = db.Column(db.String(128), default='')
+
+
+class Tag(db.Model):
+    __tablename__ = 'tags'
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(64), nullable=False, unique=True)
+    description = db.Column(db.String(128), default='')
+
+
+Users_Tags = db.Table('users_tags',
+                      db.Column('user_id', db.Integer, db.ForeignKey('users.id'), primary_key=True),
+                      db.Column('tag_id', db.Integer, db.ForeignKey('tags.id'), primary_key=True)
+                      )
+
+Posts_Tags = db.Table('posts_tags',
+                      db.Column('post_id', db.Integer, db.ForeignKey('posts.id'), primary_key=True),
+                      db.Column('tag_id', db.Integer, db.ForeignKey('tags.id'), primary_key=True)
+                      )
 
 # TODO: draft table
 # class Draft(db.Model):
@@ -326,8 +378,3 @@ class Heart(db.Model):
 # TODO: preference table
 # class UserPreference(db.Model):
 # pass
-
-
-@login_manager.user_loader
-def load_user(id):
-    return User.query.get(int(id))

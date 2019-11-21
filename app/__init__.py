@@ -1,20 +1,21 @@
 from flask import Flask
-from config import config
-from flask_sqlalchemy import SQLAlchemy
-from flask_login import LoginManager
+from flask_babel import Babel
 from flask_bootstrap import Bootstrap
+from flask_login import LoginManager
 from flask_mail import Mail
 from flask_migrate import Migrate
 from flask_moment import Moment
-from flask_babel import Babel
 from flask_pagedown import PageDown
+from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import MetaData
+
+from config import config
 
 convention = {
     "ix": 'ix_%(column_0_label)s',
     "uq": "uq_%(table_name)s_%(column_0_name)s",
     "ck": "ck_%(table_name)s_%(column_0_name)s",
-#    "_ck": "type_ck_%(table_name)s_%(constraint_name)s",
+    #    "_ck": "type_ck_%(table_name)s_%(constraint_name)s",
     "fk": "fk_%(table_name)s_%(column_0_name)s_%(referred_table_name)s",
     "pk": "pk_%(table_name)s"
 }
@@ -33,7 +34,7 @@ pagedown = PageDown()
 
 
 def create_app(config_name):
-    app = Flask(__name__, static_folder="./static/dist/")
+    app = Flask(__name__, static_folder="./static/")
     app.config.from_object(config[config_name])
 
     db.init_app(app)

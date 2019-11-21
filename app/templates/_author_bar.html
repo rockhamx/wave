@@ -25,7 +25,7 @@
 
         <div class="timestamp">
             {{ _('Published on %(date)s', date=moment(content.pub_timestamp).calendar()) }}
-            {% if type == 'post' %}
+            {% if type == 'post' and content.pub_timestamp != content.edit_timestamp %}
                 {{ _(',') }}
                 {{ _('Last edited on %(date)s', date=moment(content.edit_timestamp).calendar()) }}
             {% endif %}

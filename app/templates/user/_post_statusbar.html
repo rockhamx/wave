@@ -1,12 +1,12 @@
 <span class="statusbar">
 {#    <a href="#"><span class="glyphicon glyphicon-eye-open" aria-hidden="true"></span>{{ post.clicked }}</a>#}
     {% if post.hearts > 0 %}
-        <button class="btn-link hearts" data-toggle="tooltip" data-placement="bottom" title="">
-            <span class="glyphicon glyphicon-heart" aria-hidden="true"></span>{{ post.hearts }}
+        <button class="hearts" data-id="{{ post.id }}" data-toggle="tooltip" data-placement="bottom" title="">
+            <span class="glyphicon glyphicon-heart" aria-hidden="true"></span><span>{{ post.hearts }}</span>
         </button>
     {% else %}
-        <button class="btn-link hearts" data-toggle="tooltip" data-placement="bottom" title="">
-            <span class="glyphicon glyphicon-heart-empty" aria-hidden="true"></span>
+        <button class="hearts" data-id="{{ post.id }}" data-toggle="tooltip" data-placement="bottom" title="">
+            <span class="glyphicon glyphicon-heart" aria-hidden="true"></span><span>0</span>
         </button>
     {% endif %}
     <a href="{{ url_for('post.article', id=post.id) }}#write-comment" data-toggle="tooltip" data-placement="bottom"

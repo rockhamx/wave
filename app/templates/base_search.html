@@ -1,26 +1,35 @@
-{% extends "base.html" %}
+{% extends "base_infinite_scroll.html" %}
 
 {% block title %}
     {{ _('Search and Find') }} - {{ 'Wave' }}
+{% endblock %}
+
+{% block extra_navbar %}
+
 {% endblock %}
 
 {% block content %}
     {{ super() }}
 
     <div class="row">
+
+        <div class="col-sm-12 col-md-12 search">
+            <div class="input-group-lg">
+                <input type="text" class="form-control" placeholder="{{ _('Search Wave') }}"
+                value="{{ query }}">
+            </div>
+        </div>
+
+    </div>
+    <div class="row">
         <div class="col-sm-12 col-md-12">
             <ul class="nav nav-tabs">
-                <li role="presentation"><a href="{{ url_for('post.search') }}">{{ _('Articles') }}</a></li>
-                <li role="presentation"><a href="{{ url_for('frontend.search') }}">{{ _('People') }}</a></li>
+                <li role="presentation"><a href="{{ url_for('post.search') }}?q={{ query }}">{{ _('Articles') }}</a></li>
+                <li role="presentation"><a href="{{ url_for('frontend.search') }}?q={{ query }}">{{ _('People') }}</a></li>
                 <li role="presentation"><a href="#">{{ _('Publications') }}</a></li>
                 <li role="presentation"><a href="#">{{ _('Tags') }}</a></li>
             </ul>
         </div>
     </div>
 
-{% endblock %}
-
-{% block scripts %}
-    {{ super() }}
-    <script src="{{ url_for('static', filename='js/infinite-scroll.pkgd.min.js') }}"></script>
 {% endblock %}

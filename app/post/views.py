@@ -8,6 +8,17 @@ from app.models import Post, Comment
 from .forms import PostForm, CommentForm
 
 
+@post.route('/articles')
+@post.route('/articles/draft')
+@post.route('/articles/published')
+@login_required
+def articles():
+    user = current_user._get_current_object()
+    page = request.args.get('page', 1, type=int)
+    posts = user.latest_posts(page=page)
+    return render_template('user/articles.html', posts=posts)
+
+
 @post.route('/write', methods=['GET', 'POST'])
 @login_required
 def write():
@@ -54,9 +65,10 @@ def edit(id):
 @post.route('/delete_post', methods=['POST'])
 @login_required
 def delete():
-    result = "Failure"
+    result = "Error"
     id = request.form.get('id', None)
     if id:
+        # TODO: bugs
         p = Post.query.filter_by(id=id).first()
         if p:
             db.session.delete(p)
@@ -67,6 +79,30 @@ def delete():
     })
 
 
+@post.route('/followed')
+@login_required
+def followed():
+    page = request.args.get('page', 1, type=int)
+    posts = current_user.followed_posts(page)
+    return render_template('user/followed_posts.html', posts=posts)
+
+
+@post.route('/my/bookmarks')
+@login_required
+def bookmarks():
+    page = request.args.get('page', 1, type=int)
+    posts = current_user.bookmarks_desc_by_time(page)
+    return render_template('user/bookmarks.html', posts=posts)
+
+
+@post.route('/my/tags')
+@login_required
+def tags():
+    # page = request.args.get('page', 1, type=int)
+    # posts = current_user.bookmarks_desc_by_time(page)
+    return render_template('user/tags.html', user=current_user)
+
+
 @post.route('/newest')
 def newest():
     page = request.args.get('page', 1, type=int)
@@ -74,21 +110,13 @@ def newest():
     return render_template('newest.html', posts=posts)
 
 
-@post.route('/followed')
-@login_required
-def followed():
-    page = request.args.get('page', 1, type=int)
-    posts = current_user.followed_posts(page)
-    return render_template('Followed_posts.html', posts=posts)
-
-
 @post.route('/search')
 def search():
-    query = request.args.get('q', default='')
-    query = '%{}%'.format(query)
+    query_string = request.args.get('q', default='')
+    query = '%{}%'.format(query_string)
     page = request.args.get('page', 1, type=int)
     posts = Post.search(page, query, query, query)
-    return render_template('search.html', posts=posts)
+    return render_template('search.html', query=query_string, posts=posts)
 
 
 @post.route('/article/<int:id>', methods=['GET', 'POST'])
@@ -107,6 +135,3 @@ def article(id):
         flash(_(u'Your comment has been published.'))
         return redirect(url_for('post.article', id=id))
     return render_template('article.html', post=post, comments=comments, form=form)
-
-
-# @post.route('/')

@@ -7,20 +7,26 @@
 {% block content %}
     {{ super() }}
 
-    {% if users %}
-        <div class="row">
-            <div class="col-xs-12 col-md-12 users">
+    <div class="row">
+        <div class="col-xs-12 col-md-12 users">
+            {% if users %}
+
                 {% for user in users %}
                     {% include "user/_user_preview.html" %}
                 {% endfor %}
-                <div class="tabs"></div>
 
-            </div>
-            {% if request.base_url == request.url %}
-                <a class="pagination__next" href="{{ url_for('frontend.search') }}?page=2"></a>
             {% else %}
-                <a class="pagination__next" href="{{ request.url }}&page=2"></a>
+                <div class="message">{{ _('We couldn’t find any people.') }}</div>
             {% endif %}
+
+            <div class="tabs"></div>
+
         </div>
-    {% endif %}
+        {% if request.base_url == request.url %}
+            <a class="pagination__next" href="{{ url_for('frontend.search') }}?page=2"></a>
+        {% else %}
+            <a class="pagination__next" href="{{ request.full_path }}&page=2"></a>
+        {% endif %}
+    </div>
+
 {% endblock %}

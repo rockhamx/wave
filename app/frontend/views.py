@@ -40,10 +40,7 @@ def react():
 def user(username):
     user = User.query.filter_by(username=username).first_or_404()
     page = request.args.get('page', 1, type=int)
-    posts = user.posts.order_by(Post.edit_timestamp.desc()).paginate(
-        page=page, per_page=current_app.config['WAVE_POSTS_PER_PAGE'],
-        error_out=False
-    ).items
+    posts = user.latest_posts(page=page)
     return render_template('user/profile.html', user=user, posts=posts)
 
 
@@ -110,11 +107,11 @@ def followers(username):
 
 @frontend.route('/search/user')
 def search():
-    query = request.args.get('q', default='')
-    query = '%{}%'.format(query)
+    query_string = request.args.get('q', default='')
+    query = '%{}%'.format(query_string)
     page = request.args.get('page', 1, type=int)
     users = User.search(page, query, query)
-    return render_template('user/search.html', users=users)
+    return render_template('user/search.html', query=query_string, users=users)
 
 # @frontend.route('/tags', methods=['GET'])
 # @login_required

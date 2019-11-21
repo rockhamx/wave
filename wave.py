@@ -1,6 +1,6 @@
 import os, click
 from app import create_app, bootstrap, db, mail, migrate, babel, moment
-from app.models import User, Tag, Post, Users_Tags, Posts_Tags, Comment, Heart, Category
+from app.models import User, Tag, Post, Users_Tags, Posts_Tags, Comment, Heart, Publication, Bookmark
 from app.email import send_email
 
 app = create_app(os.getenv('FLASK_ENV'))
@@ -15,7 +15,8 @@ def shell():
                 mail=mail,
                 moment=moment,
                 babel=babel,
-                User=User, Post=Post, Tag=Tag, Category=Category, Comment=Comment, Heart=Heart,
+                User=User, Post=Post, Tag=Tag, Publication=Publication, Comment=Comment,
+                Heart=Heart, Bookmark=Bookmark,
                 UT=Users_Tags, PT=Posts_Tags,
                 send_email=send_email)
 

@@ -7,12 +7,17 @@
 {% block content %}
     {{ super() }}
 
-    {% if posts %}
         <div class="row">
             <div class="col-xs-12 col-md-12 articles">
+
+            {% if posts %}
                 {% for post in posts %}
                     {% include "user/_post_preview.html" %}
                 {% endfor %}
+            {% else %}
+                <div class="message">{{ _('We couldn’t find any posts.') }}</div>
+            {% endif %}
+
             </div>
 
             {% if request.base_url == request.url %}
@@ -21,5 +26,4 @@
                 <a class="pagination__next" href="{{ request.url }}&page=2"></a>
             {% endif %}
         </div>
-    {% endif %}
 {% endblock %}

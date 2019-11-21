@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+
+{% block title %}{{ _('%(name)s\'s HomePage', name = current_user.username) }}{% endblock %}
+
+{% block content %}
+
+    {{ super() }}
+
+        <div class="row">
+            <div class="col-xs-12 col-md-12 articles">
+                <h1>{{ _('My Followed Article') }}</h1>
+                {% for post in posts %}
+                    {% include "user/_post_preview.html" %}
+                {% endfor %}
+            </div>
+            <a class="pagination__next" href="{{ url_for('post.followed') }}?page=2"></a>
+        </div>
+
+{% endblock %}
+
+{% block scripts %}
+    {{ super() }}
+    <script src="{{ url_for('static', filename='js/infinite-scroll.pkgd.min.js') }}"></script>
+{% endblock %}
