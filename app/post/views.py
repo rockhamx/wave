@@ -87,6 +87,14 @@ def followed():
     return render_template('user/followed_posts.html', posts=posts)
 
 
+@post.route('/my/hearts')
+@login_required
+def hearts():
+    page = request.args.get('page', 1, type=int)
+    posts = current_user.hearts_desc_by_time(page)
+    return render_template('user/hearts.html', posts=posts)
+
+
 @post.route('/my/bookmarks')
 @login_required
 def bookmarks():

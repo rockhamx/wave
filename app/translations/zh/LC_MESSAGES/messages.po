@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2019-11-14 06:22+0800\n"
+"POT-Creation-Date: 2019-11-21 15:48+0800\n"
 "PO-Revision-Date: 2019-11-05 16:23+0800\n"
 "Last-Translator: \n"
 "Language: zh\n"
@@ -186,16 +186,16 @@ msgstr "语言选择"
 msgid "Save profile"
 msgstr "保存"
 
-#: app/frontend/views.py:64
+#: app/frontend/views.py:61
 msgid "Your profile has been updated."
 msgstr "您的个人信息已更新。"
 
-#: app/frontend/views.py:80 app/templates/user/_follow_buttons.html:7
+#: app/frontend/views.py:77 app/templates/user/_follow_buttons.html:7
 #: app/templates/user/_profile.html:50
 msgid "Following"
 msgstr "已关注"
 
-#: app/frontend/views.py:92 app/templates/user/_follow_buttons.html:12
+#: app/frontend/views.py:89 app/templates/user/_follow_buttons.html:12
 #: app/templates/user/_profile.html:55
 msgid "Follow"
 msgstr "关注"
@@ -224,30 +224,21 @@ msgstr "写一条评论吧"
 msgid "Publish"
 msgstr "发布"
 
-#: app/post/views.py:20
+#: app/post/views.py:31
 msgid "Your post has been published."
 msgstr "您的文章已发布"
 
-#: app/post/views.py:37
+#: app/post/views.py:48
 msgid "You have not authorized to this operation."
 msgstr "您没有权限执行此项操作。"
 
-#: app/post/views.py:46
+#: app/post/views.py:57
 msgid "You post has been updated."
 msgstr "您的文章已更新。"
 
-#: app/post/views.py:82
+#: app/post/views.py:143
 msgid "Your comment has been published."
 msgstr "您的评论已发布"
-
-#: app/templates/Followed_posts.html:3
-#, python-format
-msgid "%(name)s's HomePage"
-msgstr "%(name)s的主页"
-
-#: app/templates/Followed_posts.html:11 app/templates/base.html:53
-msgid "My Followed Article"
-msgstr "我关注的文章"
 
 #: app/templates/_author_bar.html:7
 msgid "Edit"
@@ -279,11 +270,15 @@ msgstr "主页"
 msgid "Wave"
 msgstr ""
 
-#: app/templates/base.html:51 app/templates/newest.html:12
+#: app/templates/base.html:51 app/templates/newest.html:11
 msgid "Newest"
 msgstr "最新"
 
-#: app/templates/base.html:55 app/templates/base.html:84
+#: app/templates/base.html:53 app/templates/user/followed_posts.html:11
+msgid "My Followed Article"
+msgstr "我关注的文章"
+
+#: app/templates/base.html:55
 msgid "Me"
 msgstr "我"
 
@@ -301,54 +296,70 @@ msgstr "关于"
 msgid "Signed in as %(name)s"
 msgstr "登录用户为：%(name)s"
 
+#: app/templates/base.html:84 app/templates/base_search.html:27
+msgid "Articles"
+msgstr "文章"
+
 #: app/templates/base.html:90
-msgid "My following"
-msgstr "我的关注"
-
-#: app/templates/base.html:96
-msgid "My followers"
-msgstr "我的粉丝"
-
-#: app/templates/base.html:102
 msgid "Notifications"
 msgstr "提醒"
 
-#: app/templates/base.html:108
+#: app/templates/base.html:96
 msgid "Messages"
 msgstr "消息"
 
+#: app/templates/base.html:105
+msgid "Hearts"
+msgstr "喜欢"
+
+#: app/templates/base.html:111
+msgid "Bookmarks"
+msgstr "书签"
+
+#: app/templates/base.html:117 app/templates/base_search.html:29
+msgid "Publications"
+msgstr "专栏"
+
+#: app/templates/base.html:123 app/templates/base_search.html:30
+msgid "Tags"
+msgstr "标签"
+
 #: app/templates/auth/change_password.html:4
-#: app/templates/auth/change_password.html:11 app/templates/base.html:114
+#: app/templates/auth/change_password.html:11 app/templates/base.html:131
 msgid "Change password"
 msgstr "更改密码"
 
 #: app/templates/auth/change_email.html:4
-#: app/templates/auth/change_email.html:11 app/templates/base.html:117
+#: app/templates/auth/change_email.html:11 app/templates/base.html:134
 msgid "Change email"
 msgstr "更改邮箱"
 
-#: app/templates/base.html:121
+#: app/templates/base.html:141
+msgid "Profile"
+msgstr "个人信息"
+
+#: app/templates/base.html:146
 msgid "Help"
 msgstr "帮助"
 
-#: app/templates/base.html:127
+#: app/templates/base.html:152
 msgid "Settings"
 msgstr "设置"
 
-#: app/templates/base.html:133
+#: app/templates/base.html:158
 msgid "Sign out"
 msgstr "登出"
 
 #: app/templates/auth/login.html:4 app/templates/auth/login.html:11
-#: app/templates/base.html:139
+#: app/templates/base.html:164
 msgid "Sign in"
 msgstr "登录"
 
-#: app/templates/base.html:146
+#: app/templates/base.html:171
 msgid "Search for..."
 msgstr "搜索..."
 
-#: app/templates/base.html:148
+#: app/templates/base.html:173
 msgid "Go!"
 msgstr ""
 
@@ -357,21 +368,13 @@ msgstr ""
 msgid "Search and Find"
 msgstr "搜索与寻找"
 
-#: app/templates/base_search.html:13
-msgid "Articles"
-msgstr "文章"
+#: app/templates/base_search.html:18
+msgid "Search Wave"
+msgstr "搜索Wave"
 
-#: app/templates/base_search.html:14
+#: app/templates/base_search.html:28
 msgid "People"
 msgstr "人们"
-
-#: app/templates/base_search.html:15
-msgid "Publications"
-msgstr "专栏"
-
-#: app/templates/base_search.html:16
-msgid "Tags"
-msgstr "标签"
 
 #: app/templates/index.html:3
 msgid "Welcome to Wave"
@@ -379,11 +382,31 @@ msgstr "欢迎来浪"
 
 #: app/templates/new.html:3
 msgid "New post"
-msgstr ""
+msgstr "新文章"
+
+#: app/templates/new.html:15 app/templates/user/write.html:10
+msgid "Ready to publish?"
+msgstr "准备发布？"
+
+#: app/templates/new.html:36 app/templates/user/write.html:44
+msgid "Ready to publish"
+msgstr "准备发布"
+
+#: app/templates/new.html:39 app/templates/user/write.html:47
+msgid "Article Preview"
+msgstr "文章预览"
+
+#: app/templates/new.html:44 app/templates/user/write.html:52
+msgid "Close"
+msgstr "关闭"
 
 #: app/templates/newest.html:3
 msgid "Newest article"
 msgstr "最新文章"
+
+#: app/templates/search.html:18
+msgid "We couldn’t find any posts."
+msgstr "我们找不到任何文章"
 
 #: app/templates/auth/getting-on-board.html:4
 #: app/templates/auth/getting-on-board.html:11
@@ -419,7 +442,7 @@ msgstr ""
 msgid "The administrator has been notified. Sorry for the inconvenience!"
 msgstr ""
 
-#: app/templates/user/_post_statusbar.html:7
+#: app/templates/user/_post_statusbar.html:13
 #, python-format
 msgid "%(count)s comment"
 msgid_plural "%(count)s comments"
@@ -455,10 +478,23 @@ msgstr "最近一次出现在%(time)s。"
 msgid "Edit Profile"
 msgstr "编辑个人信息"
 
-#: app/templates/user/_tags.html:3
+#: app/templates/user/_tag.html:6
 #, python-format
-msgid "%(name)s's tags"
-msgstr "%(name)s的标签"
+msgid "description: %(d)s"
+msgstr "描述：%(d)s"
+
+#: app/templates/user/articles.html:3 app/templates/user/articles.html:9
+msgid "Your articles"
+msgstr "我的文章"
+
+#: app/templates/user/bookmarks.html:3 app/templates/user/bookmarks.html:9
+msgid "Your bookmarks"
+msgstr "我的书签"
+
+#: app/templates/user/followed_posts.html:3
+#, python-format
+msgid "%(name)s's HomePage"
+msgstr "%(name)s的主页"
 
 #: app/templates/user/followers.html:3
 #, python-format
@@ -480,220 +516,221 @@ msgstr "这些人被%(name)s关注"
 msgid "%(name)s Follows"
 msgstr "%(name)s关注了"
 
-#: app/templates/user/profile.html:3
+#: app/templates/user/hearts.html:3 app/templates/user/hearts.html:9
+msgid "Your hearts"
+msgstr "我的喜欢"
+
+#: app/templates/user/profile.html:4 app/templates/user/profile.html:6
 #, python-format
 msgid "%(name)s's profile"
 msgstr "%(name)s的个人信息"
 
-#: app/templates/user/profile.html:18
+#: app/templates/user/profile.html:24
 msgid "Latest"
 msgstr "最近"
 
-#: app/templates/user/profile.html:31
+#: app/templates/user/profile.html:39
 msgid "Confirm your deletion"
 msgstr "确认删除"
 
-#: app/templates/user/profile.html:34
+#: app/templates/user/profile.html:42
 msgid "Are you really sure to delete this post? This operation is not reversible!"
 msgstr "您确定要删除这篇文章吗？这个操作将不可逆转！"
 
-#: app/templates/user/profile.html:37
+#: app/templates/user/profile.html:45
 msgid "Cancel"
 msgstr "取消"
 
-#: app/templates/user/profile.html:38
+#: app/templates/user/profile.html:46
 msgid "Confirm"
 msgstr "确认"
 
-#: app/templates/user/write.html:10
-msgid "Ready to publish?"
-msgstr "准备发布？"
+#: app/templates/user/publications.html:3 app/templates/user/tags.html:3
+#: app/templates/user/tags.html:9
+msgid "Your tags"
+msgstr "我的标签"
 
-#: app/templates/user/write.html:44
-msgid "Ready to publish"
-msgstr "准备发布"
+#: app/templates/user/publications.html:9
+msgid "Your publications"
+msgstr "我的专栏"
 
-#: app/templates/user/write.html:47
-msgid "Article Preview"
-msgstr "文章预览"
+#: app/templates/user/search.html:19
+msgid "We couldn’t find any people."
+msgstr "我们找不到任何人"
 
-#: app/templates/user/write.html:52
-msgid "Close"
-msgstr "关闭"
-
-#: venv/lib/python3.7/site-packages/flask_wtf/file.py:51
-#: venv/lib/python3.7/site-packages/wtforms/validators.py:205
-#: venv/lib/python3.7/site-packages/wtforms/validators.py:245
+#: venv/Lib/site-packages/flask_wtf/file.py:51
+#: venv/Lib/site-packages/wtforms/validators.py:205
+#: venv/Lib/site-packages/wtforms/validators.py:245
 msgid "This field is required."
 msgstr "该项为必填"
 
-#: venv/lib/python3.7/site-packages/flask_wtf/file.py:85
+#: venv/Lib/site-packages/flask_wtf/file.py:85
 msgid "File does not have an approved extension: {extensions}"
 msgstr ""
 
-#: venv/lib/python3.7/site-packages/flask_wtf/file.py:90
+#: venv/Lib/site-packages/flask_wtf/file.py:90
 msgid "File does not have an approved extension."
 msgstr ""
 
-#: venv/lib/python3.7/site-packages/wtforms/validators.py:58
+#: venv/Lib/site-packages/wtforms/validators.py:58
 #, python-format
 msgid "Invalid field name '%s'."
 msgstr ""
 
-#: venv/lib/python3.7/site-packages/wtforms/validators.py:66
+#: venv/Lib/site-packages/wtforms/validators.py:66
 #, python-format
 msgid "Field must be equal to %(other_name)s."
 msgstr ""
 
-#: venv/lib/python3.7/site-packages/wtforms/validators.py:99
+#: venv/Lib/site-packages/wtforms/validators.py:99
 #, python-format
 msgid "Field must be at least %(min)d character long."
 msgid_plural "Field must be at least %(min)d characters long."
 msgstr[0] ""
 
-#: venv/lib/python3.7/site-packages/wtforms/validators.py:102
+#: venv/Lib/site-packages/wtforms/validators.py:102
 #, python-format
 msgid "Field cannot be longer than %(max)d character."
 msgid_plural "Field cannot be longer than %(max)d characters."
 msgstr[0] ""
 
-#: venv/lib/python3.7/site-packages/wtforms/validators.py:105
+#: venv/Lib/site-packages/wtforms/validators.py:105
 #, python-format
 msgid "Field must be between %(min)d and %(max)d characters long."
 msgstr ""
 
-#: venv/lib/python3.7/site-packages/wtforms/validators.py:141
+#: venv/Lib/site-packages/wtforms/validators.py:141
 #, python-format
 msgid "Number must be at least %(min)s."
 msgstr ""
 
-#: venv/lib/python3.7/site-packages/wtforms/validators.py:143
+#: venv/Lib/site-packages/wtforms/validators.py:143
 #, python-format
 msgid "Number must be at most %(max)s."
 msgstr ""
 
-#: venv/lib/python3.7/site-packages/wtforms/validators.py:145
+#: venv/Lib/site-packages/wtforms/validators.py:145
 #, python-format
 msgid "Number must be between %(min)s and %(max)s."
 msgstr ""
 
-#: venv/lib/python3.7/site-packages/wtforms/validators.py:277
+#: venv/Lib/site-packages/wtforms/validators.py:277
 msgid "Invalid input."
 msgstr ""
 
-#: venv/lib/python3.7/site-packages/wtforms/validators.py:311
+#: venv/Lib/site-packages/wtforms/validators.py:311
 msgid "Invalid email address."
 msgstr ""
 
-#: venv/lib/python3.7/site-packages/wtforms/validators.py:352
+#: venv/Lib/site-packages/wtforms/validators.py:352
 msgid "Invalid IP address."
 msgstr ""
 
-#: venv/lib/python3.7/site-packages/wtforms/validators.py:403
+#: venv/Lib/site-packages/wtforms/validators.py:403
 msgid "Invalid Mac address."
 msgstr ""
 
-#: venv/lib/python3.7/site-packages/wtforms/validators.py:432
+#: venv/Lib/site-packages/wtforms/validators.py:432
 msgid "Invalid URL."
 msgstr ""
 
-#: venv/lib/python3.7/site-packages/wtforms/validators.py:452
+#: venv/Lib/site-packages/wtforms/validators.py:452
 msgid "Invalid UUID."
 msgstr ""
 
-#: venv/lib/python3.7/site-packages/wtforms/validators.py:482
+#: venv/Lib/site-packages/wtforms/validators.py:482
 #, python-format
 msgid "Invalid value, must be one of: %(values)s."
 msgstr ""
 
-#: venv/lib/python3.7/site-packages/wtforms/validators.py:514
+#: venv/Lib/site-packages/wtforms/validators.py:514
 #, python-format
 msgid "Invalid value, can't be any of: %(values)s."
 msgstr ""
 
-#: venv/lib/python3.7/site-packages/wtforms/csrf/core.py:98
-#: venv/lib/python3.7/site-packages/wtforms/ext/csrf/form.py:47
+#: venv/Lib/site-packages/wtforms/csrf/core.py:98
+#: venv/Lib/site-packages/wtforms/ext/csrf/form.py:47
 msgid "Invalid CSRF Token"
 msgstr ""
 
-#: venv/lib/python3.7/site-packages/wtforms/csrf/session.py:61
-#: venv/lib/python3.7/site-packages/wtforms/ext/csrf/session.py:58
+#: venv/Lib/site-packages/wtforms/csrf/session.py:61
+#: venv/Lib/site-packages/wtforms/ext/csrf/session.py:58
 msgid "CSRF token missing"
 msgstr ""
 
-#: venv/lib/python3.7/site-packages/wtforms/csrf/session.py:69
-#: venv/lib/python3.7/site-packages/wtforms/ext/csrf/session.py:66
+#: venv/Lib/site-packages/wtforms/csrf/session.py:69
+#: venv/Lib/site-packages/wtforms/ext/csrf/session.py:66
 msgid "CSRF failed"
 msgstr ""
 
-#: venv/lib/python3.7/site-packages/wtforms/csrf/session.py:74
-#: venv/lib/python3.7/site-packages/wtforms/ext/csrf/session.py:71
+#: venv/Lib/site-packages/wtforms/csrf/session.py:74
+#: venv/Lib/site-packages/wtforms/ext/csrf/session.py:71
 msgid "CSRF token expired"
 msgstr ""
 
-#: venv/lib/python3.7/site-packages/wtforms/ext/appengine/fields.py:87
-#: venv/lib/python3.7/site-packages/wtforms/ext/appengine/fields.py:164
-#: venv/lib/python3.7/site-packages/wtforms/ext/appengine/fields.py:166
-#: venv/lib/python3.7/site-packages/wtforms/ext/django/fields.py:95
-#: venv/lib/python3.7/site-packages/wtforms/ext/sqlalchemy/fields.py:125
-#: venv/lib/python3.7/site-packages/wtforms/ext/sqlalchemy/fields.py:127
-#: venv/lib/python3.7/site-packages/wtforms/ext/sqlalchemy/fields.py:180
-#: venv/lib/python3.7/site-packages/wtforms/ext/sqlalchemy/fields.py:185
-#: venv/lib/python3.7/site-packages/wtforms/fields/core.py:475
+#: venv/Lib/site-packages/wtforms/ext/appengine/fields.py:87
+#: venv/Lib/site-packages/wtforms/ext/appengine/fields.py:164
+#: venv/Lib/site-packages/wtforms/ext/appengine/fields.py:166
+#: venv/Lib/site-packages/wtforms/ext/django/fields.py:95
+#: venv/Lib/site-packages/wtforms/ext/sqlalchemy/fields.py:125
+#: venv/Lib/site-packages/wtforms/ext/sqlalchemy/fields.py:127
+#: venv/Lib/site-packages/wtforms/ext/sqlalchemy/fields.py:180
+#: venv/Lib/site-packages/wtforms/ext/sqlalchemy/fields.py:185
+#: venv/Lib/site-packages/wtforms/fields/core.py:475
 msgid "Not a valid choice"
 msgstr ""
 
-#: venv/lib/python3.7/site-packages/wtforms/ext/appengine/fields.py:185
+#: venv/Lib/site-packages/wtforms/ext/appengine/fields.py:185
 msgid "Not a valid list"
 msgstr ""
 
-#: venv/lib/python3.7/site-packages/wtforms/ext/appengine/fields.py:204
+#: venv/Lib/site-packages/wtforms/ext/appengine/fields.py:204
 msgid "Not a valid integer list"
 msgstr ""
 
-#: venv/lib/python3.7/site-packages/wtforms/ext/dateutil/fields.py:63
+#: venv/Lib/site-packages/wtforms/ext/dateutil/fields.py:63
 msgid "Please input a date/time value"
 msgstr ""
 
-#: venv/lib/python3.7/site-packages/wtforms/ext/dateutil/fields.py:75
-#: venv/lib/python3.7/site-packages/wtforms/ext/dateutil/fields.py:83
+#: venv/Lib/site-packages/wtforms/ext/dateutil/fields.py:75
+#: venv/Lib/site-packages/wtforms/ext/dateutil/fields.py:83
 msgid "Invalid date/time input"
 msgstr ""
 
-#: venv/lib/python3.7/site-packages/wtforms/fields/core.py:468
+#: venv/Lib/site-packages/wtforms/fields/core.py:468
 msgid "Invalid Choice: could not coerce"
 msgstr ""
 
-#: venv/lib/python3.7/site-packages/wtforms/fields/core.py:501
+#: venv/Lib/site-packages/wtforms/fields/core.py:501
 msgid "Invalid choice(s): one or more data inputs could not be coerced"
 msgstr ""
 
-#: venv/lib/python3.7/site-packages/wtforms/fields/core.py:508
+#: venv/Lib/site-packages/wtforms/fields/core.py:508
 #, python-format
 msgid "'%(value)s' is not a valid choice for this field"
 msgstr ""
 
-#: venv/lib/python3.7/site-packages/wtforms/fields/core.py:591
+#: venv/Lib/site-packages/wtforms/fields/core.py:591
 msgid "Not a valid integer value"
 msgstr ""
 
-#: venv/lib/python3.7/site-packages/wtforms/fields/core.py:657
+#: venv/Lib/site-packages/wtforms/fields/core.py:657
 msgid "Not a valid decimal value"
 msgstr ""
 
-#: venv/lib/python3.7/site-packages/wtforms/fields/core.py:684
+#: venv/Lib/site-packages/wtforms/fields/core.py:684
 msgid "Not a valid float value"
 msgstr ""
 
-#: venv/lib/python3.7/site-packages/wtforms/fields/core.py:745
+#: venv/Lib/site-packages/wtforms/fields/core.py:745
 msgid "Not a valid datetime value"
 msgstr ""
 
-#: venv/lib/python3.7/site-packages/wtforms/fields/core.py:762
+#: venv/Lib/site-packages/wtforms/fields/core.py:762
 msgid "Not a valid date value"
 msgstr ""
 
-#: venv/lib/python3.7/site-packages/wtforms/fields/core.py:779
+#: venv/Lib/site-packages/wtforms/fields/core.py:779
 msgid "Not a valid time value"
 msgstr ""
 
@@ -717,4 +754,13 @@ msgstr ""
 
 #~ msgid "signed in as %(name)s"
 #~ msgstr ""
+
+#~ msgid "My following"
+#~ msgstr "我的关注"
+
+#~ msgid "My followers"
+#~ msgstr "我的粉丝"
+
+#~ msgid "%(name)s's tags"
+#~ msgstr "%(name)s的标签"
 

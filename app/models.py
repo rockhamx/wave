@@ -140,6 +140,18 @@ class User(UserMixin, db.Model):
     def followers_desc_by_time(self):
         return self.followers.order_by(follows.c.timestamp).all()
 
+    def hearts_desc_by_time(self, page):
+        return User.query.join(
+            Heart, (User.id == Heart.user_id)
+        ).filter(
+            Heart.user_id == self.id
+        ).order_by(
+            Heart.timestamp.desc()
+        ).paginate(
+            page=page, per_page=current_app.config['WAVE_POSTS_PER_PAGE'],
+            # error_out=False
+        ).items
+
     def bookmarks_desc_by_time(self, page):
         return Post.query.join(
             Bookmark, (Post.id == Bookmark.post_id)

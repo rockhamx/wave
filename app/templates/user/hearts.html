@@ -1,0 +1,17 @@
+{% extends "base_infinite_scroll.html" %}
+
+{% block title %}{{ _('Your hearts') }} | Wave{% endblock %}
+
+{% block content %}
+    {{ super() }}
+    <div class="row">
+        <div class="col-xs-12 col-md-12 articles">
+            <h1>{{ _('Your hearts') }}</h1>
+
+            {% for post in posts %}
+                {% include 'user/_post_preview.html' %}
+            {% endfor %}
+        </div>
+    </div>
+    <a class="pagination__next" href="{{ request.url }}&page=2"></a>
+{% endblock %}

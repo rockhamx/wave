@@ -68,7 +68,7 @@ $(document).ready(function () {
         $search.click(function (event) {
             const query = $(this).parent().siblings('.form-control').val();
             if (query !== "") {
-                window.location = window.location.pathname + "/search?q=" + query
+                pwindow.location.href = window.location.origin + '/search' + "?q=" + query
             }
         });
     }
@@ -77,7 +77,7 @@ $(document).ready(function () {
         if (event.which == 13) {
             const query = $(this).val();
             if (query !== "") {
-                window.location = window.location.pathname + "?q=" + query
+                window.location.href = window.location.origin + '/search' + "?q=" + query
             }
         }
     });
