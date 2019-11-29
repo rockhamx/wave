@@ -14,9 +14,9 @@ export const Toolbar = ({ className, ...other }) => (
         & > * + * {
           margin-left: 15px;
         }
-        padding: 1px 18px;
         border-bottom: 2px solid #ddd;
         margin-bottom: 20px;
+        padding-bottom: 10px;
       `
     )}
   />
@@ -40,11 +40,7 @@ export const Icon = ({ className, ...other }) => (
     {...other}
     className={cx(
       "material-icons md-24",
-      className,
-      css`
-        font-size: 18px;
-        // vertical-align: center;
-      `
+      className
     )}
   />
 );

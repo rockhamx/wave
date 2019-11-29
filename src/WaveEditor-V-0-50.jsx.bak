@@ -1,0 +1,271 @@
+// Editor
+import React, { useCallback, useEffect, useRef, useState } from "react";
+import { Editor } from "slate";
+import { Editable, Slate, useSlate, withReact } from "slate-react";
+// import { initialValue, existingValue } from "./slateInitialValue";
+import { cx, css } from "emotion";
+import { Toolbar, Button, Icon } from "./components";
+import { html } from "./htmlSerializer";
+import { isHotkey } from "is-hotkey";
+import { withHistory } from "slate-history";
+
+const DEFAULT_NODE = "paragraph";
+const MARK_HOTKEYS = {
+  "mod+b": "bold",
+  "mod+i": "italic",
+  "mod+u": "underlined",
+  "mod+`": "code"
+};
+
+const WaveEditor = props => {
+  // const editor = useRef(null);
+  const draftId = $("input#id");
+  const draftReferenceId = $("input#reference_id");
+  const draftType = $("input#type");
+  const draftTitle = $("input#title");
+  const draftSubtitle = $("input#subtitle");
+  const draftDescription = $("textarea#description");
+  const draftContent = $("input#content");
+  const draftTags = $("input#tags");
+  const draftIsPublic = $("input#is_public")[0];
+  const initialValue = draftContent.val() || "<p></p>";
+  const [value, setValue] = useState(html.deserialize(initialValue));
+  const renderMark = useCallback(props => <Mark {...props} />, []);
+  const renderBlock = useCallback(props => <Element {...props} />, []);
+  const editor = useMemo(() => {
+    withRichText(withHistory(withReact(createEditor())));
+  }, []);
+
+  const get_draft = () => {
+    const id = draftId.val();
+    const referenceId = draftReferenceId.val();
+    const type = draftType.val();
+    const title = draftTitle.val();
+    const subtitle = draftSubtitle.val();
+    const description = draftDescription.val();
+    const tags = draftTags.val();
+    const content = html.serialize(value);
+    const isPublic = draftIsPublic.checked === false;
+    return {
+      id: id,
+      reference_id: referenceId,
+      type: type,
+      title: title,
+      subtitle: subtitle,
+      description: description,
+      tags: tags,
+      content: content,
+      is_public: isPublic
+    };
+  };
+  const [lastSaveDraft, setLastSaveDraft] = useState(
+    JSON.stringify(get_draft())
+  );
+
+  useEffect(() => {
+    const interval = setInterval(function() {
+      const draft = JSON.stringify(get_draft());
+      // console.log(JSON.parse(draft));
+      // console.log(JSON.parse(lastSaveDraft));
+      if (lastSaveDraft && lastSaveDraft === draft) return;
+      console.log("content changed");
+
+      const draft_progress = $("#draft_progress span")[0];
+      draft_progress.innerText = "Saving...";
+      const url = "/api/v0/drafts/";
+      $.ajax({
+        url: url,
+        type: "POST",
+        data: draft,
+        contentType: "application/json; charset=utf-8",
+        dataType: "json",
+        success: data => {
+          if (data.status === "success") {
+            if (!draftId.val()) {
+              draftId.val(data.id);
+              window.history.replaceState({}, "", `/d/${data.id}/edit`);
+            }
+            setLastSaveDraft(draft);
+            draft_progress.innerText = "Saved";
+            console.log("saved: " + draft);
+          }
+        }
+      });
+    }, 1000);
+
+    return () => {
+      clearInterval(interval);
+    };
+  });
+
+  // modal show event
+  $("#publishModalForRichText").on("show.bs.modal", function(event) {
+    // event.preventDefault();
+    // const $modal = $(this);
+    // TODO: refurnish this dumb trick
+    const content = $("input#content");
+    content.val(html.serialize(value));
+  });
+
+  return (
+    <Slate {...props}>
+      <Toolbar>
+        <MarkButton type="bold" icon="format_bold" />
+        <MarkButton type="italic" icon="format_italic" />
+        <MarkButton type="underlined" icon="format_underlined" />
+        <MarkButton type="code" icon="code" />
+        <BlockButton type="heading_one" icon="looks_one" />
+        <BlockButton type="heading_two" icon="looks_two" />
+        <BlockButton type="block_quote" icon="format_quote" />
+        <BlockButton type="numbered_list" icon="format_list_numbered" />
+        <BlockButton type="bulleted_list" icon="format_list_bulleted" />
+      </Toolbar>
+      <Editable
+        // ref={editor}
+        spellCheck
+        autoFocus
+        placeholder="Enter some text..."
+        renderMark={renderMark}
+        renderElement={renderBlock}
+        className={cx(css`
+          & > * + * {
+            margin-top: 1rem;
+          }
+          font-size: 18px;
+          min-height: 70rem;
+        `)}
+        onKeyDown={event => {
+          for (const hotkey in MARK_HOTKEYS) {
+            if (isHotkey(hotkey, event)) {
+              event.preventDefault();
+              editor.exec({
+                type: "toggle_mark",
+                mark: MARK_HOTKEYS[hotkey]
+              });
+            }
+          }
+        }}
+      />
+    </Slate>
+  );
+};
+
+const withRichText = editor => {
+  const { exec } = editor;
+
+  editor.exec = command => {
+    if (command.type === "toggle_block") {
+      const { block: type } = command;
+      const isActive = isBlockActive(editor, type);
+      const isListType = type === "bulleted-list" || type === "numbered-list";
+      Editor.unwrapNodes(editor, { match: { type: "bulleted-list" } });
+      Editor.unwrapNodes(editor, { match: { type: "numbered-list" } });
+
+      const newType = isActive ? "paragraph" : isListType ? "list-item" : type;
+      Editor.setNodes(editor, { type: newType });
+
+      if (!isActive && isListType) {
+        Editor.wrapNodes(editor, { type, children: [] });
+      }
+
+      return;
+    }
+
+    if (command.type === "toggle_mark") {
+      const { mark: type } = command;
+      const isActive = isMarkActive(editor, type);
+      const cmd = isActive ? "remove_mark" : "add_mark";
+      editor.exec({ type: cmd, mark: { type } });
+      return;
+    }
+
+    exec(command);
+  };
+
+  return editor;
+};
+
+const Mark = ({ attributes, children, mark }) => {
+  switch (mark.type) {
+    case "bold":
+      return <strong {...attributes}>{children}</strong>;
+    case "italic":
+      return <em {...attributes}>{children}</em>;
+    case "underlined":
+      return <u {...attributes}>{children}</u>;
+    case "code":
+      return <code {...attributes}>{children}</code>;
+  }
+};
+
+const Element = ({ attributes, children, element }) => {
+  switch (element.type) {
+    case "block_quote":
+      return <blockquote {...attributes}>{children}</blockquote>;
+    case "bulleted_list":
+      return <ul {...attributes}>{children}</ul>;
+    case "heading_one":
+      return <h1 {...attributes}>{children}</h1>;
+    case "heading_two":
+      return <h2 {...attributes}>{children}</h2>;
+    case "list_item":
+      return <li {...attributes}>{children}</li>;
+    case "numbered_list":
+      return <ol {...attributes}>{children}</ol>;
+    default:
+      return <p {...attributes}>{children}</p>;
+  }
+};
+
+const isMarkActive = (editor, type) => {
+  const marks = Editor.activeMarks(editor);
+  return marks.some(mark => mark.type === type);
+};
+
+const isBlockActive = (editor, type) => {
+  const { selection } = editor;
+  if (!selection) return false;
+  const match = Editor.match(editor, selection, { type });
+  return !!match;
+};
+
+const MarkButton = ({ type, icon }) => {
+  const editor = useSlate();
+  const isActive = isMarkActive(editor, type);
+
+  return (
+    <Button
+      active={isActive}
+      onMouseDown={event => {
+        event.preventDefault();
+        editor.exec({
+          type: "toggle_mark",
+          mark: "type"
+        });
+      }}
+    >
+      <Icon>{icon}</Icon>
+    </Button>
+  );
+};
+
+const BlockButton = ({ type, icon }) => {
+  const editor = useSlate();
+
+  return (
+    <Button
+      active={isBlockActive(editor, type)}
+      onMouseDown={event => {
+        event.preventDefault();
+        editor.exec({
+          type: "toggle_block",
+          block: type
+        });
+      }}
+    >
+      <Icon>{icon}</Icon>
+    </Button>
+  );
+};
+
+export default WaveEditor;

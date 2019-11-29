@@ -1,19 +1,54 @@
 <span class="statusbar">
 {#    <a href="#"><span class="glyphicon glyphicon-eye-open" aria-hidden="true"></span>{{ post.clicked }}</a>#}
-    {% if post.hearts > 0 %}
-        <button class="hearts" data-id="{{ post.id }}" data-toggle="tooltip" data-placement="bottom" title="">
-            <span class="glyphicon glyphicon-heart" aria-hidden="true"></span><span>{{ post.hearts }}</span>
-        </button>
+
+{# hearts counts#}
+    {% set user_hearts = current_user.hearts_amount(post) %}
+    {% if user_hearts > 0 %}
+        <a href="" class="btn-text hearts" data-id="{{ post.id }}" data-toggle="tooltip" data-placement="bottom"
+                title="{{ _('Like') }}">
+            <i class="material-icons">favorite</i>
+            <span data-user-hearts={{ user_hearts }}> {{ post.hearts }}</span>
+        </a>
     {% else %}
-        <button class="hearts" data-id="{{ post.id }}" data-toggle="tooltip" data-placement="bottom" title="">
-            <span class="glyphicon glyphicon-heart" aria-hidden="true"></span><span>0</span>
-        </button>
+        <a href="" class="btn-text hearts" data-id="{{ post.id }}" data-toggle="tooltip" data-placement="bottom"
+                title="{{ _('Like') }}">
+            <i class="material-icons">favorite_border</i>
+            <span data-user-hearts=0> 0</span>
+        </a>
     {% endif %}
-    <a href="{{ url_for('post.article', id=post.id) }}#write-comment" data-toggle="tooltip" data-placement="bottom"
+
+    {# go to comments fragment#}
+    <a class="btn-text" href="{{ url_for('post.article', id=post.id) }}#write-comment" data-toggle="tooltip" data-placement="bottom"
        title="{{ ngettext('%(count)s comment', '%(count)s comments', post.comments.count(), count = post.comments.count()) }}">
-        <span class="glyphicon glyphicon-comment" aria-hidden="true"></span>{{ post.comments.count() }}
+        <i class="material-icons">mode_comment</i>
+        <span>{{ post.comments.count() }}</span>
     </a>
-    <a class="float-right" href="#"><span class="glyphicon glyphicon-bookmark" aria-hidden="true"></span></a>
-{#    <a href="#"><span class="glyphicon glyphicon-heart-empty" aria-hidden="true"></span></a>#}
+
+    <div class="btn-group float-right">
+        <button class="dropdown-toggle btn-text" type="button" data-toggle="dropdown" aria-haspopup="true"
+                aria-expanded="false">
+            <i class="material-icons" data-toggle="tooltip" data-placement="bottom"
+                title="{{ _('More') }}">more_horiz</i>
+        </button>
+        <ul class="dropdown-menu">
+            <li><a class="cancelHearts" data-id="{{ post.id }}">{{ _('Cancel liked for this post') }}</a></li>
+        </ul>
+    </div>
+
+    {# bookmarks#}
+    {% if current_user.is_bookmarked(post) %}
+        <a class="btn-text float-right removeBookmark" href="#" data-id="{{ post.id }}" data-toggle="tooltip"
+           data-placement="bottom" title="{{ _('Remove bookmark') }}">
+            <i class="material-icons">bookmark</i>
+        </a>
+    {% else %}
+        <a class="btn-text float-right addBookmark" href="#" data-id="{{ post.id }}" data-toggle="tooltip"
+           data-placement="bottom" title="{{ _('Add bookmark') }}">
+            <i class="material-icons">bookmark_border</i>
+        </a>
+    {% endif %}
+
+
+    {#    <a href="#"><span class="glyphicon glyphicon-heart-empty" aria-hidden="true"></span></a>#}
     {#                <a href="#"><span class="glyphicon glyphicon-share-alt" aria-hidden="true"></span>{{ 9 }}</a>#}
 </span>

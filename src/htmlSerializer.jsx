@@ -39,12 +39,10 @@ const rules = [
         switch (obj.type) {
           case "code":
             return (
-              <pre>
-                <code>{children}</code>
-              </pre>
+              <pre>{children}</pre>
             );
           case "paragraph":
-            return <div className={obj.data.get("className")}>{children}</div>;
+            return <p className={obj.data.get("className")}>{children}</p>;
           case "heading-one":
             return <h1>{children}</h1>;
           case "heading-two":

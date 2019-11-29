@@ -13,18 +13,24 @@
             <div class="thumbnail article-detail">
 
                 {% with author = post.author, content = post %}
-                {% include "_author_bar.html" %}
+                    {% include "user/_author_bar.html" %}
                 {% endwith %}
 
                 <h1>{{ post.title }}</h1>
                 {{ post.html | safe }}
+
+                    <ul class="nav nav-pills tags">
+                        {% for tag in post.tags %}
+                            <li role="presentation"><a href="{{ url_for('frontend.index') }}">{{ tag.name }}</a></li>
+                        {% endfor %}
+                    </ul>
 
                 {% include "user/_post_statusbar.html" %}
             </div>
         </div>
     </div>
 
-{#    {% set comments = post.comments %}#}
+    {#    {% set comments = post.comments %}#}
     <div class="row">
         <div class="col-xs-12 col-md-12">
             <div class="thumbnail" id="write-comment">
@@ -36,4 +42,5 @@
             {% endfor %}
         </div>
     </div>
+
 {% endblock %}

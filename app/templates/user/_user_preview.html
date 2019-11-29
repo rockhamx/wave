@@ -6,7 +6,7 @@
     </div>
 
     <div class="u-flex2 flex-box-column">
-        <span><a href="{{ url_for('frontend.user', username=user.username) }}">{{ user.username }}</a></span>
+        <span><a href="{{ url_for('user.profile', username=user.username) }}">{{ user.name }}</a></span>
         <span class="u-description">{{ user.description }}</span>
         {% include "user/_follow_buttons.html" %}
     </div>

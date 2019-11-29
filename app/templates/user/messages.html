@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+{% import "bootstrap/wtf.html" as wtf %}
+
+{% block title %}{{ _('Sending message to %(name)s', name=recipient) }} | Wave{% endblock %}
+
+{% block content %}
+    {{ super() }}
+
+    <div class="container">
+
+        <div class="row sent_messages">
+
+            <div class="page-header">
+                <h1>{{ _('Sent messages') }}</h1>
+            </div>
+
+            {% set messages, type = sent_messages, 'sent' %}
+            {% include 'user/_messages.html' %}
+        </div>
+
+        <div class="row received_messages">
+
+            <div class="page-header">
+                <h1>{{ _('Received messages') }}</h1>
+            </div>
+
+            {% set messages, type = received_messages, 'received' %}
+            {% include 'user/_messages.html' %}
+        </div>
+
+    </div>
+
+{% endblock %}

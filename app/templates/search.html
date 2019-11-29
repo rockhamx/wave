@@ -7,8 +7,8 @@
 {% block content %}
     {{ super() }}
 
-        <div class="row">
-            <div class="col-xs-12 col-md-12 articles">
+    <div class="row">
+        <div class="col-xs-12 col-md-12 articles">
 
             {% if posts %}
                 {% for post in posts %}
@@ -18,12 +18,12 @@
                 <div class="message">{{ _('We couldn’t find any posts.') }}</div>
             {% endif %}
 
-            </div>
-
-            {% if request.base_url == request.url %}
-                <a class="pagination__next" href="{{ url_for('post.search') }}?page=2"></a>
-            {% else %}
-                <a class="pagination__next" href="{{ request.url }}&page=2"></a>
-            {% endif %}
         </div>
+
+        {% if request.base_url == request.url %}
+            <a class="pagination__next" href="{{ url_for('frontend.search') }}?page=2"></a>
+        {% else %}
+            <a class="pagination__next" href="{{ request.url }}&page=2"></a>
+        {% endif %}
+    </div>
 {% endblock %}

@@ -12,22 +12,30 @@
     {{ super() }}
 
     <div class="row">
-
         <div class="col-sm-12 col-md-12 search">
             <div class="input-group-lg">
-                <input type="text" class="form-control" placeholder="{{ _('Search Wave') }}"
-                value="{{ query }}">
+                <input type="text" class="form-control" id="search" placeholder="{{ _('Search Wave') }}"
+                       value="{{ query }}">
             </div>
         </div>
-
     </div>
+
+{#    TODO: turn this page to a single page#}
     <div class="row">
         <div class="col-sm-12 col-md-12">
             <ul class="nav nav-tabs">
-                <li role="presentation"><a href="{{ url_for('post.search') }}?q={{ query }}">{{ _('Articles') }}</a></li>
-                <li role="presentation"><a href="{{ url_for('frontend.search') }}?q={{ query }}">{{ _('People') }}</a></li>
-                <li role="presentation"><a href="#">{{ _('Publications') }}</a></li>
-                <li role="presentation"><a href="#">{{ _('Tags') }}</a></li>
+                <li role="presentation">
+                    <a href="{{ url_for('frontend.search', q=query) }}">{{ _('Articles') }}</a>
+                </li>
+                <li role="presentation">
+                    <a href="{{ url_for('frontend.search_user', q=query) }}">{{ _('People') }}</a>
+                </li>
+                <li role="presentation">
+                    <a href="{{ url_for('frontend.search_pub', q=query) }}">{{ _('Publications') }}</a>
+                </li>
+                <li role="presentation">
+                    <a href="{{ url_for('frontend.search_tag', q=query) }}">{{ _('Tags') }}</a>
+                </li>
             </ul>
         </div>
     </div>

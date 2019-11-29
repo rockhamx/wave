@@ -1,0 +1,17 @@
+<div class="thumbnail publication flex-box">
+    <div class="flex-box flex-grow-1">
+        <a href=""><img src="" alt="{{ pub.name }}"></a>
+        <div class="flex-box-column publication-info">
+            <strong>{{ pub.name }}</strong>
+            <span>{{ pub.description if pub.description else "No description." }}</span>
+        </div>
+    </div>
+    <div>
+
+        <button class="btn-text">
+            <span>{{ _('Following') }}</span>
+            <i class="material-icons">keyboard_arrow_down</i>
+        </button>
+
+    </div>
+</div>

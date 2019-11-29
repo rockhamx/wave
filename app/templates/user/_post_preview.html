@@ -2,11 +2,11 @@
 <div class="thumbnail article-preview">
 
     {% with author = post.author, content = post, type = "post" %}
-        {% include "_author_bar.html" %}
+        {% include "user/_author_bar.html" %}
     {% endwith %}
 
-    <h3><a href="{{ url_for('post.article', id=post.id) }}">{{ post.title }}</a>
-
+    <h3>
+        <a href="{{ url_for('post.article', id=post.id) }}">{{ post.title }}</a>
     </h3>
     <p>{{ post.preview | safe }}</p>
 

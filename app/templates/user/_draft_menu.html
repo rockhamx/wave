@@ -1,0 +1,13 @@
+<div class="btn-group draft-menu">
+    <button class="close dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true"
+            aria-expanded="false">
+        <span class="glyphicon glyphicon-menu-down" aria-hidden="true"></span>
+    </button>
+    <ul class="dropdown-menu">
+
+        <li><a href="{{ url_for('post.draft', id=draft.id) }}">{{ _('Edit') }}</a></li>
+
+        <li><a data-id="{{ draft.id }}" data-toggle="modal" data-target="#draftConfirmModal">{{ _('Delete') }}</a></li>
+    </ul>
+</div>
+

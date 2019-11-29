@@ -48,10 +48,12 @@ def create_app(config_name):
 
     from .frontend import frontend
     from .auth import auth
+    from .user import user
     from .post import post
     from .api import api
     app.register_blueprint(frontend)
     app.register_blueprint(auth)
+    app.register_blueprint(user)
     app.register_blueprint(post)
     app.register_blueprint(api, url_prefix='/api/v0')
 

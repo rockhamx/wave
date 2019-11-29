@@ -2,9 +2,9 @@
     <div class="col-xs-12 col-md-12">
         <div href="#" class="thumbnail profile clearfix">
 
-            <div class="avatar"><img src="{{ user.avatar(256) }}" alt="avatar"></div>
+            <div class="avatar flex-grow-1"><img src="{{ user.avatar(256) }}" alt="avatar"></div>
 
-            <div class="text">
+            <div class="text flex-grow-2">
                 <h3>{{ user.name }}</h3>
                 {% if user.description %} <p>{{ user.description }}</p> {% endif %}
 
@@ -22,12 +22,12 @@
 
                 <p>
                     {#                Following#}
-                    <a href="{{ url_for('frontend.following', username=user.username) }}">
+                    <a href="{{ url_for('user.following', username=user.username) }}">
                         {{ _('<b>%(following)d</b> following', following = user.following.count() ) }}
                     </a>
                     {{ _(', ') }}
                     {#                Followers#}
-                    <a href="{{ url_for('frontend.followers', username=user.username) }}">
+                    <a href="{{ url_for('user.followers', username=user.username) }}">
                         {{ ngettext('<b id="followers">%(followers)d</b> follower',
                     '<b id="followers">%(followers)d</b> followers',
                     user.followers.count(), followers = user.followers.count()) }}

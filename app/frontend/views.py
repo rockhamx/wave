@@ -1,11 +1,10 @@
-from flask import render_template, flash, redirect, url_for, request, current_app
-from flask_babel import refresh, gettext as _
-from flask_login import login_required, current_user
+from flask import render_template, request, current_app
+from flask_babel import gettext as _
+from flask_login import current_user
 
 from . import frontend
-from app import db, babel
-from app.models import User, Post
-from .forms import EditProfileForm
+from app import babel
+from app.models import User, Post, Publication, Tag
 
 
 # @login_required
@@ -35,83 +34,41 @@ def react():
     return render_template('react.html')
 
 
-# User Profile
-@frontend.route('/<username>')
-def user(username):
-    user = User.query.filter_by(username=username).first_or_404()
+@frontend.route('/search')
+def search():
+    query_string = request.args.get('q', default='')
+    query = '%{}%'.format(query_string)
     page = request.args.get('page', 1, type=int)
-    posts = user.latest_posts(page=page)
-    return render_template('user/profile.html', user=user, posts=posts)
-
-
-@frontend.route('/edit-profile', methods=['GET', 'POST'])
-@login_required
-def edit_profile():
-    form = EditProfileForm()
-    if form.validate_on_submit():
-        old_locale = form.locale.data
-        current_user.name = form.name.data
-        current_user.location = form.location.data
-        current_user.description = form.description.data
-        current_user.locale = form.locale.data
-        db.session.add(current_user)
-        db.session.commit()
-        if current_user.locale != old_locale:
-            refresh()
-        flash(_(u'Your profile has been updated.'))
-        return redirect(url_for('.user', username=current_user.username))
-    form.name.data = current_user.name
-    form.location.data = current_user.location
-    form.description.data = current_user.description
-    form.locale.data = current_user.locale
-    return render_template('user/edit_profile.html', form=form)
-
-
-@frontend.route('/follow', methods=['POST'])
-@login_required
-def follow():
-    u = User.query.filter_by(username=request.form['username']).first()
-    if u and current_user != u and not current_user.is_following(u):
-        current_user.follows(u)
-        db.session.commit()
-        status = _('Following')
-        return {'status': status}
-    return {}
-
-
-@frontend.route('/unfollow', methods=['POST'])
-@login_required
-def unfollow():
-    u = User.query.filter_by(username=request.form['username']).first()
-    if u and current_user != u and current_user.is_following(u):
-        current_user.un_follows(u)
-        db.session.commit()
-        status = _('Follow')
-        return {'status': status}
-    return {}
-
-
-@frontend.route('/<username>/following')
-def following(username):
-    u = User.query.filter_by(username=username).first_or_404()
-    users = u.following_desc_by_time()
-    return render_template('user/following.html', username=username, users=users)
-
-
-@frontend.route('/<username>/followers')
-def followers(username):
-    u = User.query.filter_by(username=username).first_or_404()
-    users = u.followers_desc_by_time()
-    return render_template('user/followers.html', username=username, users=users)
+    posts = Post.search(page, query, query, query)
+    return render_template('search.html', query=query_string, posts=posts)
 
 
 @frontend.route('/search/user')
-def search():
+def search_user():
     query_string = request.args.get('q', default='')
     query = '%{}%'.format(query_string)
     page = request.args.get('page', 1, type=int)
     users = User.search(page, query, query)
     return render_template('user/search.html', query=query_string, users=users)
+
+
+@frontend.route('/search/publication')
+def search_pub():
+    query_string = request.args.get('q', default='')
+    query = '%{}%'.format(query_string)
+    page = request.args.get('page', 1, type=int)
+    pubs = Publication.search(page, query, query)
+    return render_template('publication/search.html', query=query_string, publications=pubs)
+
+
+@frontend.route('/search/tags')
+def search_tag():
+    query_string = request.args.get('q', default='')
+    query = '%{}%'.format(query_string)
+    page = request.args.get('page', 1, type=int)
+    tags = Tag.search(page, query, query)
+    return render_template('tag/search.html', query=query_string, tags=tags)
+
 
 # @frontend.route('/tags', methods=['GET'])
 # @login_required

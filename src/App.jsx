@@ -1,6 +1,6 @@
 import React from "react";
 import ReactDOM from "react-dom";
-import WaveEditor from "./WaveEditor.jsx";
+import WaveEditor from "./WaveEditor";
 import { css, cx } from "emotion";
 
 const editor = (
@@ -8,7 +8,7 @@ const editor = (
     className={cx(css`
       background-color: #f8f8f8;
       width: inherit;
-      min-height: 50rem;
+      // min-height: 50rem;
       padding: 20px;
     `)}
   />

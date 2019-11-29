@@ -1,12 +1,12 @@
 from flask_babel import lazy_gettext as _l
 from flask_wtf import FlaskForm
-from wtforms import StringField, SubmitField, TextAreaField
-from wtforms.validators import Length
+from wtforms import SubmitField, TextAreaField, StringField
+from wtforms.validators import Length, InputRequired
 
 
-class EditProfileForm(FlaskForm):
-    name = StringField(_l(u'Nickname'), [Length(0, 64)])
-    location = StringField(_l(u'Location'), [Length(0, 64)])
-    description = TextAreaField(_l(u'description'))
-    locale = StringField(_l(u'Locale'))
-    submit = SubmitField(_l(u'Save profile'))
+class NewPublicationForm(FlaskForm):
+    name = StringField(_l(u'Name'), validators=[InputRequired(), Length(min=0, max=64)],
+                       render_kw={"placeholder": _l(u'Publication name, required.')})
+    description = TextAreaField(_l(u'Description'),
+                                render_kw={"placeholder": _l(u'Description, this is optional.')})
+    submit = SubmitField(_l(u'Create'))

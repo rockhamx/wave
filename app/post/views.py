@@ -4,50 +4,53 @@ from flask_login import login_required, current_user
 
 from . import post
 from app import db
-from app.models import Post, Comment
-from .forms import PostForm, CommentForm
+from app.models import Post, Draft, Tag, Comment
+from .forms import PostEditorForm, CommentForm, RichTextEditorForm
 
 
 @post.route('/articles')
-@post.route('/articles/draft')
-@post.route('/articles/published')
+# @post.route('/articles/draft')
+# @post.route('/articles/published')
 @login_required
 def articles():
-    user = current_user._get_current_object()
+    # user = current_user._get_current_object()
     page = request.args.get('page', 1, type=int)
-    posts = user.latest_posts(page=page)
-    return render_template('user/articles.html', posts=posts)
+    drafts = current_user.drafts_desc_by_time(page=page)
+    posts = current_user.latest_posts(page=page)
+    return render_template('user/articles.html', drafts=drafts, posts=posts)
 
 
 @post.route('/write', methods=['GET', 'POST'])
 @login_required
 def write():
-    form = PostForm()
+    form = PostEditorForm()
     if form.validate_on_submit():
         p = Post(title=form.title.data, body=form.body.data,
                  is_public=form.is_public.data, author=current_user._get_current_object())
         db.session.add(p)
         db.session.commit()
         flash(_(u'Your post has been published.'))
-        return redirect(url_for('frontend.user', username=current_user.username))
+        return redirect(url_for('user.profile', username=current_user.username))
     return render_template('user/write.html', form=form)
 
 
-@post.route('/new')
-@login_required
-def new():
-    return render_template('new.html')
-
-
-@post.route('/edit_post/<int:id>', methods=['GET', 'POST'])
+@post.route('/p/<int:id>/edit', methods=['GET', 'POST'])
 @login_required
 def edit(id):
-    form = PostForm()
-    p = Post.query.filter_by(id=id).first_or_404()
-    if current_user.id != p.author_id:
-        flash(_('You have not authorized to this operation.', 'error'))
-        return redirect(url_for('.user', username=current_user.username))
+    p = Post.query.filter_by(id=id, author_id=current_user.id).first_or_404()
 
+    if not p.body:
+        form = RichTextEditorForm()
+        form.reference_id.data = p.id
+        form.title.data = p.title
+        form.subtitle.data = p.subtitle
+        form.description.data = p.description
+        form.content.data = p.html
+        form.tags.data = ','.join([str(tag) for tag in p.tags])
+        form.is_public.data = p.is_public
+        return render_template('new.html', form=form)
+
+    form = PostEditorForm()
     if form.validate_on_submit():
         p.title = form.title.data
         p.body = form.body.data
@@ -62,53 +65,52 @@ def edit(id):
     return render_template('user/write.html', form=form)
 
 
-@post.route('/delete_post', methods=['POST'])
+@post.route('/new')
 @login_required
-def delete():
-    result = "Error"
-    id = request.form.get('id', None)
-    if id:
-        # TODO: bugs
-        p = Post.query.filter_by(id=id).first()
-        if p:
-            db.session.delete(p)
-            db.session.commit()
-            result = "Success"
-    return jsonify({
-        "status": result
-    })
+def new():
+    form = RichTextEditorForm()
+    return render_template('new.html', form=form)
 
 
-@post.route('/followed')
+@post.route('/d/<int:id>/edit', methods=['GET', 'POST'])
 @login_required
-def followed():
-    page = request.args.get('page', 1, type=int)
-    posts = current_user.followed_posts(page)
-    return render_template('user/followed_posts.html', posts=posts)
+def draft(id):
+    d = Draft.query.filter_by(id=id, author_id=current_user.id).first_or_404()
+    # if current_user.id != d.author_id:
+    #     flash(_('You have not authorized to this operation.'))
+    #     return redirect(url_for('.user', username=current_user.username))
 
+    form = RichTextEditorForm()
+    if form.validate_on_submit():
+        if form.reference_id.data:
+            p = Post.query.filter_by(id=form.reference_id.data, author_id=current_user.id).first_or_404()
+        else:
+            p = Post()
+            p.author = current_user._get_current_object()
+        p.update(title=form.title.data, subtitle=form.subtitle.data, description=form.description.data,
+                 html=form.content.data, is_public=form.is_public.data)
 
-@post.route('/my/hearts')
-@login_required
-def hearts():
-    page = request.args.get('page', 1, type=int)
-    posts = current_user.hearts_desc_by_time(page)
-    return render_template('user/hearts.html', posts=posts)
+        if form.tags.data:
+            for tag in form.tags.data.split(','):
+                tag = Tag.get_or_create(tag.strip())
+                if tag and tag not in p.tags:
+                    p.tags.append(tag)
+        db.session.add(p)
+        db.session.delete(d)
+        db.session.commit()
+        flash(_(u'Your post has been updated.'))
+        return redirect(url_for('post.article', id=p.id))
 
-
-@post.route('/my/bookmarks')
-@login_required
-def bookmarks():
-    page = request.args.get('page', 1, type=int)
-    posts = current_user.bookmarks_desc_by_time(page)
-    return render_template('user/bookmarks.html', posts=posts)
-
-
-@post.route('/my/tags')
-@login_required
-def tags():
-    # page = request.args.get('page', 1, type=int)
-    # posts = current_user.bookmarks_desc_by_time(page)
-    return render_template('user/tags.html', user=current_user)
+    form.id.data = d.id
+    form.reference_id.data = d.reference_id
+    form.type.data = d.type
+    form.title.data = d.title
+    form.subtitle.data = d.subtitle
+    form.description.data = d.description
+    form.content.data = d.content
+    form.tags.data = d.tags
+    form.is_public.data = d.is_public
+    return render_template('new.html', form=form)
 
 
 @post.route('/newest')
@@ -118,19 +120,10 @@ def newest():
     return render_template('newest.html', posts=posts)
 
 
-@post.route('/search')
-def search():
-    query_string = request.args.get('q', default='')
-    query = '%{}%'.format(query_string)
-    page = request.args.get('page', 1, type=int)
-    posts = Post.search(page, query, query, query)
-    return render_template('search.html', query=query_string, posts=posts)
-
-
 @post.route('/article/<int:id>', methods=['GET', 'POST'])
 def article(id):
     form = CommentForm()
-    post = Post.query.filter_by(id=id).first()
+    post = Post.query.filter_by(id=id).first_or_404()
     comments = post.comments_desc_by_time()
     if form.validate_on_submit():
         if not current_user.is_authenticated:
@@ -143,3 +136,18 @@ def article(id):
         flash(_(u'Your comment has been published.'))
         return redirect(url_for('post.article', id=id))
     return render_template('article.html', post=post, comments=comments, form=form)
+
+# @post.route('/delete_post', methods=['POST'])
+# @login_required
+# def delete():
+#     result = "error"
+#     id = request.form.get('id', None)
+#     if id:
+#         p = Post.query.filter_by(id=id).first()
+#         if p:
+#             db.session.delete(p)
+#             db.session.commit()
+#             result = "success"
+#     return jsonify({
+#         "status": result
+#     })

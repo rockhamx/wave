@@ -1,0 +1,29 @@
+{% extends "base_search.html" %}
+
+{% block title %}
+    {{ _('Search and Find') }} - {{ 'Wave' }}
+{% endblock %}
+
+{% block content %}
+    {{ super() }}
+
+    <div class="row">
+        <div class="col-xs-12 col-md-12 publications">
+
+            {% if tags %}
+                {% for tag in tags %}
+                    {% include "tag/_tag_preview.html" %}
+                {% endfor %}
+            {% else %}
+                <div class="message">{{ _('We couldn’t find any tags.') }}</div>
+            {% endif %}
+
+        </div>
+
+        {% if request.base_url == request.url %}
+            <a class="pagination__next" href="{{ url_for('frontend.search_tag') }}?page=2"></a>
+        {% else %}
+            <a class="pagination__next" href="{{ request.url }}&page=2"></a>
+        {% endif %}
+    </div>
+{% endblock %}

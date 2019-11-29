@@ -26,6 +26,8 @@
 {% block styles %}
     {{ super() }}
     <link href="{{ url_for('static', filename='css/wave.css') }}" rel="stylesheet">
+    <link href="{{ url_for('static', filename='css/material-icons.css') }}"
+          rel="stylesheet">
 {% endblock %}
 
 {% block navbar %}
@@ -41,22 +43,22 @@
                 </button>
                 <a class="navbar-brand" href="{{ url_for('frontend.index') }}">
                     <span><img src="{{ url_for('static', filename='wave/favicon-40x40.png') }}" alt="brand"></span>
-                    | {{ _('Wave') }}
+                    <span>| {{ _('Wave') }}</span>
                 </a>
             </div>
             <div id="navbar" class="collapse navbar-collapse">
                 <ul class="nav navbar-nav">
-                    {#                    <li><a href="{{ url_for('frontend.index') }}">{{ _('Home') }}</a></li>#}
-                    {#          TODO: Trending#}
-                    <li><a href="{{ url_for('post.newest') }}">{{ _('Newest') }}</a></li>
-                    {% if current_user.is_authenticated %}
-                        <li><a href="{{ url_for('post.followed') }}">{{ _('My Followed Article') }}</a></li>
-                        <li>
-                            <a href="{{ url_for('frontend.user', username=current_user.username) }}">{{ _('Me') }}</a>
-                        </li>
-                        <li><a href="{{ url_for('post.write') }}">{{ _('Writing') }}</a></li>
-                    {% endif %}
-                    <li><a href="#about">{{ _('About') }}</a></li>
+                    {% block navbar_left %}
+                        {#          TODO: Trending#}
+                        <li><a href="{{ url_for('post.newest') }}">{{ _('Newest') }}</a></li>
+                        {% if current_user.is_authenticated %}
+                            <li><a href="{{ url_for('user.followed') }}">{{ _('My Followed Article') }}</a></li>
+                            <li>
+                                <a href="{{ url_for('user.profile', username=current_user.username) }}">{{ _('Profile') }}</a>
+                            </li>
+                        {% endif %}
+                        <li><a href="#about">{{ _('About') }}</a></li>
+                    {% endblock %}
                 </ul>
                 {#      user dropdown menu#}
                 <ul class="nav navbar-nav navbar-right">
@@ -73,54 +75,64 @@
                                 </li>
                                 <li role="separator" class="divider"></li>
                                 <li>
-                                    <a href="{{ url_for('post.write') }}">
+                                    <a href="{{ url_for('post.new') }}">
                                         <span class="glyphicon glyphicon-edit"
-                                              aria-hidden="true"></span>{{ _('Writing') }}
+                                              aria-hidden="true"></span>
+                                        <span>{{ _('Writing') }}</span>
                                     </a>
                                 </li>
                                 <li>
                                     <a href="{{ url_for('post.articles') }}">
                                         <span class="glyphicon glyphicon-duplicate"
-                                              aria-hidden="true"></span>{{ _('Articles') }}
+                                              aria-hidden="true"></span>
+                                        <span>{{ _('Articles') }}</span>
                                     </a>
                                 </li>
                                 <li>
-                                    <a href="{{ url_for('frontend.user', username=current_user.username) }}">
+                                    <a href="{{ url_for('user.profile', username=current_user.username) }}">
                                         <span class="glyphicon glyphicon-bell"
-                                              aria-hidden="true"></span>{{ _('Notifications') }}
+                                              aria-hidden="true"></span>
+                                        <span>{{ _('Notifications') }}</span>
+                                        <span class="badge"></span>
                                     </a>
                                 </li>
-                                <li>
-                                    <a href="{{ url_for('frontend.user', username=current_user.username) }}">
+                                <li id="messages">
+                                    <a href="{{ url_for('user.messages') }}">
                                         <span class="glyphicon glyphicon-envelope"
-                                              aria-hidden="true"></span>{{ _('Messages') }}
+                                              aria-hidden="true"></span>
+                                        <span>{{ _('Messages') }}</span>
+                                        <span class="badge"></span>
                                     </a>
                                 </li>
 
                                 <li role="separator" class="divider"></li>
 
                                 <li>
-                                    <a href="{{ url_for('post.hearts') }}">
+                                    <a href="{{ url_for('user.hearts') }}">
                                         <span class="glyphicon glyphicon-heart"
-                                              aria-hidden="true"></span>{{ _('Hearts') }}
+                                              aria-hidden="true"></span>
+                                        <span>{{ _('Hearts') }}</span>
                                     </a>
                                 </li>
                                 <li>
-                                    <a href="{{ url_for('post.bookmarks') }}">
+                                    <a href="{{ url_for('user.bookmarks') }}">
                                         <span class="glyphicon glyphicon-bookmark"
-                                              aria-hidden="true"></span>{{ _('Bookmarks') }}
+                                              aria-hidden="true"></span>
+                                        <span>{{ _('Bookmarks') }}</span>
                                     </a>
                                 </li>
                                 <li>
-                                    <a href="{{ url_for('frontend.user', username=current_user.username) }}">
+                                    <a href="{{ url_for('user.publications') }}">
                                         <span class="glyphicon glyphicon-ruble"
-                                              aria-hidden="true"></span>{{ _('Publications') }}
+                                              aria-hidden="true"></span>
+                                        <span>{{ _('Publications') }}</span>
                                     </a>
                                 </li>
                                 <li>
-                                    <a href="{{ url_for('post.tags', username=current_user.username) }}">
-                                        <span class="glyphicon glyphicon-tags"
-                                              aria-hidden="true"></span>{{ _('Tags') }}
+                                    <a href="{{ url_for('user.interests') }}">
+                                        <span class="glyphicon glyphicon-sunglasses"
+                                              aria-hidden="true"></span>
+                                        <span>{{ _('Interests') }}</span>
                                     </a>
                                 </li>
 
@@ -128,34 +140,42 @@
 
                                 <li><a href="{{ url_for('auth.change_password') }}">
                                     <span class="glyphicon glyphicon-pencil"
-                                          aria-hidden="true"></span>{{ _('Change password') }}</a></li>
+                                          aria-hidden="true"></span>
+                                    <span>{{ _('Change password') }}</span>
+                                </a></li>
                                 <li><a href="{{ url_for('auth.change_email_request') }}">
                                     <span class="glyphicon glyphicon-pencil"
-                                          aria-hidden="true"></span>{{ _('Change email') }}</a></li>
+                                          aria-hidden="true"></span>
+                                    <span>{{ _('Change email') }}</span>
+                                </a></li>
 
                                 <li role="separator" class="divider"></li>
 
                                 <li>
-                                    <a href="{{ url_for('frontend.user', username=current_user.username) }}">
+                                    <a href="{{ url_for('user.profile', username=current_user.username) }}">
                                         <span class="glyphicon glyphicon-user"
-                                              aria-hidden="true"></span>{{ _('Profile') }}
+                                              aria-hidden="true"></span>
+                                        <span>{{ _('Profile') }}</span>
                                     </a>
                                 </li>
                                 <li>
-                                    <a href="{{ url_for('frontend.user', username=current_user.username) }}">
-                                        <span class="glyphicon glyphicon-book" aria-hidden="true"></span>{{ _('Help') }}
+                                    <a href="{{ url_for('user.profile', username=current_user.username) }}">
+                                        <span class="glyphicon glyphicon-book" aria-hidden="true"></span>
+                                        <span>{{ _('Help') }}</span>
                                     </a>
                                 </li>
                                 <li>
-                                    <a href="{{ url_for('frontend.user', username=current_user.username) }}">
+                                    <a href="{{ url_for('user.preference') }}">
                                         <span class="glyphicon glyphicon-cog"
-                                              aria-hidden="true"></span>{{ _('Settings') }}
+                                              aria-hidden="true"></span>
+                                        <span>{{ _('Preperence') }}</span>
                                     </a>
                                 </li>
                                 <li>
                                     <a href="{{ url_for('auth.logout') }}">
                                         <span class="glyphicon glyphicon-log-out"
-                                              aria-hidden="true"></span>{{ _('Sign out') }}
+                                              aria-hidden="true"></span>
+                                        <span>{{ _('Sign out') }}</span>
                                     </a>
                                 </li>
                             </ul>
@@ -167,15 +187,20 @@
 
                 {% block extra_navbar %}
                     <div class="col-sm-4 col-md-3 navbar-right search">
-                        <div class="input-group">
-                            <input type="text" class="form-control" placeholder="{{ _('Search for...') }}">
-                            <span class="input-group-btn">
-                                <button class="btn btn-default" id="search" type="button">{{ _('Go!') }}</button>
-                            </span>
-                        </div>
+
+                        <form action="/search" method="get">
+                            <div class="input-group">
+                                <input name="q" type="text" class="form-control" placeholder="{{ _('Search for...') }}">
+                                <span class="input-group-btn">
+                                    <button class="btn btn-default" id="search" type="submit">{{ _('Go!') }}</button>
+                                </span>
+                            </div>
+                        </form>
+
                     </div>
                 {% endblock %}
-            </div><!--/.nav-collapse -->
+
+            </div>
         </div>
     </nav>
 {% endblock %}
@@ -198,19 +223,41 @@
 {% block scripts %}
     {{ super() }}
     {#    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment-with-locales.js"></script>#}
-    {#    <script src="{{ url_for('static', filename='js/moment-with-locales.js') }}"></script>#}
     {#    <script>moment.locale('zh-CN');</script>#}
     {{ moment.include_moment() }}
+
+    {#    <script src="{{ url_for('static', filename='js/moment-with-locales.js') }}"></script>#}
 
     <script src="{{ url_for('static', filename='js/wave.js') }}"></script>
 
     {% if current_user.is_authenticated %}
-        {{ moment.locale(current_user.locale) }}
+        {% if current_user.locale == 'zh_Hans_CN' %}
+            {{ moment.locale('zh-cn') }}
+        {% else %}
+            {{ moment.locale(current_user.locale) }}
+            <script>
+                moment.updateLocale("zh-cn", {
+                    calendar: {
+                        lastDay: "[昨天]LT",
+                        lastWeek: function (now) {
+                            if (this.valueOf() > moment().startOf("isoweek").valueOf())
+                                return "[这]ddddLT";
+                            else
+                                return "[上]ddddLT";
+                        },
+                        nextDay: "[明天]LT",
+                        nextWeek: "[下]ddddLT",
+                        sameDay: "[今天]LT",
+                        sameElse: "L",
+                    }
+                });
+            </script>
+        {% endif %}
     {% else %}
         {{ moment.locale(auto_detect=True) }}
     {% endif %}
-    <script type=text/javascript>
-        $URL_ROOT = {{ request.url_root|tojson|safe }};
-    </script>
+    {#    <script type=text/javascript>#}
+    {#        $URL_ROOT = {{ request.url_root|tojson|safe }};#}
+    {#    </script>#}
 
 {% endblock %}

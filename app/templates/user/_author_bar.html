@@ -1,23 +1,21 @@
 {% if current_user == author %}
-    <div class="btn-group author-menu">
-        <button class="close dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-            <span class="glyphicon glyphicon-menu-down" aria-hidden="true"></span>
-        </button>
-        <ul class="dropdown-menu">
-            <li><a href="{{ url_for('post.edit', id=post.id) }}">{{ _('Edit') }}</a></li>
-            <li><a data-id="{{ content.id }}" data-toggle="modal" data-target="#confirmModal">{{ _('Delete') }}</a></li>
-        </ul>
+    {% include "user/_post_menu.html" %}
+{% else %}
+    <div class="float-right">
+        <a href="{{ url_for('frontend.send_message', recipient=author.username) }}" class="send_message">
+            <i class="material-icons">mail_outline</i>
+        </a>
     </div>
 {% endif %}
 
 <div class="author-bar clearfix flex-box">
-    <div><a href="{{ url_for('frontend.user', username=author.username) }}">
+    <div><a href="{{ url_for('user.profile', username=author.username) }}">
         <img src="{{ author.avatar(42) }}" alt="avatar" class="avatar">
     </a></div>
 
     <div class="author-bar-right">
         <div class="author-bar-name flex-box">
-            <div><a href="{{ url_for('frontend.user', username=author.username) }}">{{ author.name }}</a></div>
+            <div><a href="{{ url_for('user.profile', username=author.username) }}">{{ author.name }}</a></div>
             {% with user = author %}
                 {% include "user/_follow_buttons.html" %}
             {% endwith %}

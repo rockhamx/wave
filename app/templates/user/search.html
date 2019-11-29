@@ -9,21 +9,20 @@
 
     <div class="row">
         <div class="col-xs-12 col-md-12 users">
-            {% if users %}
 
+            {% if users %}
                 {% for user in users %}
                     {% include "user/_user_preview.html" %}
                 {% endfor %}
-
             {% else %}
                 <div class="message">{{ _('We couldn’t find any people.') }}</div>
             {% endif %}
 
-            <div class="tabs"></div>
+{#            <div class="tabs"></div>#}
 
         </div>
         {% if request.base_url == request.url %}
-            <a class="pagination__next" href="{{ url_for('frontend.search') }}?page=2"></a>
+            <a class="pagination__next" href="{{ url_for('frontend.search_user') }}?page=2"></a>
         {% else %}
             <a class="pagination__next" href="{{ request.full_path }}&page=2"></a>
         {% endif %}

@@ -1,5 +1,5 @@
 // Editor
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { Editor } from "slate-react";
 // import { initialValue, existingValue } from "./slateInitialValue";
 import { cx, css } from "emotion";
@@ -14,9 +14,89 @@ const isUnderlinedHotkey = isKeyHotkey("mod+u");
 const isCodeHotkey = isKeyHotkey("mod+`");
 
 const WaveEditor = props => {
-  const initialValue = localStorage.getItem("content") || "<div></div>";
-  const [value, setValue] = useState(html.deserialize(initialValue));
   const editor = useRef(null);
+  const draftId = $("input#id");
+  const draftReferenceId = $("input#reference_id");
+  const draftType = $("input#type");
+  const draftTitle = $("input#title");
+  const draftSubtitle = $("input#subtitle");
+  const draftDescription = $("textarea#description");
+  const draftContent = $("input#content");
+  const draftTags = $("input#tags");
+  const draftIsPublic = $("input#is_public")[0];
+  const initialValue = draftContent.val() || "<p></p>";
+  const [value, setValue] = useState(html.deserialize(initialValue));
+  let interval;
+
+  const get_draft = () => {
+    const id = draftId.val();
+    const referenceId = draftReferenceId.val();
+    const type = draftType.val();
+    const title = draftTitle.val();
+    const subtitle = draftSubtitle.val();
+    const description = draftDescription.val();
+    const tags = draftTags.val();
+    const content = html.serialize(value);
+    const isPublic = draftIsPublic.checked === false;
+    return {
+      id: id,
+      reference_id: referenceId,
+      type: type,
+      title: title,
+      subtitle: subtitle,
+      description: description,
+      tags: tags,
+      content: content,
+      is_public: isPublic
+    };
+  };
+  const [lastSaveDraft, setLastSaveDraft] = useState(JSON.stringify(get_draft()));
+
+  useEffect(() => {
+    interval = setInterval(function() {
+      const draft = JSON.stringify(get_draft());
+      // console.log(JSON.parse(draft));
+      // console.log(JSON.parse(lastSaveDraft));
+      if (lastSaveDraft && lastSaveDraft === draft) return;
+      console.log("content changed");
+
+      const draft_progress = $("#draft_progress span")[0];
+      draft_progress.innerText = "Saving...";
+      const url = "/api/v0/drafts/";
+      $.ajax({
+        url: url,
+        type: "POST",
+        data: draft,
+        contentType: "application/json; charset=utf-8",
+        dataType: "json",
+        success: data => {
+          if (data.status === "success") {
+            if (!draftId.val()) {
+              draftId.val(data.id);
+              window.history.replaceState({}, "", `/d/${data.id}/edit`);
+            }
+            setLastSaveDraft(draft);
+            draft_progress.innerText = "Saved";
+            console.log("saved: " + draft);
+          }
+        }
+      });
+    }, 1000);
+
+    return () => {
+      clearInterval(interval);
+    };
+  });
+
+  // modal show event
+  $("#publishModalForRichText").on("show.bs.modal", function (event) {
+    // event.preventDefault();
+    // const $modal = $(this);
+    // TODO: refurnish this dumb trick
+    const content = $("input#content");
+    content.val(html.serialize(value));
+
+  });
 
   const onClickMark = (event, type) => {
     event.preventDefault();
@@ -132,9 +212,9 @@ const WaveEditor = props => {
     switch (node.type) {
       case "paragraph":
         return (
-          <div {...attributes} className={cx(node.data.get("className"))}>
+          <p {...attributes} className={cx(node.data.get("className"))}>
             {children}
-          </div>
+          </p>
         );
       case "block-quote":
         return <blockquote {...attributes}>{children}</blockquote>;
@@ -153,15 +233,14 @@ const WaveEditor = props => {
     }
   };
 
-  const handleChange = val => {
-    if (val.value.document !== value.document) {
-      const content = html.serialize(val.value);
-      localStorage.setItem("content", content);
+  const handleChange = obj => {
+    // if (obj.value.document !== value.document) {
+    //   const content = html.serialize(obj.value);
+    //   localStorage.setItem("content", content);
+    // }
 
-    }
-
-    // console.log(value);
-    setValue(val.value);
+    console.log(value);
+    setValue(obj.value);
   };
 
   const handleKeyDown = (event, editor, next) => {
@@ -195,6 +274,8 @@ const WaveEditor = props => {
         {renderBlockButton("block-quote", "format_quote")}
         {renderBlockButton("numbered-list", "format_list_numbered")}
         {renderBlockButton("bulleted-list", "format_list_bulleted")}
+        {/*{renderBlockButton("insert-image", "insert_image")}*/}
+
       </Toolbar>
       <Editor
         ref={editor}
@@ -206,6 +287,7 @@ const WaveEditor = props => {
             margin-top: 1rem;
           }
           font-size: 18px;
+          min-height: 70rem;
         `)}
         value={value}
         onChange={handleChange}

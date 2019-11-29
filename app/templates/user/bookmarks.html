@@ -1,12 +1,12 @@
 {% extends "base_infinite_scroll.html" %}
 
-{% block title %}{{ _('Your bookmarks') }} | Wave{% endblock %}
+{% block title %}{{ _('Bookmarks') }} | Wave{% endblock %}
 
 {% block content %}
     {{ super() }}
     <div class="row">
         <div class="col-xs-12 col-md-12 articles">
-            <h1>{{ _('Your bookmarks') }}</h1>
+            <h1>{{ _('Bookmarks') }}</h1>
 
             {% for post in posts %}
                 {% include 'user/_post_preview.html' %}
