@@ -1,9 +1,40 @@
 from flask import jsonify
 from flask_login import login_required, current_user
+from flask_babel import gettext as _
 
 from app import db
-from app.models import Message
+from app.models import User, Message
 from . import api
+
+
+@api.route('/follow/<username>', methods=['POST'])
+@login_required
+def follow(username):
+    status = _('Follow')
+    u = User.query.filter_by(username=username).first()
+    if u and current_user != u:
+        current_user.follows(u)
+        db.session.commit()
+        status = _('Following')
+
+    return jsonify({
+        'status': status
+    })
+
+
+@api.route('/unfollow/<username>', methods=['POST'])
+@login_required
+def unfollow(username):
+    status = _('Following')
+    u = User.query.filter_by(username=username).first()
+    if u and current_user != u:
+        current_user.un_follows(u)
+        db.session.commit()
+        status = _('Follow')
+
+    return jsonify({
+        'status': status
+    })
 
 
 @api.route('/unread_messages/count')

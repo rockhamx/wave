@@ -1,4 +1,4 @@
-from flask import render_template, redirect, request, url_for, flash, current_app
+from flask import render_template, redirect, request, url_for, flash
 from flask_login import login_user, logout_user, login_required, current_user
 from flask_babel import refresh, gettext as _, get_locale
 
@@ -13,11 +13,11 @@ from .. import db, email
 def before_request():
     if current_user.is_authenticated:
         current_user.ping()
-        if not current_user.confirmed \
-            and request.endpoint \
-            and request.blueprint != 'auth' \
-            and request.endpoint != 'static':
-            return redirect(url_for('auth.unconfirmed'))
+        # if not current_user.confirmed \
+        #     and request.endpoint \
+        #     and request.blueprint != 'auth' \
+        #     and request.endpoint != 'static':
+        #     return redirect(url_for('auth.unconfirmed'))
 
 
 @auth.route('/getting-on-board', methods=('GET', 'POST'))
@@ -51,8 +51,8 @@ def login():
             next_url = request.args.get('next')
             refresh()    # refresh locale & timezone
             if next_url is None or not next_url.startswith('/'):
-                next_url = url_for('frontend.user', username=current_user.username)
-            flash(_(u'Welcome back, %(name)s!', name=current_user.username))
+                next_url = url_for('user.profile', username=current_user.username)
+            flash(_(u'Welcome back, %(name)s!', name=current_user.name))
             return redirect(next_url)
         flash(_(u'Invalid username or password.'))
     return render_template('auth/login.html', form=form)

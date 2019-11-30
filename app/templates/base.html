@@ -24,7 +24,14 @@
 {% endblock %}
 
 {% block styles %}
-    {{ super() }}
+    {#    {{ super() }}#}
+    <!-- Bootstrap -->
+    {% if current_user.theme %}
+        <link href="{{ current_user.theme }}" rel="stylesheet" id="bootstrap">
+    {% else %}
+        <link href="{{ url_for('static', filename='/css/bootstrap.min.css') }}" rel="stylesheet" id="bootstrap">
+    {% endif %}
+    <!-- Wave -->
     <link href="{{ url_for('static', filename='css/wave.css') }}" rel="stylesheet">
     <link href="{{ url_for('static', filename='css/material-icons.css') }}"
           rel="stylesheet">
@@ -34,13 +41,13 @@
     <nav class="navbar navbar-default navbar-fixed-top">
         <div class="container">
             <div class="navbar-header">
-                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar"
-                        aria-expanded="false" aria-controls="navbar">
-                    <span class="sr-only">Toggle navigation</span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                </button>
+{#                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar"#}
+{#                        aria-expanded="false" aria-controls="navbar">#}
+{#                    <span class="sr-only">Toggle navigation</span>#}
+{#                    <span class="icon-bar"></span>#}
+{#                    <span class="icon-bar"></span>#}
+{#                    <span class="icon-bar"></span>#}
+{#                </button>#}
                 <a class="navbar-brand" href="{{ url_for('frontend.index') }}">
                     <span><img src="{{ url_for('static', filename='wave/favicon-40x40.png') }}" alt="brand"></span>
                     <span>| {{ _('Wave') }}</span>
@@ -57,7 +64,7 @@
                                 <a href="{{ url_for('user.profile', username=current_user.username) }}">{{ _('Profile') }}</a>
                             </li>
                         {% endif %}
-                        <li><a href="#about">{{ _('About') }}</a></li>
+                        <li><a href="{{ url_for('frontend.about') }}">{{ _('About') }}</a></li>
                     {% endblock %}
                 </ul>
                 {#      user dropdown menu#}
@@ -168,7 +175,7 @@
                                     <a href="{{ url_for('user.preference') }}">
                                         <span class="glyphicon glyphicon-cog"
                                               aria-hidden="true"></span>
-                                        <span>{{ _('Preperence') }}</span>
+                                        <span>{{ _('Preference') }}</span>
                                     </a>
                                 </li>
                                 <li>
@@ -231,17 +238,15 @@
     <script src="{{ url_for('static', filename='js/wave.js') }}"></script>
 
     {% if current_user.is_authenticated %}
-        {% if current_user.locale == 'zh_Hans_CN' %}
-            {{ moment.locale('zh-cn') }}
-        {% else %}
-            {{ moment.locale(current_user.locale) }}
+        {% if current_user.locale in ['zh_Hans_CN', 'zh_CN'] %}
+{#            {{ moment.locale('zh-cn') }}#}
             <script>
                 moment.updateLocale("zh-cn", {
                     calendar: {
                         lastDay: "[昨天]LT",
                         lastWeek: function (now) {
                             if (this.valueOf() > moment().startOf("isoweek").valueOf())
-                                return "[这]ddddLT";
+                                return "ddddLT";
                             else
                                 return "[上]ddddLT";
                         },
@@ -252,6 +257,8 @@
                     }
                 });
             </script>
+        {% else %}
+            {{ moment.locale(current_user.locale) }}
         {% endif %}
     {% else %}
         {{ moment.locale(auto_detect=True) }}

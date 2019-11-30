@@ -40,7 +40,7 @@ def create_app(config_name):
     db.init_app(app)
     bootstrap.init_app(app)
     mail.init_app(app)
-    migrate.init_app(app, db, render_as_batch=True)
+    migrate.init_app(app, db, render_as_batch=(True if 'sqlite' in app.config['SQLALCHEMY_DATABASE_URI'] else False))
     moment.init_app(app)
     login_manager.init_app(app)
     babel.init_app(app)

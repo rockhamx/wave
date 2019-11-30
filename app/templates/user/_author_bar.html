@@ -1,8 +1,12 @@
 {% if current_user == author %}
-    {% include "user/_post_menu.html" %}
+    {% if type == 'comment' %}
+
+    {% else %}
+        {% include "post/_post_menu.html" %}
+    {% endif %}
 {% else %}
     <div class="float-right">
-        <a href="{{ url_for('frontend.send_message', recipient=author.username) }}" class="send_message">
+        <a href="{{ url_for('user.send_message', recipient=author.username) }}" class="send_message">
             <i class="material-icons">mail_outline</i>
         </a>
     </div>

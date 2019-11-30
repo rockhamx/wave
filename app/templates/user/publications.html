@@ -18,12 +18,18 @@
             <h3>{{ _('Followed') }}</h3>
 
             {% for pub in publications %}
+                {% set status = 'following' %}
                 {% include 'publication/_publication_preview.html' %}
             {% else %}
                 <h4>{{ _('You have not followed any publications') }}</h4>
             {% endfor %}
 
-            <h3>{{ _('Recommend') }}</h3>
+{#            <h3>{{ _('Recommend') }}</h3>#}
+{##}
+{#            {% for pub in recommend %}#}
+{#                {% set status = 'not_following' %}#}
+{#                {% include 'publication/_publication_preview.html' %}#}
+{#            {% endfor %}#}
         </div>
     </div>
 

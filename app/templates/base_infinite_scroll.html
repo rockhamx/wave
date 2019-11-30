@@ -1,5 +1,10 @@
 {% extends "base.html" %}
 
+{% block content %}
+    {{ super() }}
+    {% include "post/_post_delete_confirm.html" %}
+{% endblock %}
+
 {% block scripts %}
     {{ super() }}
     <script src="{{ url_for('static', filename='js/infinite-scroll.pkgd.min.js') }}"></script>

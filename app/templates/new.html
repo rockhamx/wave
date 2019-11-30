@@ -18,8 +18,8 @@
     <div class="navbar-right publish">
         <button type="button" class="btn btn-primary btn-sm" data-toggle="modal"
                 data-target="#publishModalForRichText">
-            {% if form.reference_id %}
-                {{ _('Update this article') }}
+            {% if form.reference_id.data %}
+                {{ _('Revise article') }}
             {% else %}
                 {{ _('Ready to publish?') }}
             {% endif %}
@@ -47,8 +47,8 @@
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
                             aria-hidden="true">&times;</span></button>
                     <h4 class="modal-title" id="myModalLabel">
-                        {% if form.reference_id %}
-                            {{ _('Update article') }}
+                        {% if form.reference_id.data != '' %}
+                            {{ _('Revise article') }}
                         {% else %}
                             {{ _('Ready to publish?') }}
                         {% endif %}
@@ -104,7 +104,7 @@
                         {#                            <label for=""><input type="checkbox" id="isPublic">{{ _('Only visible for myself') }}#}
                         {#                            </label>#}
                         {#                        </div>#}
-                        {{ wtf.form_field(form.is_public) }}
+                        {{ wtf.form_field(form.private) }}
 
                     </div>
                     <div class="modal-footer">

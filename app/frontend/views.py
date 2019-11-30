@@ -29,6 +29,11 @@ def index():
     return render_template('index.html')
 
 
+@frontend.route('/about')
+def about():
+    return render_template('about.html')
+
+
 @frontend.route('/react')
 def react():
     return render_template('react.html')

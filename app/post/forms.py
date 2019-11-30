@@ -27,7 +27,7 @@ class RichTextEditorForm(FlaskForm):
                                 render_kw={'placeholder': _l(u'Optional.')})
     tags = StringField(_l(u'Add or change tags (up to 5) so readers know what your article is about.'),
                        render_kw={'placeholder': _l(u'Add a tag...')})
-    is_public = BooleanField(_l(u'Only visible for myself'))
+    private = BooleanField(_l(u'Only visible for myself'))
     submit = SubmitField(_l(u'Publish now'))
 
 

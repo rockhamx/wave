@@ -1,17 +1,44 @@
 // Editor
 import React, { useEffect, useRef, useState } from "react";
-import { Editor } from "slate-react";
+import { Block } from "slate"
+import { Editor, getEventTransfer } from "slate-react";
 // import { initialValue, existingValue } from "./slateInitialValue";
-import { cx, css } from "emotion";
-import { Toolbar, Button, Icon } from "./components";
 import { html } from "./htmlSerializer";
+import { Toolbar, Button, Icon } from "./components";
+import { cx, css } from "emotion";
 import { isKeyHotkey } from "is-hotkey";
+import imageExtensions from "image-extensions";
+import isUrl from "is-url";
 
 const DEFAULT_NODE = "paragraph";
 const isBoldHotkey = isKeyHotkey("mod+b");
 const isItalicHotkey = isKeyHotkey("mod+i");
 const isUnderlinedHotkey = isKeyHotkey("mod+u");
 const isCodeHotkey = isKeyHotkey("mod+`");
+/**
+ * The editor's schema.
+ *
+ * @type {Object}
+ */
+
+const schema = {
+  document: {
+    last: { type: "paragraph" },
+    normalize: (editor, { code, node, child }) => {
+      switch (code) {
+        case "last_child_type_invalid": {
+          const paragraph = Block.create("paragraph");
+          return editor.insertNodeByKey(node.key, node.nodes.size, paragraph);
+        }
+      }
+    }
+  },
+  blocks: {
+    image: {
+      isVoid: true
+    }
+  }
+};
 
 const WaveEditor = props => {
   const editor = useRef(null);
@@ -23,7 +50,7 @@ const WaveEditor = props => {
   const draftDescription = $("textarea#description");
   const draftContent = $("input#content");
   const draftTags = $("input#tags");
-  const draftIsPublic = $("input#is_public")[0];
+  const draftIsPublic = $("input#private")[0];
   const initialValue = draftContent.val() || "<p></p>";
   const [value, setValue] = useState(html.deserialize(initialValue));
   let interval;
@@ -37,7 +64,7 @@ const WaveEditor = props => {
     const description = draftDescription.val();
     const tags = draftTags.val();
     const content = html.serialize(value);
-    const isPublic = draftIsPublic.checked === false;
+    const isPublic = draftIsPublic.checked;
     return {
       id: id,
       reference_id: referenceId,
@@ -50,7 +77,9 @@ const WaveEditor = props => {
       is_public: isPublic
     };
   };
-  const [lastSaveDraft, setLastSaveDraft] = useState(JSON.stringify(get_draft()));
+  const [lastSaveDraft, setLastSaveDraft] = useState(
+    JSON.stringify(get_draft())
+  );
 
   useEffect(() => {
     interval = setInterval(function() {
@@ -89,13 +118,12 @@ const WaveEditor = props => {
   });
 
   // modal show event
-  $("#publishModalForRichText").on("show.bs.modal", function (event) {
+  $("#publishModalForRichText").on("show.bs.modal", function(event) {
     // event.preventDefault();
     // const $modal = $(this);
     // TODO: refurnish this dumb trick
     const content = $("input#content");
     content.val(html.serialize(value));
-
   });
 
   const onClickMark = (event, type) => {
@@ -189,50 +217,6 @@ const WaveEditor = props => {
     );
   };
 
-  const renderMark = (props, editor, next) => {
-    const { children, attributes, mark } = props;
-
-    switch (mark.type) {
-      case "bold":
-        return <strong {...attributes}>{children}</strong>;
-      case "italic":
-        return <em {...attributes}>{children}</em>;
-      case "underlined":
-        return <u {...attributes}>{children}</u>;
-      case "code":
-        return <code {...attributes}>{children}</code>;
-      default:
-        return next();
-    }
-  };
-
-  const renderBlock = (props, editor, next) => {
-    const { attributes, children, node } = props;
-
-    switch (node.type) {
-      case "paragraph":
-        return (
-          <p {...attributes} className={cx(node.data.get("className"))}>
-            {children}
-          </p>
-        );
-      case "block-quote":
-        return <blockquote {...attributes}>{children}</blockquote>;
-      case "bulleted-list":
-        return <ul {...attributes}>{children}</ul>;
-      case "heading-one":
-        return <h1 {...attributes}>{children}</h1>;
-      case "heading-two":
-        return <h2 {...attributes}>{children}</h2>;
-      case "list-item":
-        return <li {...attributes}>{children}</li>;
-      case "numbered-list":
-        return <ol {...attributes}>{children}</ol>;
-      default:
-        return next();
-    }
-  };
-
   const handleChange = obj => {
     // if (obj.value.document !== value.document) {
     //   const content = html.serialize(obj.value);
@@ -262,6 +246,39 @@ const WaveEditor = props => {
     editor.toggleMark(mark);
   };
 
+  const handleDropOrPaste = (event, editor, next) => {
+    const target = editor.findEventRange(event);
+    if (!target && event.type === "drop") return next();
+
+    const transfer = getEventTransfer(event);
+    const { type, text, files } = transfer;
+
+    if (type === "files") {
+      event.preventDefault();
+      for (const file of files) {
+        const reader = new FileReader();
+        const [mime] = file.type.split("/");
+        if (mime !== "image") continue;
+
+        reader.addEventListener("load", () => {
+          editor.command(insertImage, reader.result, target);
+        });
+
+        reader.readAsDataURL(file);
+      }
+      return;
+    }
+
+    if (["text", "html", "fragment"].includes(type)) {
+      if (!isUrl(text)) return next();
+      if (!isImageUrl(text)) return next();
+      editor.command(insertImage, text, target);
+      return;
+    }
+
+    next();
+  };
+
   return (
     <div {...props}>
       <Toolbar>
@@ -275,7 +292,6 @@ const WaveEditor = props => {
         {renderBlockButton("numbered-list", "format_list_numbered")}
         {renderBlockButton("bulleted-list", "format_list_bulleted")}
         {/*{renderBlockButton("insert-image", "insert_image")}*/}
-
       </Toolbar>
       <Editor
         ref={editor}
@@ -288,15 +304,119 @@ const WaveEditor = props => {
           }
           font-size: 18px;
           min-height: 70rem;
+          max-height: 80rem;
+          overflow: auto;
         `)}
         value={value}
         onChange={handleChange}
         onKeyDown={handleKeyDown}
+        onDrop={handleDropOrPaste}
+        onPaste={handleDropOrPaste}
+        schema={schema}
         renderMark={renderMark}
         renderBlock={renderBlock}
       />
     </div>
   );
+};
+/**
+ * A function to determine whether a URL has an image extension.
+ *
+ * @param {String} url
+ * @return {Boolean}
+ */
+
+function isImageUrl(url) {
+  return imageExtensions.includes(getExtension(url));
+}
+
+/**
+ * Get the extension of the URL, using the URL API.
+ *
+ * @param {String} url
+ * @return {String}
+ */
+
+function getExtension(url) {
+  return new URL(url).pathname.split(".").pop();
+}
+
+/**
+ * A change function to standardize inserting images.
+ *
+ * @param {Editor} editor
+ * @param {String} src
+ * @param {Range} target
+ */
+
+function insertImage(editor, src, target) {
+  if (target) {
+    editor.select(target);
+  }
+
+  editor.insertBlock({
+    type: "image",
+    data: { src }
+  });
+}
+
+const renderMark = (props, editor, next) => {
+  const { children, attributes, mark } = props;
+
+  switch (mark.type) {
+    case "bold":
+      return <strong {...attributes}>{children}</strong>;
+    case "italic":
+      return <em {...attributes}>{children}</em>;
+    case "underlined":
+      return <u {...attributes}>{children}</u>;
+    case "code":
+      return <code {...attributes}>{children}</code>;
+    default:
+      return next();
+  }
+};
+
+const renderBlock = (props, editor, next) => {
+  const { attributes, children, node, isFocused } = props;
+
+  switch (node.type) {
+    case "paragraph":
+      return (
+        <p {...attributes} className={cx(node.data.get("className"))}>
+          {children}
+        </p>
+      );
+    case "block-quote":
+      return <blockquote {...attributes}>{children}</blockquote>;
+    case "bulleted-list":
+      return <ul {...attributes}>{children}</ul>;
+    case "heading-one":
+      return <h1 {...attributes}>{children}</h1>;
+    case "heading-two":
+      return <h2 {...attributes}>{children}</h2>;
+    case "list-item":
+      return <li {...attributes}>{children}</li>;
+    case "numbered-list":
+      return <ol {...attributes}>{children}</ol>;
+    case "image":
+      const src = node.data.get("src");
+      return (
+        <img
+          {...attributes}
+          src={src}
+          alt=""
+          className={css`
+            display: block;
+            max-width: 100%;
+            max-height: 20em;
+            box-shadow: ${isFocused ? "rgb(180, 213, 255) 0px 0px 0px 3px" : "none"};
+          `}
+        />
+      );
+    default:
+      return next();
+  }
 };
 
 export default WaveEditor;

@@ -14,6 +14,7 @@
 
                 {% with author = post.author, content = post %}
                     {% include "user/_author_bar.html" %}
+                    {% include "post/_post_delete_confirm.html" %}
                 {% endwith %}
 
                 <h1>{{ post.title }}</h1>
@@ -25,7 +26,7 @@
                         {% endfor %}
                     </ul>
 
-                {% include "user/_post_statusbar.html" %}
+                {% include "post/_post_statusbar.html" %}
             </div>
         </div>
     </div>
@@ -38,7 +39,7 @@
             </div>
             {% set type = "comment" %}
             {% for comment in comments %}
-                {% include "_comment.html" %}
+                {% include "comment/_comment_preview.html" %}
             {% endfor %}
         </div>
     </div>

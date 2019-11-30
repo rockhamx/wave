@@ -12,7 +12,7 @@
 
             {% if posts %}
                 {% for post in posts %}
-                    {% include "user/_post_preview.html" %}
+                    {% include "post/_post_preview.html" %}
                 {% endfor %}
             {% else %}
                 <div class="message">{{ _('We couldn’t find any posts.') }}</div>

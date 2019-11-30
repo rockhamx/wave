@@ -47,11 +47,11 @@ def delete_post(id):
     })
 
 
-@api.route('/hearts/<int:post_id>', methods=['GET'])
+@api.route('/hearts/<int:id>', methods=['GET'])
 @login_required
-def hearts_amount(post_id):
+def hearts_amount(id):
     status = 'error'
-    post = Post.query.get(int(post_id))
+    post = Post.query.get(int(id))
     amount = None
     if post:
         amount = current_user.hearts_amount(post)
@@ -62,11 +62,11 @@ def hearts_amount(post_id):
     })
 
 
-@api.route('/hearts/<int:post_id>', methods=['POST'])
+@api.route('/hearts/<int:id>', methods=['POST'])
 @login_required
-def hearts(post_id):
+def hearts(id):
     status = 'error'
-    post = Post.query.get(int(post_id))
+    post = Post.query.get(int(id))
     if post:
         amount = request.json.get('amount', 1)
         user = User.query.get(current_user.id)
@@ -77,11 +77,11 @@ def hearts(post_id):
     return jsonify({'status': status})
 
 
-@api.route('/hearts/<int:post_id>', methods=['DELETE'])
+@api.route('/hearts/<int:id>', methods=['DELETE'])
 @login_required
-def un_hearts(post_id):
+def un_hearts(id):
     status = 'error'
-    post = Post.query.get(int(post_id))
+    post = Post.query.get(int(id))
     if post:
         user = User.query.get(current_user.id)
         user.unlike(post)
@@ -91,11 +91,11 @@ def un_hearts(post_id):
     return jsonify({'status': status})
 
 
-@api.route('/bookmarks/<int:post_id>', methods=['POST'])
+@api.route('/bookmarks/<int:id>', methods=['POST'])
 @login_required
-def add_bookmark(post_id):
+def add_bookmark(id):
     status = 'error'
-    post = Post.query.get(int(post_id))
+    post = Post.query.get(int(id))
     if post:
         user = User.query.get(current_user.id)
         user.add_bookmark(post)
@@ -106,11 +106,11 @@ def add_bookmark(post_id):
     })
 
 
-@api.route('/bookmarks/<int:post_id>', methods=['DELETE'])
+@api.route('/bookmarks/<int:id>', methods=['DELETE'])
 @login_required
-def remove_bookmark(post_id):
+def remove_bookmark(id):
     status = 'error'
-    post = Post.query.get(int(post_id))
+    post = Post.query.get(int(id))
     if post:
         user = User.query.get(current_user.id)
         if user.remove_bookmark(post):

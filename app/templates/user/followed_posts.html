@@ -10,7 +10,7 @@
             <div class="col-xs-12 col-md-12 articles">
                 <h1>{{ _('My Followed Article') }}</h1>
                 {% for post in posts %}
-                    {% include "user/_post_preview.html" %}
+                    {% include "user/../post/_post_preview.html" %}
                 {% endfor %}
             </div>
             <a class="pagination__next" href="{{ url_for('user.followed') }}?page=2"></a>

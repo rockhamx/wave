@@ -5,11 +5,15 @@ const BLOCK_TAGS = {
   p: "paragraph",
   h1: "heading-one",
   h2: "heading-two",
+  h3: "heading-three",
+  h4: "heading-four",
+  h5: "heading-five",
   ul: "bulleted-list",
   ol: "numbered-list",
   li: "list-item",
   blockquote: "block-quote",
-  pre: "code"
+  pre: "code",
+  img: "image"
 };
 
 const MARK_TAGS = {
@@ -24,6 +28,17 @@ const rules = [
     deserialize(el, next) {
       const type = BLOCK_TAGS[el.tagName.toLowerCase()];
       if (type) {
+        if (type === "image")
+          return {
+            object: "block",
+            type: type,
+            data: {
+              className: el.getAttribute("class"),
+              src: el.getAttribute("src")
+            },
+            nodes: next(el.childNodes)
+          };
+
         return {
           object: "block",
           type: type,
@@ -38,9 +53,7 @@ const rules = [
       if (obj.object === "block") {
         switch (obj.type) {
           case "code":
-            return (
-              <pre>{children}</pre>
-            );
+            return <pre>{children}</pre>;
           case "paragraph":
             return <p className={obj.data.get("className")}>{children}</p>;
           case "heading-one":
@@ -55,6 +68,8 @@ const rules = [
             return <li>{children}</li>;
           case "block-quote":
             return <blockquote>{children}</blockquote>;
+          case "image":
+            return <img src={obj.data.get("src")} alt=""/>;
         }
       }
     }

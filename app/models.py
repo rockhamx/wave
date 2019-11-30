@@ -1,17 +1,23 @@
-import bleach
+from threading import Thread
+
 from langdetect import detect
 from langdetect.lang_detect_exception import LangDetectException
 from markdown import markdown
 from werkzeug.security import generate_password_hash, check_password_hash
 from itsdangerous import TimedJSONWebSignatureSerializer as Serializer, SignatureExpired
 import jwt
-from flask import current_app, jsonify
+import bleach
+import requests
+import os.path
+from flask import current_app, jsonify, url_for
 from flask_login import UserMixin, AnonymousUserMixin
 
 from app import db, login_manager
+from config import Config
 from datetime import datetime
 from time import time
 from hashlib import md5
+
 
 follows = db.Table('follows',
                    db.Column('follower_id', db.Integer, db.ForeignKey('users.id'), primary_key=True),
@@ -35,13 +41,11 @@ class User(UserMixin, db.Model):
     email_hash = db.Column(db.String(32))
     locale = db.Column(db.String(12), default='en_US')
     timezone = db.Column(db.String(8), default='UTC+8')
+    theme = db.Column(db.String(256))
     is_administrator = db.Column(db.Boolean, default=False)
     posts = db.relationship('Post', lazy='dynamic', backref=db.backref('author', lazy='select'))
     comments = db.relationship('Comment', lazy='dynamic',
                                backref=db.backref('author', lazy='select'))
-    # tags = db.relationship('Tag', secondary='users_tags', lazy='subquery',
-    #                        backref=db.backref('user', lazy=True))
-    # publications = db.relationship('Publication', backref=db.backref('authors', lazy='dynamic'))
     following = db.relationship('User', secondary='follows', lazy='dynamic',
                                 primaryjoin=(follows.c.follower_id == id),
                                 secondaryjoin=(follows.c.following_id == id),
@@ -53,6 +57,9 @@ class User(UserMixin, db.Model):
             self.name = self.username
         if self.email and self.email_hash is None:
             self.email_hash = self.gravatar_hash()
+        # TODO: async
+        for size in [30, 42, 256]:
+            self.avatar(size)
 
     @property
     def password(self):
@@ -113,8 +120,46 @@ class User(UserMixin, db.Model):
     def gravatar_hash(self):
         return md5(self.email.lower().encode('utf-8')).hexdigest()
 
-    def avatar(self, size):
+    def gravatar_url(self, size=''):
         return 'https://www.gravatar.com/avatar/{}?d=identicon&s={}'.format(self.email_hash, size)
+
+    def avatar_dir(self):
+        return os.path.join(current_app.root_path, 'static', 'images', 'users', self.email_hash, 'avatar')
+
+    @staticmethod
+    def avatar_filename(dirname='', size=None):
+        if size:
+            return os.path.join(dirname, '{}x{}.png'.format(size, size))
+        else:
+            return os.path.join(dirname, 'default.png')
+
+    def download_gravatar_async(self, size, dist):
+        url = self.gravatar_url(size)
+        thr = Thread(target=self.download_image, args=(url, dist))
+        thr.start()
+        return thr
+
+    @staticmethod
+    def download_image(url, dist):
+        r = requests.get(url)
+        # assert r.status_code == 200
+        if r.status_code == 200:
+            with open(dist, 'wb') as f:
+                f.write(r.content)
+                return True
+        return False
+
+    def avatar(self, size=None):
+        dirname = self.avatar_dir()
+        abs_filename = User.avatar_filename(dirname, size)
+        if not os.path.exists(abs_filename):
+            if not os.path.exists(dirname):
+                os.makedirs(dirname)
+            self.download_gravatar_async(size, abs_filename)
+            return self.gravatar_url(size)
+
+        filename = User.avatar_filename(os.path.join('images', 'users', self.email_hash, 'avatar'), size)
+        return url_for('static', filename=filename)
 
     def drafts_desc_by_time(self, page):
         return self.drafts.order_by(
@@ -125,7 +170,29 @@ class User(UserMixin, db.Model):
         ).items
 
     def latest_posts(self, page=1):
-        return self.posts.order_by(Post.edit_timestamp.desc()).paginate(
+        return self.posts.order_by(
+            Post.edit_timestamp.desc()
+        ).paginate(
+            page=page, per_page=current_app.config['WAVE_POSTS_PER_PAGE'],
+            # error_out=False
+        ).items
+
+    def latest_posts_exclude_private(self, page=1):
+        return self.posts.filter(
+            Post.is_public == 1
+        ).order_by(
+            Post.edit_timestamp.desc()
+        ).paginate(
+            page=page, per_page=current_app.config['WAVE_POSTS_PER_PAGE'],
+            # error_out=False
+        ).items
+
+    def private_posts(self, page):
+        return self.posts.filter(
+            Post.is_public != 1
+        ).order_by(
+            Post.edit_timestamp.desc()
+        ).paginate(
             page=page, per_page=current_app.config['WAVE_POSTS_PER_PAGE'],
             # error_out=False
         ).items
@@ -134,7 +201,7 @@ class User(UserMixin, db.Model):
         return Post.query.join(
             follows, (Post.author_id == follows.c.following_id)
         ).filter(
-            follows.c.follower_id == self.id
+            Post.is_public == 1, follows.c.follower_id == self.id
         ).order_by(
             Post.pub_timestamp.desc()
         ).paginate(
@@ -159,9 +226,11 @@ class User(UserMixin, db.Model):
             # error_out=False
         ).items
 
-    def is_following(self, user):
-        return self.following.filter(
-            follows.c.following_id == user.id).count() > 0
+    def following_desc_by_time(self):
+        return self.following.order_by(follows.c.timestamp).all()
+
+    def followers_desc_by_time(self):
+        return self.followers.order_by(follows.c.timestamp).all()
 
     def follows(self, user):
         if not self.is_following(user):
@@ -171,11 +240,9 @@ class User(UserMixin, db.Model):
         if self.is_following(user):
             self.following.remove(user)
 
-    def following_desc_by_time(self):
-        return self.following.order_by(follows.c.timestamp).all()
-
-    def followers_desc_by_time(self):
-        return self.followers.order_by(follows.c.timestamp).all()
+    def is_following(self, user):
+        return self.following.filter(
+            follows.c.following_id == user.id).count() > 0
 
     def hearts_desc_by_time(self, page=1):
         return Post.query.join(
@@ -252,7 +319,7 @@ class User(UserMixin, db.Model):
         return False
 
     def is_bookmarked(self, post):
-        return post.id in [b.post_id for b in self.bookmarks]
+        return post.id in [bookmark.post_id for bookmark in self.bookmarks]
 
     def followed_pubs_desc_by_time(self, page=1):
         return Publication.query.join(
@@ -260,7 +327,20 @@ class User(UserMixin, db.Model):
         ).filter(
             FollowedPublication.user_id == self.id
         ).order_by(
-            Publication.created_timestamp
+            Publication.created_timestamp.desc()
+        ).paginate(
+            page=page, per_page=current_app.config['WAVE_POSTS_PER_PAGE'],
+            # error_out=False
+        ).items
+
+    def recommend_pubs_desc_by_popular(self, page=1):
+        return Publication.query.join(
+            FollowedPublication, (Publication.id == FollowedPublication.publication_id)
+        ).filter(
+            # FollowedPublication.user_id != self.id
+        ).order_by(
+            Publication.created_timestamp.desc()
+            # Publication.posts.count()
         ).paginate(
             page=page, per_page=current_app.config['WAVE_POSTS_PER_PAGE'],
             # error_out=False
@@ -280,6 +360,14 @@ class User(UserMixin, db.Model):
             db.session.delete(followed_pub)
             return True
         return False
+
+    def comments_desc_by_time(self, page=1):
+        return self.comments.order_by(
+            Comment.pub_timestamp.desc()
+        ).paginate(
+            page=page, per_page=current_app.config['WAVE_POSTS_PER_PAGE'],
+            # error_out=False
+        ).items
 
     def unread_messages_count(self):
         return self.message_received.filter(
@@ -319,7 +407,7 @@ class Post(db.Model):
     body = db.Column(db.Text())
     html = db.Column(db.Text())
     preview = db.Column(db.Text())
-    is_public = db.Column(db.Boolean(), nullable=False)
+    is_public = db.Column(db.Boolean(), nullable=False, default=1)
     pub_timestamp = db.Column(db.DateTime(), default=datetime.utcnow)
     edit_timestamp = db.Column(db.DateTime(), index=True)
     language = db.Column(db.String(8), default='en')
@@ -327,12 +415,12 @@ class Post(db.Model):
     hearts = db.Column(db.Integer, default=0)
     author_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
     publication_id = db.Column(db.Integer, db.ForeignKey('publications.id'))
-    comments = db.relationship('Comment', lazy='dynamic', cascade="all, delete-orphan",
-                               backref=db.backref('post', lazy='select'))
     publication = db.relationship('Publication', lazy='select',
                                   backref=db.backref('posts', lazy='dynamic', uselist=True))
     tags = db.relationship('Tag', secondary='posts_tags', lazy='subquery',
                            backref=db.backref('posts', lazy=True))
+    comments = db.relationship('Comment', lazy='dynamic', cascade="all, delete-orphan",
+                               backref=db.backref('post', lazy='select'))
 
     def __init__(self, **kwargs):
         super(Post, self).__init__(**kwargs)
@@ -366,15 +454,18 @@ class Post(db.Model):
             self.body = body
         if html:
             self.html = html
-        if is_public:
-            self.is_public = is_public
+        self.is_public = 1 if is_public else 0
         if tags:
             self.tags = tags
         # self.edit_timestamp = datetime.utcnow()
 
     @staticmethod
     def newest(page=1):
-        return Post.query.order_by(Post.pub_timestamp.desc()).paginate(
+        return Post.query.filter(
+            Post.is_public == 1
+        ).order_by(
+            Post.pub_timestamp.desc()
+        ).paginate(
             page, per_page=current_app.config['WAVE_POSTS_PER_PAGE'],
             # error_out=False
         ).items
@@ -387,6 +478,13 @@ class Post(db.Model):
             Post.preview.ilike(description_pattern)
         ).order_by(Post.pub_timestamp.desc()).paginate(
             page, per_page=10,
+            # error_out=False
+        ).items
+
+    def comments_desc_by_time(self, page=1):
+        return self.comments.order_by(
+            Comment.pub_timestamp.desc()).paginate(
+            page=page, per_page=current_app.config['WAVE_POSTS_PER_PAGE'],
             # error_out=False
         ).items
 
@@ -405,7 +503,7 @@ class Post(db.Model):
         else:
             target.edit_timestamp = target.pub_timestamp = datetime.utcnow()
         # filtering some html tags
-        allowed_tags = current_app.config['WAVE_ALLOWED_TAGS']
+        allowed_tags = Config.WAVE_ALLOWED_TAGS
         value = bleach.linkify(bleach.clean(value, tags=allowed_tags))
 
         cleaned = bleach.clean(value, tags=[], strip=True)
@@ -419,7 +517,7 @@ class Post(db.Model):
         nth_words = 64
         # chinese
         if 'zh' in target.language:
-            preview = cleaned[:nth_words]
+            target.preview = cleaned[:nth_words]
         # latin
         else:
             index = 0
@@ -429,13 +527,6 @@ class Post(db.Model):
                 target.preview = cleaned[:index] + '...'
             except ValueError:
                 target.preview = cleaned[:index]
-
-    def comments_desc_by_time(self, page=1):
-        return self.comments.order_by(
-            Comment.pub_timestamp.desc()).paginate(
-            page=page, per_page=current_app.config['WAVE_POSTS_PER_PAGE'],
-            # error_out=False
-        ).items
 
 
 db.event.listen(Post.body, 'set', Post.on_changed_body)
@@ -589,7 +680,7 @@ class Draft(db.Model):
     description = db.Column(db.String(256))
     type = db.Column(db.String(16), nullable=False)
     content = db.Column(db.Text)
-    is_public = db.Column(db.Boolean(), nullable=True)
+    is_public = db.Column(db.Boolean(), nullable=False, default=True)
     tags = db.Column(db.String(256))
     publication_id = db.Column(db.Integer, db.ForeignKey('publications.id'))
     author_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
@@ -597,6 +688,8 @@ class Draft(db.Model):
     saved_timestamp = db.Column(db.DateTime(), index=True)
     author = db.relationship('User', lazy='select',
                              backref=db.backref('drafts', lazy='dynamic'))
+    post = db.relationship('Post', lazy=True,
+                           backref=db.backref('drafts', lazy='dynamic'))
 
     def to_json(self):
         return jsonify({
@@ -657,6 +750,9 @@ class Draft(db.Model):
             self.tags = tags
         self.saved_timestamp = datetime.utcnow()
 
-# TODO: preference table
+
 # class UserPreference(db.Model):
-# pass
+#     user_id = db.Column(db.Integer, db.ForeignKey('users.id'), primary_key=True)
+#     theme = db.Column(db.String(16))
+# user = db.relationship('User', lazy=True,
+#                        backref=db.backref('preference', lazy=True))

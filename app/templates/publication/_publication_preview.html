@@ -8,10 +8,16 @@
     </div>
     <div>
 
-        <button class="btn-text">
-            <span>{{ _('Following') }}</span>
-            <i class="material-icons">keyboard_arrow_down</i>
-        </button>
+        {% if status and status == 'following' %}
+            <button class="btn-text unfollow_publication" data-id="{{ pub.id }}">
+                <span class="status">{{ _('Following') }}</span>
+                <i class="material-icons">keyboard_arrow_down</i>
+            </button>
+        {% else %}
+            <button class="btn-text follow_publication" data-id="{{ pub.id }}">
+                <span class="status">{{ _('Follow') }}</span>
+                <i class="material-icons"></i>
+        {% endif %}
 
     </div>
 </div>

@@ -10,7 +10,7 @@
         <div class="col-xs-12 col-md-12 articles">
             <h1>{{ _('Newest') }}</h1>
             {% for post in posts %}
-                {% include "user/_post_preview.html" %}
+                {% include "post/_post_preview.html" %}
             {% endfor %}
         </div>
         <a class="pagination__next" href="{{ url_for('post.newest') }}?page=2"></a>

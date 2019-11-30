@@ -1,3 +1,6 @@
+import json
+import os
+
 from flask_babel import lazy_gettext as _l
 from flask_uploads import UploadSet, IMAGES
 from flask_wtf import FlaskForm
@@ -16,6 +19,15 @@ supported_languages = [
     (ls[3], 'English(GB)')
 ]
 
+# themes
+themes = [
+    ('/css/bootstrap.min.css', _l(u'Original - Default')),
+]
+with open(os.path.join('instance', 'bootswatch.json'), 'r') as fp:
+    bootswatch = json.load(fp)
+    for index, theme in enumerate(bootswatch['themes'], start=1):
+        themes.append((theme['css'], '{} - {}'.format(theme['name'], theme['description'])))
+
 
 class EditProfileForm(FlaskForm):
     # TODO: add placeholder
@@ -23,7 +35,7 @@ class EditProfileForm(FlaskForm):
     name = StringField(_l(u'Nickname'), validators=[Length(0, 64)])
     location = StringField(_l(u'Location'), validators=[Length(0, 64)])
     description = TextAreaField(_l(u'description'))
-    locale = SelectField(_l(u'Locale'), choices=supported_languages)
+    # locale = SelectField(_l(u'Locale'), choices=supported_languages)
     submit = SubmitField(_l(u'Save profile'))
 
 
@@ -35,6 +47,7 @@ class MessageForm(FlaskForm):
 
 
 class PreferenceForm(FlaskForm):
-    locale = SelectField(_l(u'Locale'), choices=supported_languages)
-    theme = SelectField(_l(u'Theme'), choices=[])
+    # timezone =
+    locale = SelectField(_l(u'Language'), choices=supported_languages)
+    theme = SelectField(_l(u'Theme'), choices=themes)
     submit = SubmitField(_l(u'Save preference'))

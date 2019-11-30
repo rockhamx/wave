@@ -10,9 +10,16 @@ $(document).ready(function () {
     // Will only work if string in href matches with location
     $("ul.nav a[href=\"" + href + "\"]").parent().addClass("active");
 
-    // nav-tabs activation
-    href = href + decodeURI(window.location["search"]);
-    $("ul.nav-tabs a[href=\"" + href + "\"]").parent().addClass("active");
+    // profile nav-tabs activation
+
+    const profileNavTab = $("ul.nav-tabs a[href=\"" + href + "\"]");
+    if (profileNavTab[0]) {
+        profileNavTab.parent().addClass("active");
+    } else {
+        // search nav-tabs activation
+        const searchHref = href + decodeURI(window.location["search"]);
+        $("ul.nav-tabs a[href=\"" + searchHref + "\"]").parent().addClass("active");
+    }
 
     // articles infiniteScroll
     let $articles = $("div.articles");
@@ -33,6 +40,38 @@ $(document).ready(function () {
             append: ".user-preview",
             history: false,
         });
+    }
+
+    // themes
+    let themesSelect = $("select#theme");
+    if (themesSelect) {
+        themesSelect.change(function () {
+            const css = $(this).val();
+            $("link#bootstrap").attr("href", css);
+        });
+        // $.getJSON("https://bootswatch.com/api/3.json", function (data) {
+        //     var themes = data.themes;
+        //     var select = $("select");
+        //     select.show();
+        //     $(".alert").toggleClass("alert-info alert-success");
+        //     $(".alert h4").text("Success!");
+        //
+        //     themes.forEach(function (value, index) {
+        //         select.append($("<option />")
+        //             .val(index)
+        //             .text(value.name));
+        //     });
+        //
+        //     select.change(function () {
+        //         var theme = themes[$(this).val()];
+        //         $("link#bootstrap").attr("href", theme.css);
+        //         // $("h1").text(theme.name);
+        //     }).change();
+        //
+        // }, "json").fail(function () {
+        //     $(".alert").toggleClass("alert-info alert-danger");
+        //     $(".alert h4").text("Failure!");
+        // });
     }
 
     // Search bar keydown event
@@ -59,6 +98,10 @@ $(document).ready(function () {
             });
         }
     });
+
+    // Follow publication buttons click event
+    $("button.follow_publication").click(follow_publication);
+    $("button.unfollow_publication").click(unfollow_publication);
 
     // Hearts button click event
     $(".hearts").click(function (event) {
@@ -304,6 +347,49 @@ window.remove_bookmark = function (event) {
             }
         }
     });
+};
+
+window.follow_publication = function (event) {
+    event.preventDefault();
+    let which = this;
+    const url = "/api/v0/follow/publication/" + this.dataset.id;
+    $.ajax({
+        url: url,
+        type: "POST",
+        dataType: "json",
+        success: data => {
+            if (data.result === "success") {
+                $(which).toggleClass("follow_publication unfollow_publication");
+                $(which).find("span.status")[0].innerText = data.status;
+                $(which).find(".material-icons")[0].innerText = "keyboard_arrow_down";
+                $(which).unbind("click");
+                $(which).click(unfollow_publication);
+                console.log(data.status);
+            }
+        }
+    });
+};
+
+window.unfollow_publication = function (event) {
+    event.preventDefault();
+    let which = this;
+    const url = "/api/v0/unfollow/publication/" + this.dataset.id;
+    $.ajax({
+        url: url,
+        type: "POST",
+        dataType: "json",
+        success: data => {
+            if (data.result === "success") {
+                $(which).toggleClass("follow_publication unfollow_publication");
+                $(which).find("span.status")[0].innerText = data.status;
+                $(which).find(".material-icons")[0].innerText = "";
+                $(which).unbind("click");
+                $(which).click(follow_publication);
+                console.log(data.status);
+            }
+        }
+    });
+
 };
 
 window.follow = (username) => {

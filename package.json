@@ -22,7 +22,9 @@
   },
   "homepage": "https://github.com/rockhamx/Wave#readme",
   "dependencies": {
+    "image-extensions": "^1.1.0",
     "immutable": "^4.0.0-rc.12",
+    "is-url": "^1.2.4",
     "react": "^16.11.0",
     "react-bootstrap": "^1.0.0-beta.14",
     "react-dom": "^16.11.0",

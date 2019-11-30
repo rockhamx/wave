@@ -10,16 +10,16 @@
             <h1>{{ _('Drafts') }}</h1>
 
             {% for draft in drafts %}
-                {% include 'user/_draft_preview.html' %}
+                {% include 'post/_draft_preview.html' %}
             {% endfor %}
-            {% include "user/_draft_delete_confirm.html" %}
+            {% include "post/_draft_delete_confirm.html" %}
 
             <h1>{{ _('Articles') }}</h1>
 
             {% for post in posts %}
-                {% include 'user/_post_preview.html' %}
+                {% include 'post/_post_preview.html' %}
             {% endfor %}
-            {% include "user/_post_delete_confirm.html" %}
+{#            {% include "post/_post_delete_confirm.html" %}#}
 
         </div>
     </div>

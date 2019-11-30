@@ -1,0 +1,12 @@
+<div class="thumbnail article-preview">
+
+    <h3>
+        <a href="{{ url_for('post.draft', id=draft.id) }}">{{ draft.title }}</a>
+    </h3>
+    <p>{{ draft.subtitle }}</p>
+
+    <span>{{ _('Last edited %(time)s', time=moment(draft.saved_timestamp).fromNow() if draft.saved_timestamp else moment(draft.created_timestamp).fromNow()) }}</span>
+
+    {% include "post/_draft_menu.html" %}
+</div>
+

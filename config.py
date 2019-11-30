@@ -9,8 +9,9 @@ class Config:
     # website global
     SECRET_KEY = os.environ.get('SECRET_KEY')
     SERVER_NAME = os.environ.get('SERVER_NAME')
+    WAVE_INSTANCE_FOLDER = 'instance'
     WAVE_POSTS_PER_PAGE = 10
-    WAVE_ALLOWED_TAGS = ['h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'div', 'p', 'a',
+    WAVE_ALLOWED_TAGS = ['h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'div', 'p', 'a', 'img',
                          'ol', 'ul', 'li', 'pre', 'code', 'blockquote',
                          'i', 'abbr', 'acronym', 'b', 'strong', 'em', 'u']
     SQLALCHEMY_TRACK_MODIFICATIONS = False

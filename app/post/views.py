@@ -47,21 +47,21 @@ def edit(id):
         form.description.data = p.description
         form.content.data = p.html
         form.tags.data = ','.join([str(tag) for tag in p.tags])
-        form.is_public.data = p.is_public
+        form.private.data = not p.is_public
         return render_template('new.html', form=form)
 
     form = PostEditorForm()
     if form.validate_on_submit():
         p.title = form.title.data
         p.body = form.body.data
-        p.is_public = form.is_public.data
+        p.is_public = not form.is_public.data
         db.session.add(p)
         db.session.commit()
-        flash(_(u'You post has been updated.'))
+        flash(_(u'Your post has been updated.'))
         return redirect(url_for('frontend.user', username=current_user.username))
     form.title.data = p.title
     form.body.data = p.body
-    form.is_public.data = p.is_public
+    form.private.data = not p.is_public
     return render_template('user/write.html', form=form)
 
 
@@ -88,7 +88,7 @@ def draft(id):
             p = Post()
             p.author = current_user._get_current_object()
         p.update(title=form.title.data, subtitle=form.subtitle.data, description=form.description.data,
-                 html=form.content.data, is_public=form.is_public.data)
+                 html=form.content.data, is_public=not form.private.data)
 
         if form.tags.data:
             for tag in form.tags.data.split(','):
@@ -109,7 +109,7 @@ def draft(id):
     form.description.data = d.description
     form.content.data = d.content
     form.tags.data = d.tags
-    form.is_public.data = d.is_public
+    form.private.data = not d.is_public
     return render_template('new.html', form=form)
 
 
