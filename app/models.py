@@ -789,7 +789,9 @@ class Draft(db.Model):
         if draft.get('id', None):
             return Draft.query.get(draft['id'])
         else:
-            return Draft(reference_id=draft.get('reference_id', None),
+            if not draft.get('reference_id', None):
+                reference_id = None
+            return Draft(reference_id=reference_id,
                          type=draft.get('type'),
                          title=draft.get('title', None),
                          subtitle=draft.get('subtitle', None),
@@ -821,6 +823,7 @@ class Draft(db.Model):
         self.publication = Publication.query.get(publication_id)
         self.tags = tags
         self.saved_timestamp = datetime.utcnow()
+        db.session.add(self)
 
 # class UserPreference(db.Model):
 #     user_id = db.Column(db.Integer, db.ForeignKey('users.id'), primary_key=True)

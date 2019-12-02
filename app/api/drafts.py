@@ -29,7 +29,6 @@ def save_draft():
             d.update_from_json(request.json)
         else:
             d.author_id = current_user.id
-        db.session.add(d)
         db.session.commit()
         result = 'success'
         status = _(u'Saved')
