@@ -1,4 +1,5 @@
 from threading import Thread
+from urllib.parse import urljoin
 
 from PIL import Image
 from langdetect import detect
@@ -133,6 +134,12 @@ class User(UserMixin, db.Model):
         else:
             return os.path.join(dirname, 'default.png')
 
+    def avatar_url(self, relative_url, size=None):
+        if size:
+            return relative_url + '{}x{}.png'.format(size, size)
+        else:
+            return relative_url + 'default.png'
+
     def save_upload_avatar(self, file_storage):
         default_filepath = self.avatar_path()
         if os.path.splitext(file_storage.filename)[1] != '.png':
@@ -173,7 +180,8 @@ class User(UserMixin, db.Model):
             self.download_gravatar_async(abs_filepath, size)
             return self.gravatar_url(size)
 
-        filename = self.avatar_path(os.path.join('images', 'users', self.email_hash, 'avatar'), size)
+        # relative url
+        filename = self.avatar_url('/images/' + 'users/' + self.email_hash + '/avatar/', size)
         return url_for('static', filename=filename)
 
     def drafts_desc_by_time(self, page):
