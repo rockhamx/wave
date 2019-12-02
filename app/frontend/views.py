@@ -1,4 +1,4 @@
-from flask import render_template, request, current_app
+from flask import render_template, request, current_app, redirect, url_for
 from flask_babel import gettext as _
 from flask_login import current_user
 
@@ -27,6 +27,11 @@ def get_timezone():
 @frontend.route('/')
 def index():
     return render_template('index.html')
+
+
+@frontend.route('/features')
+def features():
+    return redirect(url_for('post.article', id=3))
 
 
 @frontend.route('/about')

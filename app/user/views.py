@@ -3,13 +3,12 @@ import os
 from flask import request, render_template, flash, redirect, url_for, current_app
 from flask_babel import refresh, gettext as _
 from flask_login import login_required, current_user
-from werkzeug.utils import secure_filename
 
 from app import db
 from app.models import User, Publication, Message
-from . import user, EditProfileForm, PreferenceForm
+from . import user, EditProfileForm, PreferenceForm, MessageForm
 from ..frontend.forms import NewPublicationForm
-from .forms import MessageForm
+from ..uploads import avatar
 
 
 # User Profile
@@ -49,10 +48,8 @@ def edit_profile():
     if form.validate_on_submit():
         file = form.avatar.data
         if file:
-            filename = secure_filename(file.filename)
-            file.save(os.path.join(
-                current_app.instance_path, 'avatars', filename
-            ))
+            # file.save(current_user.avatar_path())
+            current_user.save_upload_avatar(file)
         current_user.name = form.name.data
         current_user.location = form.location.data
         current_user.description = form.description.data
@@ -189,7 +186,7 @@ def send_message(recipient):
         db.session.add(msg)
         db.session.commit()
         flash(_('Your message has been sent.'))
-        return redirect(url_for('frontend.messages', username=current_user.username))
+        return redirect(url_for('user.messages', username=current_user.username))
     return render_template('user/send_message.html', form=form, recipient=user.name)
 
 

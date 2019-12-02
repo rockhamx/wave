@@ -11,6 +11,7 @@ class Config:
     SERVER_NAME = os.environ.get('SERVER_NAME')
     WAVE_INSTANCE_FOLDER = 'instance'
     WAVE_POSTS_PER_PAGE = 10
+    WAVE_AVATAR_REQUIRED_SIZE = [30, 42, 60, 100, 256]
     WAVE_ALLOWED_TAGS = ['h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'div', 'p', 'a', 'img',
                          'ol', 'ul', 'li', 'pre', 'code', 'blockquote',
                          'i', 'abbr', 'acronym', 'b', 'strong', 'em', 'u']
@@ -27,6 +28,10 @@ class Config:
     SUPPORTED_LANGUAGES = ['zh_CN', 'zh_TW', 'en_US', 'en_GB']
     BABEL_DEFAULT_LOCALE = SUPPORTED_LANGUAGES[0]
     BABEL_DEFAULT_TIMEZONE = 'UTC'
+    # Flask Uploads
+    # UPLOADS_DEFAULT_DEST =
+    # Flask Admin
+    FLASK_ADMIN_SWATCH = 'paper'
     # the following comment will be deprecated due to the insecurity
     # SQLALCHEMY_COMMIT_ON_TEARDOWN = True
 

@@ -53,14 +53,16 @@ def count_unread():
 @api.route('/read/message/<int:id>', methods=['POST'])
 @login_required
 def read_message(id):
-    status = 'error'
+    result, status = 'error', _(u'Unread')
     msg = Message.query.get(int(id))
     if current_user.id == msg.recipient_id:
         if not msg.read:
             msg.read = True
             db.session.add(msg)
             db.session.commit()
-        status = 'success'
+        result = 'success'
+        status = _(u'Read')
     return jsonify({
+        "result": result,
         "status": status
     })

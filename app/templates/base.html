@@ -64,6 +64,7 @@
                                 <a href="{{ url_for('user.profile', username=current_user.username) }}">{{ _('Profile') }}</a>
                             </li>
                         {% endif %}
+                        <li><a href="{{ url_for('post.article', id=3) }}">{{ _('Features') }}</a></li>
                         <li><a href="{{ url_for('frontend.about') }}">{{ _('About') }}</a></li>
                     {% endblock %}
                 </ul>
@@ -71,7 +72,7 @@
                 <ul class="nav navbar-nav navbar-right">
                     {% if current_user.is_authenticated %}
                         <li class="dropdown">
-                            <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                            <a href="#" class="dropdown-toggle" id="user-menu" data-toggle="dropdown">
                                 <img src="{{ current_user.avatar(size=30) }}" alt="avatar" class="avatar"><b
                                     class="caret"></b>
                             </a>
@@ -135,13 +136,13 @@
                                         <span>{{ _('Publications') }}</span>
                                     </a>
                                 </li>
-                                <li>
-                                    <a href="{{ url_for('user.interests') }}">
-                                        <span class="glyphicon glyphicon-sunglasses"
-                                              aria-hidden="true"></span>
-                                        <span>{{ _('Interests') }}</span>
-                                    </a>
-                                </li>
+{#                                <li>#}
+{#                                    <a href="{{ url_for('user.interests') }}">#}
+{#                                        <span class="glyphicon glyphicon-sunglasses"#}
+{#                                              aria-hidden="true"></span>#}
+{#                                        <span>{{ _('Interests') }}</span>#}
+{#                                    </a>#}
+{#                                </li>#}
 
                                 <li role="separator" class="divider"></li>
 
@@ -188,6 +189,7 @@
                             </ul>
                         </li>
                     {% else %}
+                        <li><a href="{{ url_for('auth.register') }}">{{ _('Get started') }}</a></li>
                         <li><a href="{{ url_for('auth.login') }}">{{ _('Sign in') }}</a></li>
                     {% endif %}
                 </ul>

@@ -8,9 +8,11 @@
 {% endblock %}
 
 {% block navbar_left %}
-    <span> {{ _('Draft') }}</span>
-    <li id="draft_progress">
-        <span></span>
+    <li>
+        <a href="" id="draft-status" onclick="return false" >
+            <span>{{ _('Draft') }}</span>
+            <span id="draft_progress"></span>
+        </a>
     </li>
 {% endblock %}
 

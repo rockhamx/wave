@@ -5,6 +5,11 @@
     </h3>
     <p>{{ draft.subtitle }}</p>
 
+    {% if draft.description %}
+        <p>{{ draft.description }}</p>
+    {% else %}
+        <p>{{ draft.bleach(draft.content[:150]) }}</p>
+    {% endif %}
     <span>{{ _('Last edited %(time)s', time=moment(draft.saved_timestamp).fromNow() if draft.saved_timestamp else moment(draft.created_timestamp).fromNow()) }}</span>
 
     {% include "post/_draft_menu.html" %}

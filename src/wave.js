@@ -11,7 +11,6 @@ $(document).ready(function () {
     $("ul.nav a[href=\"" + href + "\"]").parent().addClass("active");
 
     // profile nav-tabs activation
-
     const profileNavTab = $("ul.nav-tabs a[href=\"" + href + "\"]");
     if (profileNavTab[0]) {
         profileNavTab.parent().addClass("active");
@@ -206,9 +205,9 @@ $(document).ready(function () {
             type: "POST",
             dataType: "json",
             success: (data) => {
-                if (data.status === "success") {
-                    console.log("success");
-                    $which.find(".panel-title").css({"color": "grey"});
+                if (data.result === "success") {
+                    $which.find(".panel-title").css({"color": "grey"})
+                        .find("span#status").text(data.status);
                 }
             }
         });
@@ -229,7 +228,11 @@ $(document).ready(function () {
                 success: data => {
                     if (data.status === "success") {
                         // TODO: flash a message here
-                        window.location.reload();
+                        if (data.next) {
+                            window.location.href = data.next;
+                        } else {
+                            window.location.reload();
+                        }
                         // const $article = $btn.parents("div.article-preview");
                         // $article.fadeOut().remove();
                         console.log(data.status);
@@ -252,7 +255,7 @@ $(document).ready(function () {
                 contentType: "application/x-www-form-urlencoded; charset=UTF-8",
                 dataType: "json",
                 success: data => {
-                    if (data.status === "success") {
+                    if (data.result === "success") {
                         // TODO: flash a message here
                         window.location.reload();
                     }

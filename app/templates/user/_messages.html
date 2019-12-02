@@ -3,19 +3,26 @@
         <div class="panel panel-default" data-id="{{ message.id }}">
             <div class="panel-heading" role="tab" id="{{ type }}heading{{ loop.index }}">
                 <h4 class="panel-title {{ 'read' if type == 'received' and message.read }}">
-                    <a {{ 'class="collapsed"' if loop.index != 1 }} role="button"
-                                                                    data-toggle="collapse"
-                                                                    data-parent="#{{ type }}accordion"
-                                                                    href="#{{ type }}collapse{{ loop.index }}"
-                                                                    aria-controls="{{ type }}collapse{{ loop.index }}"
-                                                                    aria-expanded={{ 'true' if loop.index == 1 else 'false' }}
+                    <a {{ 'class="collapsed"' if loop.index != 1 }}
+                            role="button"
+                            data-toggle="collapse"
+                            data-parent="#{{ type }}accordion"
+                            href="#{{ type }}collapse{{ loop.index }}"
+                            aria-controls="{{ type }}collapse{{ loop.index }}"
+                            aria-expanded={{ 'true' if loop.index == 1 else 'false' }}
                     >
+                    <span>
                         {% if type == 'sent' %}
-                            {{ _('Sent to %(name)s at %(time)s', name=message.recipient.name, time=moment(message.timestamp).calendar()) }}
+                            {{ _('Sent to %(name)s at ', name=message.recipient.name) }}
+                            {{ moment(message.timestamp).calendar() }}
                         {% elif type == 'received' %}
-                            {{ _('Sent from %(name)s at %(time)s', name=message.sender.name, time=moment(message.timestamp).calendar()) }}
-                            {{ _(' -- (Read)') if message.read else _(' -- (Unread)')}}
+                            {{ _('Sent from %(name)s at ', name=message.sender.name) }}
+                            {{ moment(message.timestamp).calendar() }}
+                            <span>
+                                 -- ( <span id="status">{{ _('Read') if message.read else _('Unread') }}</span> )
+                             </span>
                         {% endif %}
+                    </span>
                     </a>
 
                     {% if type == 'sent' %}
@@ -32,8 +39,9 @@
 
                 </h4>
             </div>
+
             <div id="{{ type }}collapse{{ loop.index }}"
-                 class="panel-collapse collapse {{ "in" if loop.index == 1 }}"
+                 class="panel-collapse collapse {{ "in" if type == 'sent' and loop.index == 1 }}"
                  role="tabpanel"
                  aria-labelledby="{{ type }}heading{{ loop.index }}">
                 <div class="panel-body">
@@ -42,6 +50,6 @@
             </div>
         </div>
     {% else %}
-        <h3>{{ _('You do not have any messages.') }}</h3>
+        <h3>{{ _('Nothing here.') }}</h3>
     {% endfor %}
 </div>

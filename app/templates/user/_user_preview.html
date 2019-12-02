@@ -2,7 +2,9 @@
 <div class="thumbnail user-preview flex-box">
 
     <div class="u-flex1">
-        <img src="{{ user.avatar(60) }}" alt="avatar">
+        <a href="{{ url_for('user.profile', username=user.username) }}">
+            <img src="{{ user.avatar(60) }}" alt="avatar">
+        </a>
     </div>
 
     <div class="u-flex2 flex-box-column">

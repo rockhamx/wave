@@ -40,13 +40,16 @@ def edit(id):
     p = Post.query.filter_by(id=id, author_id=current_user.id).first_or_404()
 
     if not p.body:
+        d = Draft.query.filter_by(reference_id=p.id).first()
+        if d:
+            return redirect(url_for('post.draft', id=d.id))
         form = RichTextEditorForm()
         form.reference_id.data = p.id
         form.title.data = p.title
         form.subtitle.data = p.subtitle
         form.description.data = p.description
         form.content.data = p.html
-        form.tags.data = ','.join([str(tag) for tag in p.tags])
+        form.tags.data = ' '.join([str(tag) for tag in p.tags])
         form.private.data = not p.is_public
         return render_template('new.html', form=form)
 
@@ -76,10 +79,6 @@ def new():
 @login_required
 def draft(id):
     d = Draft.query.filter_by(id=id, author_id=current_user.id).first_or_404()
-    # if current_user.id != d.author_id:
-    #     flash(_('You have not authorized to this operation.'))
-    #     return redirect(url_for('.user', username=current_user.username))
-
     form = RichTextEditorForm()
     if form.validate_on_submit():
         if form.reference_id.data:
@@ -87,14 +86,16 @@ def draft(id):
         else:
             p = Post()
             p.author = current_user._get_current_object()
-        p.update(title=form.title.data, subtitle=form.subtitle.data, description=form.description.data,
-                 html=form.content.data, is_public=not form.private.data)
 
+        tags = []
         if form.tags.data:
-            for tag in form.tags.data.split(','):
+            for tag in form.tags.data.split():
                 tag = Tag.get_or_create(tag.strip())
                 if tag and tag not in p.tags:
-                    p.tags.append(tag)
+                    tags.append(tag)
+        p.update(title=form.title.data, subtitle=form.subtitle.data, description=form.description.data,
+                 html=form.content.data, is_public=not form.private.data, tags=tags)
+
         db.session.add(p)
         db.session.delete(d)
         db.session.commit()

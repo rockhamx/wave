@@ -1,5 +1,6 @@
 from threading import Thread
 
+from PIL import Image
 from langdetect import detect
 from langdetect.lang_detect_exception import LangDetectException
 from markdown import markdown
@@ -18,7 +19,6 @@ from datetime import datetime
 from time import time
 from hashlib import md5
 
-
 follows = db.Table('follows',
                    db.Column('follower_id', db.Integer, db.ForeignKey('users.id'), primary_key=True),
                    db.Column('following_id', db.Integer, db.ForeignKey('users.id'), primary_key=True),
@@ -29,18 +29,18 @@ follows = db.Table('follows',
 class User(UserMixin, db.Model):
     __tablename__ = 'users'
     id = db.Column(db.Integer, primary_key=True)
-    email = db.Column(db.String(64), unique=True, nullable=False, index=True)
     username = db.Column(db.String(64), unique=True, nullable=False, index=True)
-    password_hash = db.Column(db.String(128), nullable=False)
-    confirmed = db.Column(db.Boolean, default=False)
     name = db.Column(db.String(64))
+    email = db.Column(db.String(64), unique=True, nullable=False, index=True)
     location = db.Column(db.String(64))
     description = db.Column(db.Text)
-    member_since = db.Column(db.DateTime(), default=datetime.utcnow)
-    last_seen = db.Column(db.DateTime(), default=datetime.utcnow)
-    email_hash = db.Column(db.String(32))
+    confirmed = db.Column(db.Boolean, default=False)
     locale = db.Column(db.String(12), default='en_US')
     timezone = db.Column(db.String(8), default='UTC+8')
+    member_since = db.Column(db.DateTime(), default=datetime.utcnow)
+    last_seen = db.Column(db.DateTime(), default=datetime.utcnow)
+    password_hash = db.Column(db.String(128), nullable=False)
+    email_hash = db.Column(db.String(32))
     theme = db.Column(db.String(256))
     is_administrator = db.Column(db.Boolean, default=False)
     posts = db.relationship('Post', lazy='dynamic', backref=db.backref('author', lazy='select'))
@@ -57,9 +57,8 @@ class User(UserMixin, db.Model):
             self.name = self.username
         if self.email and self.email_hash is None:
             self.email_hash = self.gravatar_hash()
-        # TODO: async
-        for size in [30, 42, 256]:
-            self.avatar(size)
+        for size in Config.WAVE_AVATAR_REQUIRED_SIZE:
+            self.download_gravatar_async(size=size)
 
     @property
     def password(self):
@@ -126,39 +125,55 @@ class User(UserMixin, db.Model):
     def avatar_dir(self):
         return os.path.join(current_app.root_path, 'static', 'images', 'users', self.email_hash, 'avatar')
 
-    @staticmethod
-    def avatar_filename(dirname='', size=None):
+    def avatar_path(self, dirname=None, size=None):
+        if not dirname:
+            dirname = self.avatar_dir()
         if size:
             return os.path.join(dirname, '{}x{}.png'.format(size, size))
         else:
             return os.path.join(dirname, 'default.png')
 
-    def download_gravatar_async(self, size, dist):
-        url = self.gravatar_url(size)
-        thr = Thread(target=self.download_image, args=(url, dist))
-        thr.start()
-        return thr
+    def save_upload_avatar(self, file_storage):
+        default_filepath = self.avatar_path()
+        if os.path.splitext(file_storage.filename)[1] != '.png':
+            default = Image.open(file_storage.stream)
+            default.save(default_filepath)
+        else:
+            file_storage.save(default_filepath)
+
+        for size in Config.WAVE_AVATAR_REQUIRED_SIZE:
+            filepath = self.avatar_path(size=size)
+            im = Image.open(default_filepath).copy().resize((size, size))
+            im.save(filepath)
 
     @staticmethod
-    def download_image(url, dist):
+    def download_image(url, filepath):
         r = requests.get(url)
         # assert r.status_code == 200
         if r.status_code == 200:
-            with open(dist, 'wb') as f:
+            with open(filepath, 'wb') as f:
                 f.write(r.content)
                 return True
         return False
 
+    def download_gravatar_async(self, filepath=None, size=None):
+        if not filepath:
+            filepath = self.avatar_path(size=size)
+        url = self.gravatar_url(size)
+        thr = Thread(target=self.download_image, args=(url, filepath))
+        thr.start()
+        return thr
+
     def avatar(self, size=None):
         dirname = self.avatar_dir()
-        abs_filename = User.avatar_filename(dirname, size)
-        if not os.path.exists(abs_filename):
+        abs_filepath = self.avatar_path(dirname, size)
+        if not os.path.exists(abs_filepath):
             if not os.path.exists(dirname):
                 os.makedirs(dirname)
-            self.download_gravatar_async(size, abs_filename)
+            self.download_gravatar_async(abs_filepath, size)
             return self.gravatar_url(size)
 
-        filename = User.avatar_filename(os.path.join('images', 'users', self.email_hash, 'avatar'), size)
+        filename = self.avatar_path(os.path.join('images', 'users', self.email_hash, 'avatar'), size)
         return url_for('static', filename=filename)
 
     def drafts_desc_by_time(self, page):
@@ -404,19 +419,19 @@ class Post(db.Model):
     title = db.Column(db.String(128), nullable=False)
     subtitle = db.Column(db.String(128), nullable=True)
     description = db.Column(db.String(256), nullable=True)
+    hearts = db.Column(db.Integer, default=0)
+    language = db.Column(db.String(8), default='en')
+    is_public = db.Column(db.Boolean(), nullable=False, default=1)
     body = db.Column(db.Text())
     html = db.Column(db.Text())
     preview = db.Column(db.Text())
-    is_public = db.Column(db.Boolean(), nullable=False, default=1)
-    pub_timestamp = db.Column(db.DateTime(), default=datetime.utcnow)
-    edit_timestamp = db.Column(db.DateTime(), index=True)
-    language = db.Column(db.String(8), default='en')
-    clicked = db.Column(db.Integer, default=0)
-    hearts = db.Column(db.Integer, default=0)
-    author_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
-    publication_id = db.Column(db.Integer, db.ForeignKey('publications.id'))
     publication = db.relationship('Publication', lazy='select',
                                   backref=db.backref('posts', lazy='dynamic', uselist=True))
+    pub_timestamp = db.Column(db.DateTime(), default=datetime.utcnow)
+    edit_timestamp = db.Column(db.DateTime(), index=True)
+    clicked = db.Column(db.Integer, default=0)
+    author_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
+    publication_id = db.Column(db.Integer, db.ForeignKey('publications.id'))
     tags = db.relationship('Tag', secondary='posts_tags', lazy='subquery',
                            backref=db.backref('posts', lazy=True))
     comments = db.relationship('Comment', lazy='dynamic', cascade="all, delete-orphan",
@@ -443,20 +458,17 @@ class Post(db.Model):
         elif type == 'markdown':
             pass
 
-    def update(self, title=None, subtitle=None, description=None, body=None, html=None, is_public=None, tags=None):
+    def update(self, title, subtitle, description, is_public, tags, body=None, html=None):
         if title:
             self.title = title
-        if subtitle:
-            self.subtitle = subtitle
-        if description:
-            self.description = description
+        self.subtitle = subtitle
+        self.description = description
+        self.is_public = 1 if is_public else 0
+        self.tags = tags
         if body:
             self.body = body
-        if html:
+        else:
             self.html = html
-        self.is_public = 1 if is_public else 0
-        if tags:
-            self.tags = tags
         # self.edit_timestamp = datetime.utcnow()
 
     @staticmethod
@@ -492,7 +504,10 @@ class Post(db.Model):
     @staticmethod
     def on_changed_body(target, value, oldvalue, initiator):
         # render markdown to html
-        html = markdown(value, output_format='html')
+        if value:
+            html = markdown(value, output_format='html')
+        else:
+            html = ''
         target.html = html
 
     @staticmethod
@@ -654,9 +669,9 @@ class Message(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     sender_id = db.Column(db.Integer, db.ForeignKey('users.id'))
     recipient_id = db.Column(db.Integer, db.ForeignKey('users.id'))
-    content = db.Column(db.String(256))
     timestamp = db.Column(db.DateTime, index=True, default=datetime.utcnow)
     read = db.Column(db.Boolean, index=True, default=False)
+    content = db.Column(db.String(256))
     sender = db.relationship('User', lazy='select', foreign_keys=[sender_id],
                              backref=db.backref('message_sent', lazy='dynamic',
                                                 cascade='all, delete-orphan'))
@@ -678,9 +693,9 @@ class Draft(db.Model):
     title = db.Column(db.String(128))
     subtitle = db.Column(db.String(128))
     description = db.Column(db.String(256))
-    type = db.Column(db.String(16), nullable=False)
     content = db.Column(db.Text)
     is_public = db.Column(db.Boolean(), nullable=False, default=True)
+    type = db.Column(db.String(16), nullable=False)
     tags = db.Column(db.String(256))
     publication_id = db.Column(db.Integer, db.ForeignKey('publications.id'))
     author_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
@@ -691,9 +706,12 @@ class Draft(db.Model):
     post = db.relationship('Post', lazy=True,
                            backref=db.backref('drafts', lazy='dynamic'))
 
+    def bleach(self, content):
+        return bleach.clean(content, tags=[], strip=True)
+
     def to_json(self):
         return jsonify({
-            "status": "success",
+            "result": "success",
             "id": self.id,
             "reference_id": self.reference_id,
             "title": self.title,
@@ -749,7 +767,6 @@ class Draft(db.Model):
         if tags:
             self.tags = tags
         self.saved_timestamp = datetime.utcnow()
-
 
 # class UserPreference(db.Model):
 #     user_id = db.Column(db.Integer, db.ForeignKey('users.id'), primary_key=True)

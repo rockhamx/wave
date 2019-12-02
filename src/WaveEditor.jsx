@@ -89,7 +89,7 @@ const WaveEditor = props => {
       if (lastSaveDraft && lastSaveDraft === draft) return;
       console.log("content changed");
 
-      const draft_progress = $("#draft_progress span")[0];
+      const draft_progress = $("span#draft_progress")[0];
       draft_progress.innerText = "Saving...";
       const url = "/api/v0/drafts/";
       $.ajax({
@@ -99,14 +99,14 @@ const WaveEditor = props => {
         contentType: "application/json; charset=utf-8",
         dataType: "json",
         success: data => {
-          if (data.status === "success") {
+          if (data.result === "success") {
             if (!draftId.val()) {
               draftId.val(data.id);
               window.history.replaceState({}, "", `/d/${data.id}/edit`);
             }
             setLastSaveDraft(draft);
-            draft_progress.innerText = "Saved";
-            console.log("saved: " + draft);
+            draft_progress.innerText = data.status;
+            console.log(data.status + draft);
           }
         }
       });

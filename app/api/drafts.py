@@ -1,5 +1,6 @@
 from flask import request, jsonify
 from flask_login import login_required, current_user
+from flask_babel import gettext as _
 
 from app import db
 from app.models import Draft
@@ -14,40 +15,42 @@ def draft(id):
         return draft.to_json()
     else:
         return jsonify({
-            "status": "error"
+            "result": "error"
         })
 
 
 @api.route('/drafts/', methods=['POST'])
 @login_required
 def save_draft():
-    status = "error"
-    draft = Draft.from_json(request.json)
-    if draft:
-        if draft.id:
-            draft.update_from_json(request.json)
+    result, status = 'error', ''
+    d = Draft.from_json(request.json)
+    if d:
+        if d.id:
+            d.update_from_json(request.json)
         else:
-            draft.author_id = current_user.id
-        db.session.add(draft)
+            d.author_id = current_user.id
+        db.session.add(d)
         db.session.commit()
-        status = 'success'
+        result = 'success'
+        status = _(u'Saved')
 
     return jsonify({
+        "result": result,
         "status": status,
-        "id": draft.id,
+        "id": d.id,
     })
 
 
 @api.route('/draft/<int:id>', methods=['DELETE'])
 @login_required
 def delete_draft(id):
-    status = "error"
+    result = 'error'
     if id:
         d = Draft.query.filter_by(id=id).first()
         if d:
             db.session.delete(d)
             db.session.commit()
-            status = "success"
+            result = "success"
     return jsonify({
-        "status": status
+        "result": result,
     })

@@ -2,15 +2,15 @@ import json
 import os
 
 from flask_babel import lazy_gettext as _l
-from flask_uploads import UploadSet, IMAGES
 from flask_wtf import FlaskForm
-from flask_wtf.file import FileField, FileRequired, FileAllowed
-from wtforms import StringField, SubmitField, TextAreaField, SelectField
-from wtforms.validators import Length, InputRequired
+from flask_uploads import IMAGES
+from wtforms import StringField, SubmitField, TextAreaField, SelectField, FileField
+from wtforms.validators import Length, InputRequired, ValidationError
 
+from app.validators import image_only
 from config import Config
+# from ..uploads import avatar
 
-images = UploadSet('images', IMAGES)
 ls = Config.SUPPORTED_LANGUAGES
 supported_languages = [
     (ls[0], '简体中文(Simplified Chinese)'),
@@ -31,8 +31,11 @@ with open(os.path.join('instance', 'bootswatch.json'), 'r') as fp:
 
 class EditProfileForm(FlaskForm):
     # TODO: add placeholder
-    avatar = FileField(_l(u'Change avatar', validators=[FileRequired(), FileAllowed(images, _l(u'Images only'))]))
-    name = StringField(_l(u'Nickname'), validators=[Length(0, 64)])
+    avatar = FileField(_l(u'Change avatar'), validators=[image_only], render_kw={
+        "accept": ', '.join(['image/' + ext for ext in IMAGES])
+    })
+    # avatar = FileField(_l(u'Change avatar', validators=[FileAllowed(avatar, _l(u'Images only'))]))
+    name = StringField(_l(u'Nickname'), validators=[InputRequired(), Length(0, 64)])
     location = StringField(_l(u'Location'), validators=[Length(0, 64)])
     description = TextAreaField(_l(u'description'))
     # locale = SelectField(_l(u'Locale'), choices=supported_languages)
