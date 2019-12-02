@@ -1,7 +1,7 @@
 from flask_babel import lazy_gettext as _l
 from flask_wtf import FlaskForm
 from flask_uploads import IMAGES
-from wtforms import StringField, SubmitField, TextAreaField, SelectField, FileField
+from wtforms import StringField, SubmitField, TextAreaField, SelectField, FileField, Label
 from wtforms.validators import Length, InputRequired
 
 from app.validators import image_only

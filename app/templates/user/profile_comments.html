@@ -11,6 +11,8 @@
                 {% include 'comment/_comment_preview.html' %}
             {% endfor %}
 
+            {% include 'comment/_comment_delete_confirm.html' %}
+
         </div>
         {#    TODO:add bootstrap pagination#}
         <a class="pagination__next" href="{{ url_for('user.profile_comments', username = user.username) }}?page=2"></a>

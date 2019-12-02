@@ -1,0 +1,23 @@
+{% extends "base_infinite_scroll.html" %}
+
+{% block title %}{{ pub.name }}
+{% endblock %}
+
+{% block content %}
+    {{ super() }}
+
+    <div class="row">
+        <div class="col-xs-12 col-md-12 articles">
+
+            <h1>{{ pub.name }}</h1>
+            {% for post in posts %}
+                {% include 'post/_post_preview.html' %}
+            {% endfor %}
+            {% include "post/_post_delete_confirm.html" %}
+
+        </div>
+        {#    TODO:add bootstrap pagination#}
+        <a class="pagination__next" href="{{ url_for('publication.home', name = pub.name) }}?page=2"></a>
+    </div>
+
+{% endblock %}

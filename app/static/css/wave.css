@@ -18,14 +18,13 @@ html {
   max-width: 568px;
 }
 
-.modal-dialog.modal-lg {
+.modal-dialog.modal-lg textarea {
   max-width: 868px;
 }
 
-/*working with material-icons 24px*/
-/*font-size: 24px*/
 /*flashed messages*/
-body > div.container:first-of-type {
+body > div.container:first-of-type,
+.row.distance {
   margin-top: 68px;
 }
 
@@ -58,18 +57,6 @@ div.row div.search {
 }
 
 /*text-align: center*/
-.avatar {
-  border-radius: 50%;
-}
-
-.float-left {
-  float: left;
-}
-
-.float-right {
-  float: right;
-}
-
 .flex-box {
   display: flex;
   align-items: center;
@@ -253,8 +240,7 @@ li .glyphicon {
 }
 
 /*article preview*/
-.article-preview,
-.article-detail {
+.article-detail, .article-preview {
   padding-top: 23px;
   padding-bottom: 23px;
   margin-bottom: 24px;
@@ -265,7 +251,6 @@ li .glyphicon {
   font-size: 18px;
 }
 
-/*article details*/
 .article-detail > h1 {
   text-align: center;
 }
@@ -277,13 +262,25 @@ li .glyphicon {
   letter-spacing: -0.004em;
 }
 
+.publication-float {
+  width: 15rem;
+  position: fixed;
+  top: 20%;
+  left: 10%;
+}
+
+#write-comment {
+  padding-top: 10px;
+  padding-bottom: 10px;
+}
+
 /*author-bar*/
 .author-bar {
-  /*margin-top: 10px*/
   align-items: center;
 }
 
-.author-menu {
+.post-menu,
+.comment-menu {
   float: right;
 }
 

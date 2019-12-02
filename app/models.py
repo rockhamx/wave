@@ -234,8 +234,10 @@ class User(UserMixin, db.Model):
 
     def recent_posts(self):
         followed = Post.query.join(
-            follows, (follows.c.following_id == Post.author_id)).filter(
-            follows.c.follower_id == self.id)
+            follows, (follows.c.following_id == Post.author_id)
+        ).filter(
+            Post.is_public == 1, follows.c.follower_id == self.id
+        )
         own = Post.query.filter_by(author_id=self.id)
         return followed.union(own).order_by(Post.pub_timestamp.desc())
 
@@ -384,6 +386,11 @@ class User(UserMixin, db.Model):
             return True
         return False
 
+    def is_followed_publication(self, pub):
+        return FollowedPublication.query.filter_by(
+            user_id=self.id, publication_id=pub.id
+        ).count() > 0
+
     def comments_desc_by_time(self, page=1):
         return self.comments.order_by(
             Comment.pub_timestamp.desc()
@@ -433,8 +440,6 @@ class Post(db.Model):
     body = db.Column(db.Text())
     html = db.Column(db.Text())
     preview = db.Column(db.Text())
-    publication = db.relationship('Publication', lazy='select',
-                                  backref=db.backref('posts', lazy='dynamic', uselist=True))
     pub_timestamp = db.Column(db.DateTime(), default=datetime.utcnow)
     edit_timestamp = db.Column(db.DateTime(), index=True)
     clicked = db.Column(db.Integer, default=0)
@@ -442,6 +447,8 @@ class Post(db.Model):
     publication_id = db.Column(db.Integer, db.ForeignKey('publications.id'))
     tags = db.relationship('Tag', secondary='posts_tags', lazy='subquery',
                            backref=db.backref('posts', lazy=True))
+    publication = db.relationship('Publication', lazy='select',
+                                  backref=db.backref('posts', lazy='dynamic', uselist=True))
     comments = db.relationship('Comment', lazy='dynamic', cascade="all, delete-orphan",
                                backref=db.backref('post', lazy='select'))
 
@@ -466,12 +473,13 @@ class Post(db.Model):
         elif type == 'markdown':
             pass
 
-    def update(self, title, subtitle, description, is_public, tags, body=None, html=None):
+    def update(self, title, subtitle, description, is_public, publication, tags, body=None, html=None):
         if title:
             self.title = title
         self.subtitle = subtitle
         self.description = description
         self.is_public = 1 if is_public else 0
+        self.publication = publication
         self.tags = tags
         if body:
             self.body = body
@@ -503,7 +511,8 @@ class Post(db.Model):
 
     def comments_desc_by_time(self, page=1):
         return self.comments.order_by(
-            Comment.pub_timestamp.desc()).paginate(
+            Comment.pub_timestamp.desc()
+        ).paginate(
             page=page, per_page=current_app.config['WAVE_POSTS_PER_PAGE'],
             # error_out=False
         ).items
@@ -599,6 +608,16 @@ class Publication(db.Model):
     creator_id = db.Column(db.Integer, db.ForeignKey('users.id'))
     creator = db.relationship('User', lazy='select')
 
+    def latest(self, page=1):
+        return Post.query.filter(
+            Post.publication_id == self.id, Post.is_public == 1
+        ).order_by(
+            Post.pub_timestamp.desc()
+        ).paginate(
+            page=page, per_page=current_app.config['WAVE_POSTS_PER_PAGE'],
+            # error_out=False
+        ).items
+
     @staticmethod
     def exist(name):
         return Publication.query.filter_by(name=name).first()
@@ -623,6 +642,35 @@ class FollowedPublication(db.Model):
                            backref=db.backref('followed_publications', lazy='dynamic', cascade="all, delete-orphan"))
     publication = db.relationship('Publication', single_parent=True,
                                   backref=db.backref('followed_users', lazy='dynamic', cascade="all, delete-orphan"))
+
+    # def avatar_path(self):
+    #     return os.path.join('images', 'publications', self.name, 'default.png')
+    #
+    # def save_upload_avatar(self, file_storage):
+    #     default_filepath = self.avatar_path()
+    #     if os.path.splitext(file_storage.filename)[1] != '.png':
+    #         default = Image.open(file_storage.stream).re
+    #         default.save(default_filepath)
+    #     else:
+    #         file_storage.save(default_filepath)
+    #
+    #     for size in Config.WAVE_AVATAR_REQUIRED_SIZE:
+    #         filepath = self.avatar_path(size=size)
+    #         im = Image.open(default_filepath).copy().resize((size, size))
+    #         im.save(filepath)
+    #
+    # def avatar(self, size=None):
+    #     dirname = self.avatar_dir()
+    #     abs_filepath = self.avatar_path(dirname, size)
+    #     if not os.path.exists(abs_filepath):
+    #         if not os.path.exists(dirname):
+    #             os.makedirs(dirname)
+    #         self.download_gravatar_async(abs_filepath, size)
+    #         return self.gravatar_url(size)
+    #
+    #     # relative url
+    #     filename = self.avatar_url('/images/' + 'publications/' + '/', size)
+    #     return url_for('static', filename=filename)
 
 
 class Tag(db.Model):
@@ -709,6 +757,8 @@ class Draft(db.Model):
     author_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
     created_timestamp = db.Column(db.DateTime(), default=datetime.utcnow)
     saved_timestamp = db.Column(db.DateTime(), index=True)
+    publication = db.relationship('Publication', lazy='select',
+                                  backref=db.backref('drafts', lazy='dynamic', uselist=True))
     author = db.relationship('User', lazy='select',
                              backref=db.backref('drafts', lazy='dynamic'))
     post = db.relationship('Post', lazy=True,
@@ -717,6 +767,7 @@ class Draft(db.Model):
     def bleach(self, content):
         return bleach.clean(content, tags=[], strip=True)
 
+    # deprecated
     def to_json(self):
         return jsonify({
             "result": "success",
@@ -749,31 +800,26 @@ class Draft(db.Model):
                          )
 
     def update_from_json(self, draft):
-        title = draft.get('title', None)
-        subtitle = draft.get('subtitle', None)
-        description = draft.get('description', None)
-        type = draft.get('type', None)
+        title = draft.get('title')
+        subtitle = draft.get('subtitle')
+        description = draft.get('description')
+        type = draft.get('type')
         content = draft.get('content', None)
-        is_public = draft.get('is_public', None)
-        tags = draft.get('tags', None)
+        is_public = draft.get('is_public')
+        publication_id = draft.get('publication')
+        tags = draft.get('tags')
         self.update(title=title, subtitle=subtitle, description=description, type=type, content=content,
-                    is_public=is_public, tags=tags)
+                    is_public=is_public, publication_id=publication_id, tags=tags)
 
-    def update(self, title=None, subtitle=None, description=None, type=None, content=None, is_public=None, tags=None):
-        if title:
-            self.title = title
-        if subtitle:
-            self.subtitle = subtitle
-        if description:
-            self.description = description
-        if type:
-            self.type = type
-        if content:
-            self.content = content
-        if is_public:
-            self.is_public = is_public
-        if tags:
-            self.tags = tags
+    def update(self, title, subtitle, description, type, content, is_public, publication_id, tags):
+        self.title = title
+        self.subtitle = subtitle
+        self.description = description
+        self.type = type
+        self.content = content
+        self.is_public = is_public
+        self.publication = Publication.query.get(publication_id)
+        self.tags = tags
         self.saved_timestamp = datetime.utcnow()
 
 # class UserPreference(db.Model):

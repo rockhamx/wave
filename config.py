@@ -11,7 +11,7 @@ class Config:
     SERVER_NAME = os.environ.get('SERVER_NAME')
     WAVE_INSTANCE_FOLDER = 'instance'
     WAVE_POSTS_PER_PAGE = 10
-    WAVE_AVATAR_REQUIRED_SIZE = [30, 42, 60, 100, 256]
+    WAVE_AVATAR_REQUIRED_SIZE = [30, 42, 60, 80, 100, 256]
     WAVE_ALLOWED_TAGS = ['h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'div', 'p', 'a', 'img',
                          'ol', 'ul', 'li', 'pre', 'code', 'blockquote',
                          'i', 'abbr', 'acronym', 'b', 'strong', 'em', 'u']

@@ -1,16 +1,11 @@
-<div class="btn-group author-menu">
+<div class="btn-group comment-menu">
     <button class="close dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true"
             aria-expanded="false">
         <span class="glyphicon glyphicon-menu-down" aria-hidden="true"></span>
     </button>
     <ul class="dropdown-menu">
-        {#            {% if post.body %}#}
-        <li><a href="{{ url_for('post.edit', id=content.id) }}">{{ _('Edit') }}</a></li>
-        {#            {% else %}#}
-        {#                <li><a href="{{ url_for('post.new', id=post.id) }}">{{ _('Edit') }}</a></li>#}
-        {#            {% endif %}#}
 
-        <li><a data-id="{{ content.id }}" data-toggle="modal" data-target="#confirmModal">{{ _('Delete') }}</a></li>
+        <li><a href="" data-id="{{ content.id }}" data-toggle="modal" data-target="#commentConfirmModal">{{ _('Delete') }}</a></li>
     </ul>
 </div>
 

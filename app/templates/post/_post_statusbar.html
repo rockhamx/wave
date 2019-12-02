@@ -37,7 +37,7 @@
     {% endif %}
 
     {% if current_user.is_authenticated %}
-        <div class="btn-group float-right">
+        <div class="btn-group pull-right">
             <button class="dropdown-toggle btn-text" type="button" data-toggle="dropdown" aria-haspopup="true"
                     aria-expanded="false">
                 <i class="material-icons" data-toggle="tooltip" data-placement="bottom"
@@ -51,12 +51,12 @@
 
     {# bookmarks#}
     {% if current_user.is_authenticated and current_user.is_bookmarked(post) %}
-        <a class="btn-text float-right removeBookmark" href="#" data-id="{{ post.id }}" data-toggle="tooltip"
+        <a class="btn-text pull-right removeBookmark" href="#" data-id="{{ post.id }}" data-toggle="tooltip"
            data-placement="bottom" title="{{ _('Remove bookmark') }}">
             <i class="material-icons">bookmark</i>
         </a>
     {% else %}
-        <a class="btn-text float-right addBookmark" href="#" data-id="{{ post.id }}" data-toggle="tooltip"
+        <a class="btn-text pull-right addBookmark" href="#" data-id="{{ post.id }}" data-toggle="tooltip"
            data-placement="bottom" title="{{ _('Add bookmark') }}">
             <i class="material-icons">bookmark_border</i>
         </a>

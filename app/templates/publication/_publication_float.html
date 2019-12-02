@@ -1,0 +1,27 @@
+{% if pub %}
+    <div class="publication-float">
+        <div>
+            <a href="{{ url_for('publication.home', name=pub.name) }}">
+                <strong>{{ pub.name }}</strong>
+            </a>
+        </div>
+        {% if pub.description %}
+            <div>
+                <span class="sub-text">{{ pub.description }}</span>
+            </div>
+        {% endif %}
+        <div>
+            {% if current_user.is_followed_publication(pub) %}
+                <button class="btn-text unfollow_publication" data-id="{{ pub.id }}">
+                    <span class="status">{{ _('Following') }}</span>
+                    <i class="material-icons">keyboard_arrow_down</i>
+                </button>
+            {% else %}
+                <button class="btn-text follow_publication" data-id="{{ pub.id }}">
+                    <span class="status">{{ _('Follow') }}</span>
+                    <i class="material-icons"></i>
+                </button>
+            {% endif %}
+        </div>
+    </div>
+{% endif %}

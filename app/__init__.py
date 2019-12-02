@@ -49,28 +49,30 @@ def create_app(config_name):
     admin.init_app(app)
     pagedown.init_app(app)
 
-    # with app.app_context():
+    with app.app_context():
     #     from app.themes import themes
-
-    from app.admin_views import UserView, PostView, DraftView, CommentView, PublicationView, TagView, MessageView
-    from app.models import User, Post, Draft, Comment, Publication, Tag, Message
-    admin.add_view(UserView(User, db.session, name='Users', endpoint='users'))
-    admin.add_view(PostView(Post, db.session, name='Posts', endpoint='posts'))
-    admin.add_view(DraftView(Draft, db.session, name='Drafts', endpoint='drafts'))
-    admin.add_view(CommentView(Comment, db.session, name='Comments', endpoint='comments'))
-    admin.add_view(PublicationView(Publication, db.session, name='Publications', endpoint='publications'))
-    admin.add_view(TagView(Tag, db.session, name='Tags', endpoint='Tags'))
-    admin.add_view(MessageView(Message, db.session, name='Messages', endpoint='messages'))
+        # TODO: understand why need app_context()
+        from app.admin_views import UserView, PostView, DraftView, CommentView, PublicationView, TagView, MessageView
+        from app.models import User, Post, Draft, Comment, Publication, Tag, Message
+        admin.add_view(UserView(User, db.session, name='Users', endpoint='users'))
+        admin.add_view(PostView(Post, db.session, name='Posts', endpoint='posts'))
+        admin.add_view(DraftView(Draft, db.session, name='Drafts', endpoint='drafts'))
+        admin.add_view(CommentView(Comment, db.session, name='Comments', endpoint='comments'))
+        admin.add_view(PublicationView(Publication, db.session, name='Publications', endpoint='publications'))
+        admin.add_view(TagView(Tag, db.session, name='Tags', endpoint='Tags'))
+        admin.add_view(MessageView(Message, db.session, name='Messages', endpoint='messages'))
 
     from .frontend import frontend
     from .auth import auth
     from .user import user
     from .post import post
+    from .publication import publication
     from .api import api
     app.register_blueprint(frontend)
     app.register_blueprint(auth)
     app.register_blueprint(user)
     app.register_blueprint(post)
+    app.register_blueprint(publication)
     app.register_blueprint(api, url_prefix='/api/v0')
 
     return app

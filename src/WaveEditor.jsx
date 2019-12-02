@@ -49,6 +49,7 @@ const WaveEditor = props => {
   const draftSubtitle = $("input#subtitle");
   const draftDescription = $("textarea#description");
   const draftContent = $("input#content");
+  const draftPublication = $("select#publication");
   const draftTags = $("input#tags");
   const draftIsPublic = $("input#private")[0];
   const initialValue = draftContent.val() || "<p></p>";
@@ -62,9 +63,10 @@ const WaveEditor = props => {
     const title = draftTitle.val();
     const subtitle = draftSubtitle.val();
     const description = draftDescription.val();
+    const publication = draftPublication.val();
     const tags = draftTags.val();
     const content = html.serialize(value);
-    const isPublic = draftIsPublic.checked;
+    const isPublic = draftIsPublic.checked === false;
     return {
       id: id,
       reference_id: referenceId,
@@ -72,6 +74,7 @@ const WaveEditor = props => {
       title: title,
       subtitle: subtitle,
       description: description,
+      publication: publication,
       tags: tags,
       content: content,
       is_public: isPublic

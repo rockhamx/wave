@@ -12,22 +12,16 @@ html
 .modal-dialog.modal-sm textarea
   max-width: 268px
 
-
 .modal-dialog textarea
   max-width: 568px
 
-
-.modal-dialog.modal-lg
+.modal-dialog.modal-lg textarea
   max-width: 868px
 
 
-/*working with material-icons 24px*/
-//.panel-title
-/*font-size: 24px*/
-
-
 /*flashed messages*/
-body > div.container:first-of-type
+body > div.container:first-of-type,
+.row.distance
   margin-top: 68px
 
 
@@ -39,10 +33,6 @@ body > div.container:first-of-type
   max-width: 1170px
   margin-left: auto
   margin-right: auto
-
-
-//.dropdown-menu > li > a
-//  cursor: pointer
 
 
 .dropdown-menu a#username
@@ -65,19 +55,6 @@ div.row div.search
 
 //h1
 /*text-align: center*/
-
-
-.avatar
-  border-radius: 50%
-
-
-.float-left
-  float: left
-
-
-.float-right
-  float: right
-
 
 .flex-box
   display: flex
@@ -277,21 +254,23 @@ li .glyphicon
 
 
 /*article preview*/
-.article-preview,
-.article-detail
+%article
   padding-top: 23px
   padding-bottom: 23px
   margin-bottom: 24px
   box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1)
 
 
+.article-preview
+  @extend %article
+
 .article-preview > p
   font-size: 18px
 
 
-/*article details*/
-//.article-detail
-
+// article-detail
+.article-detail
+  @extend %article
 
 .article-detail > h1
   text-align: center
@@ -303,14 +282,25 @@ li .glyphicon
   margin: 2rem 0 0
   letter-spacing: -0.004em
 
+// publication float
+.publication-float
+  width: 15rem
+  position: fixed
+  top: 20%
+  left: 10%
+
+// comment form
+#write-comment
+  padding-top: 10px
+  padding-bottom: 10px
 
 /*author-bar*/
 .author-bar
-  /*margin-top: 10px*/
   align-items: center
 
 
-.author-menu
+.post-menu,
+.comment-menu
   float: right
 
 
@@ -352,5 +342,3 @@ li .glyphicon
 .navbar-nav > li > a#draft-status:focus
   cursor: default
   background-color: inherit
-
-  //cusor

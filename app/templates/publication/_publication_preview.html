@@ -1,13 +1,16 @@
 <div class="thumbnail publication flex-box">
     <div class="flex-box flex-grow-1">
-        <a href=""><img src="" alt="{{ pub.name }}"></a>
+{#        <a href="{{ url_for('publication.home', name=pub.name) }}">#}
+{#            <img src="" alt="{{ pub.name }}">#}
+{#        </a>#}
         <div class="flex-box-column publication-info">
-            <strong>{{ pub.name }}</strong>
+            <a href="{{ url_for('publication.home', name=pub.name) }}">
+                <strong>{{ pub.name }}</strong>
+            </a>
             <span>{{ pub.description if pub.description else "No description." }}</span>
         </div>
     </div>
     <div>
-
         {% if status and status == 'following' %}
             <button class="btn-text unfollow_publication" data-id="{{ pub.id }}">
                 <span class="status">{{ _('Following') }}</span>
@@ -17,7 +20,7 @@
             <button class="btn-text follow_publication" data-id="{{ pub.id }}">
                 <span class="status">{{ _('Follow') }}</span>
                 <i class="material-icons"></i>
+            </button>
         {% endif %}
-
     </div>
 </div>

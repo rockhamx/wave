@@ -30,16 +30,10 @@
 {% endblock %}
 
 {% block content %}
-
     {{ super() }}
 
     <div class="container">
-        {#        <div class="input-group title">#}
-        {#            <input type="text" class="form-control" id="title" placeholder="{{ _('Title') }}" aria-describedby="sizing-addon1">#}
-        {#        </div>#}
-
         <div class="col-xs-6 col-md-12" id="slate-editor"></div>
-
     </div>
 
     <div class="modal fade" id="publishModalForRichText" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
@@ -49,63 +43,40 @@
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
                             aria-hidden="true">&times;</span></button>
                     <h4 class="modal-title" id="myModalLabel">
-                        {% if form.reference_id.data != '' %}
+                        {% if form.reference_id.data %}
                             {{ _('Revise article') }}
                         {% else %}
-                            {{ _('Ready to publish?') }}
+                            {{ _('Ready to publish') }}
                         {% endif %}
                     </h4>
                 </div>
 
                 <form action="" method="post" class="form" role="form">
+                    {{ form.hidden_tag() }}
                     <div class="modal-body">
+
                         <h4>{{ _('Article Preview') }}</h4>
-                        {{ form.hidden_tag() }}
-                        {#                        <div class="form-group">#}
-                        {#                            <label for="previewTitle">{{ _('Title') }}</label>#}
-                        {#                            <input type="text" class="form-control" id="previewTitle" required#}
-                        {#                                   placeholder="{{ _('Write a title...') }}">#}
-                        {#                        </div>#}
                         {{ wtf.form_field(form.title) }}
-
-                        {#                        <div class="form-group">#}
-                        {#                            <label for="previewSubtitle">{{ _('Subtitle') }}</label>#}
-                        {#                            <input type="text" class="form-control" id="previewSubtitle"#}
-                        {#                                   placeholder="{{ _('Write a subtitle...') }}">#}
-                        {#                        </div>#}
                         {{ wtf.form_field(form.subtitle) }}
-
-                        {#                        <div class="form-group">#}
-                        {#                            <label for="description">{{ _('Description') }}</label>#}
-                        {#                            <textarea class="form-control" id="description" rows="3"#}
-                        {#                                      placeholder="{{ _('Write a Description...') }}"></textarea>#}
-                        {#                        </div>#}
                         <div class="form-group">
                             {{ form.description.label }}
-                            {{ form.description(class="form-control", rows="3") }}
+                            {{ form.description(class="form-control", aria_describedby="note", rows="3") }}
                         </div>
-
-                        <div class="form-group">
-                            <label for="">{{ _('Note: Changes here will affect how your article appears in public places like Wave’s homepage — not the article itself.') }}</label>
-                        </div>
-
+                        <span class="note">
+                            {{ _('Note: Changes here will affect how your article appears in public places like Wave’s homepage'
+                        ' — not the article itself.') }}
+                        </span>
                         <hr>
 
                         <h4>{{ _('Additions') }}</h4>
-                        {#                        <div class="form-group">#}
-                        {#                            <label for="addTags">{{ _('Add or change tags (up to 5) so readers know what your article is about') }}</label>#}
-                        {#                            <input type="text" class="form-control" id="addTags"#}
-                        {#                                   placeholder="{{ _('Add a tag...') }}">#}
-                        {#                        </div>#}
+                        <div class="form-group">
+                            {{ form.publication.label }}
+                            {{ form.publication(class="form-control") }}
+                        </div>
                         <div class="form-group">
                             {{ form.tags.label }}
                             {{ form.tags(class="form-control") }}
                         </div>
-
-                        {#                        <div class="checkbox">#}
-                        {#                            <label for=""><input type="checkbox" id="isPublic">{{ _('Only visible for myself') }}#}
-                        {#                            </label>#}
-                        {#                        </div>#}
                         {{ wtf.form_field(form.private) }}
 
                     </div>

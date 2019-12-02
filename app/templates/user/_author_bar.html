@@ -1,11 +1,11 @@
 {% if current_user == author %}
     {% if type == 'comment' %}
-
+        {% include "comment/_comment_menu.html" %}
     {% else %}
         {% include "post/_post_menu.html" %}
     {% endif %}
 {% else %}
-    <div class="float-right">
+    <div class="pull-right">
         <a href="{{ url_for('user.send_message', recipient=author.username) }}" class="send_message">
             <i class="material-icons">mail_outline</i>
         </a>
@@ -14,7 +14,7 @@
 
 <div class="author-bar clearfix flex-box">
     <div><a href="{{ url_for('user.profile', username=author.username) }}">
-        <img src="{{ author.avatar(42) }}" alt="avatar" class="avatar">
+        <img src="{{ author.avatar(42) }}" alt="avatar" class="img-circle">
     </a></div>
 
     <div class="author-bar-right">

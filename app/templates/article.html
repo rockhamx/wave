@@ -6,9 +6,12 @@
 {% endblock %}
 
 {% block content %}
-    {{ super() }}
 
-    <div class="row">
+    {% with pub = post.publication %}
+        {% include "publication/_publication_float.html" %}
+    {% endwith %}
+
+    <div class="row distance">
         <div class="col-xs-12 col-md-12">
             <div class="thumbnail article-detail">
 
@@ -31,6 +34,7 @@
         </div>
     </div>
 
+    {{ super() }}
     {#    {% set comments = post.comments %}#}
     <div class="row">
         <div class="col-xs-12 col-md-12">
@@ -41,6 +45,7 @@
             {% for comment in comments %}
                 {% include "comment/_comment_preview.html" %}
             {% endfor %}
+            {% include "comment/_comment_delete_confirm.html" %}
         </div>
     </div>
 

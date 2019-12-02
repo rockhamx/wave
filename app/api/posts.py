@@ -37,7 +37,7 @@ def post():
 def delete_post(id):
     status, next_url = "error", ""
     if id:
-        p = Post.query.filter_by(id=id).first()
+        p = Post.query.get(int(id))
         if p:
             db.session.delete(p)
             db.session.commit()

@@ -4,7 +4,7 @@ from flask_login import login_required, current_user
 
 from . import post
 from app import db
-from app.models import Post, Draft, Tag, Comment
+from app.models import Post, Draft, Tag, Comment, Publication
 from .forms import PostEditorForm, CommentForm, RichTextEditorForm
 
 
@@ -40,15 +40,17 @@ def edit(id):
     p = Post.query.filter_by(id=id, author_id=current_user.id).first_or_404()
 
     if not p.body:
-        d = Draft.query.filter_by(reference_id=p.id).first()
-        if d:
-            return redirect(url_for('post.draft', id=d.id))
+        draf = Draft.query.filter_by(reference_id=p.id).first()
+        if draf:
+            return redirect(url_for('post.draft', id=draf.id))
         form = RichTextEditorForm()
         form.reference_id.data = p.id
         form.title.data = p.title
         form.subtitle.data = p.subtitle
         form.description.data = p.description
         form.content.data = p.html
+        form.publication.choices.extend([(pub.id, pub.name) for pub in current_user.followed_pubs_desc_by_time()])
+        form.publication.data = p.publication.id if p.publication else ''
         form.tags.data = ' '.join([str(tag) for tag in p.tags])
         form.private.data = not p.is_public
         return render_template('new.html', form=form)
@@ -72,6 +74,7 @@ def edit(id):
 @login_required
 def new():
     form = RichTextEditorForm()
+    form.publication.choices.extend([(pub.id, pub.name) for pub in current_user.followed_pubs_desc_by_time()])
     return render_template('new.html', form=form)
 
 
@@ -80,6 +83,8 @@ def new():
 def draft(id):
     d = Draft.query.filter_by(id=id, author_id=current_user.id).first_or_404()
     form = RichTextEditorForm()
+    form.publication.choices.extend([(pub.id, pub.name) for pub in current_user.followed_pubs_desc_by_time()])
+
     if form.validate_on_submit():
         if form.reference_id.data:
             p = Post.query.filter_by(id=form.reference_id.data, author_id=current_user.id).first_or_404()
@@ -93,8 +98,9 @@ def draft(id):
                 tag = Tag.get_or_create(tag.strip())
                 if tag and tag not in p.tags:
                     tags.append(tag)
+        publication = Publication.query.get(form.publication.data)
         p.update(title=form.title.data, subtitle=form.subtitle.data, description=form.description.data,
-                 html=form.content.data, is_public=not form.private.data, tags=tags)
+                 html=form.content.data, is_public=not form.private.data, publication=publication, tags=tags)
 
         db.session.add(p)
         db.session.delete(d)
@@ -102,6 +108,8 @@ def draft(id):
         flash(_(u'Your post has been updated.'))
         return redirect(url_for('post.article', id=p.id))
 
+    # form = RichTextEditorForm(id=id, reference_id=d.reference_id, type=d.type, title=d.title, subtitle=d.title,
+    #                           description=d.description, content=d.content, tags=d.tags, private=not d.is_public)
     form.id.data = d.id
     form.reference_id.data = d.reference_id
     form.type.data = d.type
@@ -109,6 +117,7 @@ def draft(id):
     form.subtitle.data = d.subtitle
     form.description.data = d.description
     form.content.data = d.content
+    form.publication.data = d.publication.id if d.publication else ''
     form.tags.data = d.tags
     form.private.data = not d.is_public
     return render_template('new.html', form=form)

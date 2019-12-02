@@ -48,29 +48,6 @@ $(document).ready(function () {
             const css = $(this).val();
             $("link#bootstrap").attr("href", css);
         });
-        // $.getJSON("https://bootswatch.com/api/3.json", function (data) {
-        //     var themes = data.themes;
-        //     var select = $("select");
-        //     select.show();
-        //     $(".alert").toggleClass("alert-info alert-success");
-        //     $(".alert h4").text("Success!");
-        //
-        //     themes.forEach(function (value, index) {
-        //         select.append($("<option />")
-        //             .val(index)
-        //             .text(value.name));
-        //     });
-        //
-        //     select.change(function () {
-        //         var theme = themes[$(this).val()];
-        //         $("link#bootstrap").attr("href", theme.css);
-        //         // $("h1").text(theme.name);
-        //     }).change();
-        //
-        // }, "json").fail(function () {
-        //     $(".alert").toggleClass("alert-info alert-danger");
-        //     $(".alert h4").text("Failure!");
-        // });
     }
 
     // Search bar keydown event
@@ -249,6 +226,28 @@ $(document).ready(function () {
         $modal.find("button.btn-primary").click(function (event) {
             $modal.modal("hide");
             const url = "/api/v0/draft/" + $btn.data("id");
+            $.ajax({
+                url: url,
+                type: "DELETE",
+                contentType: "application/x-www-form-urlencoded; charset=UTF-8",
+                dataType: "json",
+                success: data => {
+                    if (data.result === "success") {
+                        // TODO: flash a message here
+                        window.location.reload();
+                    }
+                }
+            });
+        });
+    });
+
+    // Delete comment confirmation modal
+    $("#commentConfirmModal").on("show.bs.modal", function (event) {
+        let $modal = $(this);
+        let $btn = $(event.relatedTarget);
+        $modal.find("button#confirmDelete").click(function (event) {
+            $modal.modal("hide");
+            const url = "/api/v0/comment/" + $btn.data("id");
             $.ajax({
                 url: url,
                 type: "DELETE",

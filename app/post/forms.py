@@ -1,7 +1,7 @@
 from flask_babel import lazy_gettext as _l
 from flask_pagedown.fields import PageDownField
 from flask_wtf import FlaskForm
-from wtforms import StringField, SubmitField, BooleanField, TextAreaField, HiddenField
+from wtforms import StringField, SubmitField, BooleanField, TextAreaField, HiddenField, SelectField, Label
 from wtforms.validators import InputRequired
 
 
@@ -25,10 +25,20 @@ class RichTextEditorForm(FlaskForm):
                            render_kw={'placeholder': _l(u'Optional.')})
     description = TextAreaField(_l(u'Description'),
                                 render_kw={'placeholder': _l(u'Optional.')})
-    tags = StringField(_l(u'Add or change tags (up to 5) so readers know what your article is about.'),
+    # note = Label('', _l('Note: Changes here will affect how your article appears in public places like Wave’s homepage'
+    #                     ' — not the article itself.'))
+    publication = SelectField(_l('Publish on publication'), coerce=int, choices=[(-1, '')])
+    tags = StringField(_l(u'Add or change tags (separate by space) so readers know what your article is about.'),
                        render_kw={'placeholder': _l(u'Add a tag...')})
     private = BooleanField(_l(u'Only visible for myself'))
     submit = SubmitField(_l(u'Publish now'))
+
+    # def __call__(self, id=None, reference_id=None, type=None, content=None, title=None, subtitle=None, description=None,
+    #              publication=None, tags=None, private=None):
+    #     if id:
+    #         self.id.data = id
+    #     if reference_id:
+    #         self.reference_id =
 
 
 class CommentForm(FlaskForm):

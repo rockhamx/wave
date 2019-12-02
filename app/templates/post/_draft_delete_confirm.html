@@ -1,19 +1,23 @@
 
-<div class="modal fade" id="draftConfirmModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
-                        aria-hidden="true">&times;</span></button>
-                <h4 class="modal-title" id="myModalLabel">{{ _('Confirm your deletion') }}</h4>
-            </div>
-            <div class="modal-body">
-                {{ _('Are you really sure to delete this draft? This operation is not reversible!') }}
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-default" data-dismiss="modal">{{ _('Cancel') }}</button>
-                <button type="button" class="btn btn-primary">{{ _('Confirm') }}</button>
-            </div>
-        </div>
-    </div>
-</div>
+
+{#<div class="modal fade" id="draftConfirmModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">#}
+{#    <div class="modal-dialog" role="document">#}
+{#        <div class="modal-content">#}
+{#            <div class="modal-header">#}
+{#                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span#}
+{#                        aria-hidden="true">&times;</span></button>#}
+{#                <h4 class="modal-title" id="myModalLabel">{{ _('Confirm your deletion') }}</h4>#}
+{#            </div>#}
+{#            <div class="modal-body">#}
+{#                {{ _('Are you really sure to delete this draft? This operation is not reversible!') }}#}
+{#            </div>#}
+{#            <div class="modal-footer">#}
+{#                <button type="button" class="btn btn-default" data-dismiss="modal">{{ _('Cancel') }}</button>#}
+{#                <button type="button" class="btn btn-primary">{{ _('Confirm') }}</button>#}
+{#            </div>#}
+{#        </div>#}
+{#    </div>#}
+{#</div>#}
+{% with type = _('draft') %}
+    {% include 'modal/_confirm_delete.html' %}
+{% endwith %}
