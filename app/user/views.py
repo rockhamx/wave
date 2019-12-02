@@ -1,14 +1,11 @@
-import os
-
-from flask import request, render_template, flash, redirect, url_for, current_app
-from flask_babel import refresh, gettext as _
+from flask import request, render_template, flash, redirect, url_for
+from flask_babel import gettext as _
 from flask_login import login_required, current_user
 
 from app import db
 from app.models import User, Publication, Message
 from . import user, EditProfileForm, PreferenceForm, MessageForm
 from ..frontend.forms import NewPublicationForm
-from ..uploads import avatar
 
 
 # User Profile

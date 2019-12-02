@@ -1,15 +1,11 @@
-import json
-import os
-
 from flask_babel import lazy_gettext as _l
 from flask_wtf import FlaskForm
 from flask_uploads import IMAGES
 from wtforms import StringField, SubmitField, TextAreaField, SelectField, FileField
-from wtforms.validators import Length, InputRequired, ValidationError
+from wtforms.validators import Length, InputRequired
 
 from app.validators import image_only
 from config import Config
-# from ..uploads import avatar
 
 ls = Config.SUPPORTED_LANGUAGES
 supported_languages = [
@@ -19,14 +15,23 @@ supported_languages = [
     (ls[3], 'English(GB)')
 ]
 
-# themes
-themes = [
-    ('/css/bootstrap.min.css', _l(u'Original - Default')),
-]
-with open(os.path.join('instance', 'bootswatch.json'), 'r') as fp:
-    bootswatch = json.load(fp)
-    for index, theme in enumerate(bootswatch['themes'], start=1):
-        themes.append((theme['css'], '{} - {}'.format(theme['name'], theme['description'])))
+themes = [('/css/bootstrap.min.css', _l(u'Original - Default')),
+          ('https://bootswatch.com/3/cerulean/bootstrap.css', 'Cerulean - A calm blue sky'),
+          ('https://bootswatch.com/3/cosmo/bootstrap.css', 'Cosmo - An ode to Metro'),
+          ('https://bootswatch.com/3/cyborg/bootstrap.css', 'Cyborg - Jet black and electric blue'),
+          ('https://bootswatch.com/3/darkly/bootstrap.css', 'Darkly - Flatly in night mode'),
+          ('https://bootswatch.com/3/flatly/bootstrap.css', 'Flatly - Flat and modern'),
+          ('https://bootswatch.com/3/journal/bootstrap.css', 'Journal - Crisp like a new sheet of paper'),
+          ('https://bootswatch.com/3/lumen/bootstrap.css', 'Lumen - Light and shadow'),
+          ('https://bootswatch.com/3/paper/bootstrap.css', 'Paper - Material is the metaphor'),
+          ('https://bootswatch.com/3/readable/bootstrap.css', 'Readable - Optimized for legibility'),
+          ('https://bootswatch.com/3/sandstone/bootstrap.css', 'Sandstone - A touch of warmth'),
+          ('https://bootswatch.com/3/simplex/bootstrap.css', 'Simplex - Mini and minimalist'),
+          ('https://bootswatch.com/3/slate/bootstrap.css', 'Slate - Shades of gunmetal gray'),
+          ('https://bootswatch.com/3/spacelab/bootstrap.css', 'Spacelab - Silvery and sleek'),
+          ('https://bootswatch.com/3/superhero/bootstrap.css', 'Superhero - The brave and the blue'),
+          ('https://bootswatch.com/3/united/bootstrap.css', 'United - Ubuntu orange and unique font'),
+          ('https://bootswatch.com/3/yeti/bootstrap.css', 'Yeti - A friendly foundation')]
 
 
 class EditProfileForm(FlaskForm):

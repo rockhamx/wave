@@ -1,5 +1,4 @@
 from flask import Flask
-from flask_admin.contrib.sqla import ModelView
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 from flask_bootstrap import Bootstrap
@@ -49,6 +48,9 @@ def create_app(config_name):
     babel.init_app(app)
     admin.init_app(app)
     pagedown.init_app(app)
+
+    # with app.app_context():
+    #     from app.themes import themes
 
     from app.admin_views import UserView, PostView, DraftView, CommentView, PublicationView, TagView, MessageView
     from app.models import User, Post, Draft, Comment, Publication, Tag, Message
