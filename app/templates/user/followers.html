@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 
-{% block title %}{{ _('People following %(name)s', name = username) }}{% endblock %}
+{% block title %}{{ _('People following %(name)s', name = name) }}{% endblock %}
 
 {% block content %}
 
@@ -8,7 +8,7 @@
 
     <div class="row">
         <div class="col-xs-12 col-md-12">
-            <h1>{{ _('%(name)s is followed by', name = username) }}</h1>
+            <h1>{{ _('%(name)s is followed by', name = name) }}</h1>
             {% for user in users %}
                 {% include "user/_user_preview.html" %}
             {% endfor %}

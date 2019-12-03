@@ -42,7 +42,7 @@ def register():
 @auth.route('/login', methods=('GET', 'POST'))
 def login():
     if current_user.is_authenticated:
-        return redirect(url_for('frontend.user', username=current_user.username))
+        return redirect(url_for('user.profile', username=current_user.username))
     form = LoginForm()
     if form.validate_on_submit():
         user = User.query.filter_by(email=form.email.data.lower()).first()
@@ -52,9 +52,9 @@ def login():
             refresh()    # refresh locale & timezone
             if next_url is None or not next_url.startswith('/'):
                 next_url = url_for('user.profile', username=current_user.username)
-            flash(_(u'Welcome back, %(name)s!', name=current_user.name))
+            flash(_(u'Welcome back, %(name)s!', name=current_user.name), 'success')
             return redirect(next_url)
-        flash(_(u'Invalid username or password.'))
+        flash(_(u'Invalid username or password.'), 'warning')
     return render_template('auth/login.html', form=form)
 
 
@@ -112,7 +112,7 @@ def change_password():
             flash(_(u'Your password has been updated.'))  # 您的密码已更新，请用新的密码登录。
             return redirect(url_for('frontend.index'))
         else:
-            flash(_(u'Invalid password.'))  # 非常抱歉，您输入的密码不正确。
+            flash(_(u'Invalid password.'), 'warning')  #
     return render_template("auth/change_password.html", form=form)
 
 

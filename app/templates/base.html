@@ -3,7 +3,8 @@
 {#{% block html_attribs %} lang="zh-cmn-hans"{% endblock %}#}
 {#{% block html_attribs %} lang="en"{% endblock %}#}
 
-{% block title %}{{ _('Home') }} | {{ 'Wave' }}{% endblock %}
+{% block title %}{{ _('Home') }} | {{ 'Wave' }}
+{% endblock %}
 
 {% block metas %}
     {{ super() }}
@@ -217,8 +218,8 @@
 {% block content %}
 
     <div class="container alerts">
-        {% for message in get_flashed_messages() %}
-            <div class="alert alert-success fade in">
+        {% for category, message in get_flashed_messages(with_categories=True) %}
+            <div class="alert alert-{{ category if category != 'message' else 'info' }} fade in">
                 <button class="close" type="button" data-dismiss="alert">x</button>
                 {{ message }}
             </div>

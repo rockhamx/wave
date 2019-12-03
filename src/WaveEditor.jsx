@@ -229,15 +229,16 @@ const WaveEditor = props => {
   };
 
   const handleChange = obj => {
-    if (obj.value.document !== value.document) {
+    if (draft.content && obj.value.document !== value.document) {
       // localStorage.setItem("content", content);
-      setCount(count + 1);
-      console.log(count);
-      if (count > 2) {
-        draft.content = html.serialize(obj.value);
-        saveDraft();
-        setCount(0);
-      }
+      // setCount(count + 1);
+      // console.log(count);
+      // if (count > 2) {
+        const content = html.serialize(obj.value);
+        if (draft.content !== content)
+          saveDraft();
+        // setCount(0);
+      // }
     }
 
     // console.log(value);

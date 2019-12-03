@@ -1,8 +1,8 @@
 <div class="thumbnail publication flex-box">
     <div class="flex-box flex-grow-1">
-{#        <a href="{{ url_for('publication.home', name=pub.name) }}">#}
-{#            <img src="" alt="{{ pub.name }}">#}
-{#        </a>#}
+        {#        <a href="{{ url_for('publication.home', name=pub.name) }}">#}
+        {#            <img src="" alt="{{ pub.name }}">#}
+        {#        </a>#}
         <div class="flex-box-column publication-info">
             <a href="{{ url_for('publication.home', name=pub.name) }}">
                 <strong>{{ pub.name }}</strong>
@@ -11,7 +11,7 @@
         </div>
     </div>
     <div>
-        {% if current_user.is_followed_publication(pub) %}
+        {% if current_user.is_authenticated and current_user.is_followed_publication(pub) %}
             <button class="btn-text unfollow_publication" data-id="{{ pub.id }}">
                 <span class="status">{{ _('Following') }}</span>
                 <i class="material-icons">keyboard_arrow_down</i>

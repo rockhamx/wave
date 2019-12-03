@@ -1,6 +1,9 @@
 from flask import render_template, flash, redirect, url_for, request, current_app, abort, jsonify
 from flask_babel import gettext as _
 from flask_login import login_required, current_user
+# from sqlalchemy import inspect
+from sqlalchemy.orm.util import object_state
+from sqlalchemy.exc import IntegrityError
 
 from . import post
 from app import db
@@ -90,7 +93,12 @@ def draft(id):
             p = Post.query.filter_by(id=form.reference_id.data, author_id=current_user.id).first_or_404()
         else:
             p = Post()
-            p.author = current_user._get_current_object()
+            # Notice: using p.author = current_user._get_current_object() will causing instance(in here <p>) pending,
+            # So, the following query will trigger auto-flush mechanism
+            # (https://docs.sqlalchemy.org/en/13/orm/session_api.html#sqlalchemy.orm.session.Session.params.autoflush),
+            #  but since p.title is empty and that field in the database has notNull constrain, this is unwanted.
+            # unless using db.session.no_autoflush() context manager on top of following query.
+            p.author_id = current_user.id
 
         tags = []
         if form.tags.data:
@@ -98,10 +106,10 @@ def draft(id):
                 tag = Tag.get_or_create(tag.strip())
                 if tag and tag not in p.tags:
                     tags.append(tag)
+
         publication = Publication.query.get(form.publication.data)
         p.update(title=form.title.data, subtitle=form.subtitle.data, description=form.description.data,
                  html=form.content.data, is_public=not form.private.data, publication=publication, tags=tags)
-
         db.session.add(p)
         db.session.delete(d)
         db.session.commit()

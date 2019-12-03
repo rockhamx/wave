@@ -1,4 +1,4 @@
-from flask import jsonify
+from flask import jsonify, url_for
 from flask_login import login_required, current_user
 from flask_babel import gettext as _
 
@@ -14,18 +14,32 @@ def delete_pub():
 
 
 @api.route('/follow/publication/<int:id>', methods=['POST'])
-@login_required
 def follow_pub(id):
+    result = 'error'
     status = _('Follow')
-    pub = Publication.query.get(int(id))
-    if pub:
-        user = User.query.get(current_user.id)
-        user.follow_publication(pub)
-        db.session.commit()
-        status = _('Following')
+    next = None
+    message = {
+        "text": None,
+        "type": None,
+    }
+    # TODO: Use other authentication
+    if current_user.is_anonymous:
+        next = url_for('auth.login')
+        message['text'] = _('Please sign in first.')
+        message['type'] = 'info'
+    else:
+        pub = Publication.query.get(int(id))
+        if pub:
+            user = User.query.get(current_user.id)
+            user.follow_publication(pub)
+            db.session.commit()
+            result = 'success'
+            status = _('Following')
     return jsonify({
-        "result": "success",
-        "status": status
+        "result": result,
+        "status": status,
+        "next": next,
+        "message": message
     })
 
 

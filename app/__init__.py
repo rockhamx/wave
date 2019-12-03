@@ -3,13 +3,14 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 from flask_bootstrap import Bootstrap
 from flask_login import LoginManager
-from flask_babel import Babel
+from flask_babel import Babel, gettext as _
 from flask_mail import Mail
 from flask_moment import Moment
 from flask_admin import Admin
 from flask_pagedown import PageDown
 from sqlalchemy import MetaData
 
+from app.admin_views import WaveModelView, WaveAdminIndexView
 from config import config
 
 convention = {
@@ -31,7 +32,7 @@ moment = Moment()
 login_manager = LoginManager()
 login_manager.login_view = 'auth.login'
 babel = Babel()
-admin = Admin(name='wave', template_mode='bootstrap3')
+admin = Admin(name='wave', template_mode='bootstrap3', index_view=WaveAdminIndexView(name=_('Home')))
 pagedown = PageDown()
 
 
@@ -54,13 +55,13 @@ def create_app(config_name):
         # TODO: understand why need app_context()
         from app.admin_views import UserView, PostView, DraftView, CommentView, PublicationView, TagView, MessageView
         from app.models import User, Post, Draft, Comment, Publication, Tag, Message
-        admin.add_view(UserView(User, db.session, name='Users', endpoint='users'))
-        admin.add_view(PostView(Post, db.session, name='Posts', endpoint='posts'))
-        admin.add_view(DraftView(Draft, db.session, name='Drafts', endpoint='drafts'))
-        admin.add_view(CommentView(Comment, db.session, name='Comments', endpoint='comments'))
-        admin.add_view(PublicationView(Publication, db.session, name='Publications', endpoint='publications'))
-        admin.add_view(TagView(Tag, db.session, name='Tags', endpoint='Tags'))
-        admin.add_view(MessageView(Message, db.session, name='Messages', endpoint='messages'))
+        admin.add_view(UserView(User, db.session, name=_('Users'), endpoint='users'))
+        admin.add_view(PostView(Post, db.session, name=_('Posts'), endpoint='posts'))
+        admin.add_view(DraftView(Draft, db.session, name=_('Drafts'), endpoint='drafts'))
+        admin.add_view(CommentView(Comment, db.session, name=_('Comments'), endpoint='comments'))
+        admin.add_view(PublicationView(Publication, db.session, name=_('Publications'), endpoint='publications'))
+        admin.add_view(TagView(Tag, db.session, name=_('Tags'), endpoint='Tags'))
+        admin.add_view(MessageView(Message, db.session, name=_('Messages'), endpoint='messages'))
 
     from .frontend import frontend
     from .auth import auth

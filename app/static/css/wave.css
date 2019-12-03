@@ -23,7 +23,7 @@ html {
 }
 
 /*flashed messages*/
-body > div.alerts:first-of-type,
+body > div.container:first-of-type,
 .distance {
   margin-top: 68px;
 }

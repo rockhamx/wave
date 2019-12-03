@@ -20,6 +20,13 @@ $(document).ready(function () {
         $("ul.nav-tabs a[href=\"" + searchHref + "\"]").parent().addClass("active");
     }
 
+    // flash messages
+    const messages = localStorage.getItem("messages");
+    if (messages) {
+        $(messages).appendTo(".alerts");
+        localStorage.setItem("messages", "");
+    }
+
     // articles infiniteScroll
     let $articles = $("div.articles");
     if ($articles.children().length > 9) {
@@ -100,6 +107,9 @@ $(document).ready(function () {
                     $(which).find(".material-icons")[0].innerText = "favorite";
                     $(which).find("span").eq(0).text(" " + newVal);
                 }
+                // if (data.message.text) {
+                flash_message(data.message.text, data.message.type, data.next);
+                // }
             }
         });
     });
@@ -234,7 +244,7 @@ $(document).ready(function () {
                 success: data => {
                     if (data.result === "success") {
                         $btn.parents("div.article-preview").fadeOut().remove();
-                        flash_message(data.message.text, data.message.type)
+                        flash_message(data.message.text, data.message.type);
                     }
                 }
             });
@@ -257,7 +267,7 @@ $(document).ready(function () {
                     if (data.result === "success") {
                         // TODO: flash a message here
                         $btn.parents("div.comment-preview").fadeOut().remove();
-                        flash_message(data.message.text, data.message.type)
+                        flash_message(data.message.text, data.message.type);
                         // window.location.reload();
                     }
                 }
@@ -300,7 +310,7 @@ $(document).ready(function () {
 
 });
 
-window.flash_message = function (message, type="info") {
+window.flash_message = function (message, type = "info", next = null) {
     const $button = $("<button/>", {
         "type": "button",
         "class": "close",
@@ -315,7 +325,13 @@ window.flash_message = function (message, type="info") {
         "role": "alert",
         text: message
     }).append($button);
-    $(".alerts").append($div);
+    if (next) {
+        localStorage.setItem("messages", $div.prop("outerHTML"));
+        console.log($div.prop("outerHTML"));
+        window.location.pathname = next;
+    } else {
+        $(".alerts").append($div);
+    }
 };
 
 window.add_bookmark = function (event) {
@@ -335,6 +351,9 @@ window.add_bookmark = function (event) {
                 //TODO: flash message
                 console.log(data.status);
             }
+            // if (data.message.text) {
+            flash_message(data.message.text, data.message.type, data.next);
+            // }
         }
     });
 };
@@ -377,6 +396,7 @@ window.follow_publication = function (event) {
                 $(which).click(unfollow_publication);
                 console.log(data.status);
             }
+            flash_message(data.message.text, data.message.type, data.next);
         }
     });
 };
@@ -418,6 +438,7 @@ window.follow = (username) => {
             $("#followers").text(function (index, text) {
                 return parseInt(text) + 1;
             });
+            // flash_message(data.message.text, data.message.type, data.next);
             // $e.attr('onclick', `unfollow("${username}")`);
             // $(elementclass).click([org_username, dst_username], unfollow)
         }

@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2019-12-03 14:17+0800\n"
-"PO-Revision-Date: 2019-11-05 16:23+0800\n"
+"POT-Creation-Date: 2019-12-03 22:29+0800\n"
+"PO-Revision-Date: 2019-12-03 17:13+0800\n"
 "Last-Translator: \n"
 "Language: zh\n"
 "Language-Team: zh <LL@li.org>\n"
@@ -17,6 +17,43 @@ msgstr ""
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Generated-By: Babel 2.7.0\n"
+
+#: app/__init__.py:35 app/templates/base.html:6
+msgid "Home"
+msgstr "主页"
+
+#: app/__init__.py:58
+msgid "Users"
+msgstr "用户"
+
+#: app/__init__.py:59
+msgid "Posts"
+msgstr "文章"
+
+#: app/__init__.py:60 app/templates/user/articles.html:11
+msgid "Drafts"
+msgstr "草稿"
+
+#: app/__init__.py:61 app/templates/user/base_profile.html:25
+#: app/templates/user/profile_comments.html:9
+msgid "Comments"
+msgstr "评论"
+
+#: app/__init__.py:62 app/templates/base.html:137
+#: app/templates/base_search.html:34 app/templates/user/publications.html:4
+#: app/templates/user/publications.html:13
+msgid "Publications"
+msgstr "专栏"
+
+#: app/__init__.py:63 app/templates/base_search.html:37
+#: app/templates/user/tags.html:3 app/templates/user/tags.html:9
+msgid "Tags"
+msgstr "标签"
+
+#: app/__init__.py:64 app/templates/base.html:112
+#: app/templates/user/messages.html:4
+msgid "Messages"
+msgstr "私信"
 
 #: app/validators.py:10
 msgid "Images only"
@@ -34,27 +71,32 @@ msgstr "删除成功"
 msgid "Saved"
 msgstr "已保存"
 
-#: app/api/publications.py:19 app/api/publications.py:41 app/api/users.py:13
-#: app/api/users.py:33 app/templates/publication/_publication_float.html:21
+#: app/api/posts.py:79 app/api/posts.py:123 app/api/publications.py:28
+#: app/api/users.py:22
+msgid "Please sign in first."
+msgstr "请先登录。"
+
+#: app/api/publications.py:19 app/api/publications.py:55 app/api/users.py:13
+#: app/api/users.py:48 app/templates/publication/_publication_float.html:21
 #: app/templates/publication/_publication_preview.html:21
 #: app/templates/user/_follow_buttons.html:12
-#: app/templates/user/_profile.html:55 app/user/views.py:98
+#: app/templates/user/_profile.html:58 app/user/views.py:98
 msgid "Follow"
 msgstr "关注"
 
-#: app/api/publications.py:25 app/api/publications.py:35 app/api/users.py:18
-#: app/api/users.py:28 app/templates/publication/_publication_float.html:16
+#: app/api/publications.py:37 app/api/publications.py:49 app/api/users.py:30
+#: app/api/users.py:43 app/templates/publication/_publication_float.html:16
 #: app/templates/publication/_publication_preview.html:16
 #: app/templates/user/_follow_buttons.html:7
-#: app/templates/user/_profile.html:50 app/user/views.py:86
+#: app/templates/user/_profile.html:53 app/user/views.py:86
 msgid "Following"
 msgstr "已关注"
 
-#: app/api/users.py:56 app/templates/user/_messages.html:22
+#: app/api/users.py:71 app/templates/user/_messages.html:22
 msgid "Unread"
 msgstr "未读"
 
-#: app/api/users.py:64 app/templates/user/_messages.html:22
+#: app/api/users.py:79 app/templates/user/_messages.html:22
 msgid "Read"
 msgstr "已读"
 
@@ -150,7 +192,7 @@ msgstr "欢迎回来，%(name)s！"
 
 #: app/auth/views.py:57
 msgid "Invalid username or password."
-msgstr "无效的用户名或密码。"
+msgstr "非常抱歉，您输入的用户名或密码不正确。"
 
 #: app/auth/views.py:65
 msgid "You have been logout. See you around!"
@@ -280,117 +322,103 @@ msgstr "说说你的想法："
 msgid "Publish"
 msgstr "发布"
 
-#: app/post/views.py:32
+#: app/post/views.py:35
 msgid "Your post has been published."
 msgstr "您的文章已发布"
 
-#: app/post/views.py:65 app/post/views.py:108
+#: app/post/views.py:68 app/post/views.py:116
 msgid "Your post has been updated."
 msgstr "您的文章已更新。"
 
-#: app/post/views.py:146
+#: app/post/views.py:154
 msgid "Your comment has been published."
 msgstr "您的评论已发布"
 
-#: app/templates/about.html:3 app/templates/base.html:68
+#: app/templates/about.html:3 app/templates/base.html:69
 msgid "About"
 msgstr "关于"
 
-#: app/templates/base.html:6
-msgid "Home"
-msgstr "主页"
-
-#: app/templates/base.html:53
+#: app/templates/base.html:54
 msgid "Wave"
 msgstr ""
 
-#: app/templates/base.html:60 app/templates/newest.html:11
+#: app/templates/base.html:61 app/templates/newest.html:11
 msgid "Newest"
 msgstr "最新"
 
-#: app/templates/base.html:62 app/templates/user/followed_posts.html:11
+#: app/templates/base.html:63 app/templates/user/followed_posts.html:11
 msgid "My Followed Article"
 msgstr "我关注的文章"
 
-#: app/templates/base.html:64 app/templates/base.html:166
+#: app/templates/base.html:65 app/templates/base.html:167
 msgid "Profile"
 msgstr "个人信息"
 
-#: app/templates/base.html:67
+#: app/templates/base.html:68
 msgid "Features"
 msgstr "功能"
 
-#: app/templates/base.html:82
+#: app/templates/base.html:83
 #, python-format
 msgid "Signed in as %(name)s"
 msgstr "登录用户为：%(name)s"
 
-#: app/templates/base.html:89 app/templates/user/write.html:4
+#: app/templates/base.html:90 app/templates/user/write.html:4
 msgid "Writing"
 msgstr "写作"
 
-#: app/templates/base.html:96 app/templates/base_search.html:28
+#: app/templates/base.html:97 app/templates/base_search.html:28
 #: app/templates/user/articles.html:20 app/templates/user/base_profile.html:19
 msgid "Articles"
 msgstr "文章"
 
-#: app/templates/base.html:111 app/templates/user/messages.html:4
-msgid "Messages"
-msgstr "私信"
-
-#: app/templates/base.html:122 app/templates/user/base_profile.html:22
+#: app/templates/base.html:123 app/templates/user/base_profile.html:22
 #: app/templates/user/hearts.html:3 app/templates/user/hearts.html:13
 #: app/templates/user/profile_hearts.html:9
 msgid "Hearts"
 msgstr "喜欢"
 
-#: app/templates/base.html:129 app/templates/user/bookmarks.html:3
+#: app/templates/base.html:130 app/templates/user/bookmarks.html:3
 #: app/templates/user/bookmarks.html:11
 msgid "Bookmarks"
 msgstr "书签"
 
-#: app/templates/base.html:136 app/templates/base_search.html:34
-#: app/templates/user/publications.html:4
-#: app/templates/user/publications.html:13
-msgid "Publications"
-msgstr "专栏"
-
 #: app/templates/auth/change_password.html:4
-#: app/templates/auth/change_password.html:11 app/templates/base.html:152
+#: app/templates/auth/change_password.html:11 app/templates/base.html:153
 msgid "Change password"
 msgstr "更改密码"
 
 #: app/templates/auth/change_email.html:4
-#: app/templates/auth/change_email.html:11 app/templates/base.html:157
+#: app/templates/auth/change_email.html:11 app/templates/base.html:158
 msgid "Change email"
 msgstr "更改邮箱"
 
-#: app/templates/base.html:172
+#: app/templates/base.html:173
 msgid "Help"
 msgstr "帮助"
 
-#: app/templates/base.html:179
+#: app/templates/base.html:180
 msgid "Preference"
 msgstr "设置"
 
-#: app/templates/base.html:186
+#: app/templates/base.html:187
 msgid "Sign out"
 msgstr "登出"
 
-#: app/templates/base.html:192
+#: app/templates/base.html:193
 msgid "Get started"
 msgstr "加入"
 
 #: app/templates/auth/login.html:4 app/templates/auth/login.html:11
-#: app/templates/base.html:193
+#: app/templates/base.html:194
 msgid "Sign in"
 msgstr "登录"
 
-#: app/templates/base.html:202
+#: app/templates/base.html:203
 msgid "Search for..."
 msgstr "搜索..."
 
-#: app/templates/base.html:204
+#: app/templates/base.html:205
 msgid "Go!"
 msgstr ""
 
@@ -407,11 +435,6 @@ msgstr "搜索Wave"
 #: app/templates/base_search.html:31
 msgid "People"
 msgstr "人们"
-
-#: app/templates/base_search.html:37 app/templates/user/tags.html:3
-#: app/templates/user/tags.html:9
-msgid "Tags"
-msgstr "标签"
 
 #: app/templates/index.html:3
 msgid "Welcome to Wave"
@@ -463,6 +486,15 @@ msgstr "最新文章"
 msgid "We couldn’t find any posts."
 msgstr "我们找不到任何文章"
 
+#: app/templates/admin/index.html:20
+msgid "Admin"
+msgstr "后台管理"
+
+#: app/templates/admin/index.html:24
+#, python-format
+msgid "Hello, %(name)s!"
+msgstr "你好，%(name)s！"
+
 #: app/templates/auth/getting-on-board.html:4
 #: app/templates/auth/getting-on-board.html:11
 msgid "Getting on board"
@@ -470,14 +502,14 @@ msgstr "加入Wave"
 
 #: app/templates/auth/login.html:23
 msgid "Forget your password? Click here!"
-msgstr "忘了你的密码？猛击这里！"
+msgstr "忘记你的密码？猛击这里！"
 
 #: app/templates/auth/reset_password.html:4
 #: app/templates/auth/reset_password.html:11
 msgid "Reset password"
 msgstr "重置密码"
 
-#: app/templates/comment/_comment_delete_confirm.html:4
+#: app/templates/comment/_comment_delete_confirm.html:3
 msgid "comment"
 msgstr "评论"
 
@@ -526,7 +558,7 @@ msgstr "取消"
 msgid "Confirm"
 msgstr "确认"
 
-#: app/templates/post/_draft_delete_confirm.html:22
+#: app/templates/post/_draft_delete_confirm.html:21
 msgid "draft"
 msgstr "草稿"
 
@@ -539,12 +571,11 @@ msgstr "编辑"
 msgid "Last edited %(time)s"
 msgstr "在%(time)s修改过"
 
-#: app/templates/post/_post_delete_confirm.html:22
+#: app/templates/post/_post_delete_confirm.html:21
 msgid "article"
 msgstr "文章"
 
 #: app/templates/post/_post_statusbar.html:8
-#: app/templates/post/_post_statusbar.html:19
 msgid "Like"
 msgstr "喜欢"
 
@@ -625,50 +656,45 @@ msgstr "发送给%(name)s的私信"
 msgid "Sent from %(name)s at "
 msgstr "来自%(name)s的私信"
 
-#: app/templates/user/_profile.html:26
+#: app/templates/user/_profile.html:20
+msgid "Contact Me:"
+msgstr "联系我："
+
+#: app/templates/user/_profile.html:29
 #, python-format
 msgid "<b>%(following)d</b> following"
 msgstr "关注 <b>%(following)d</b> 人"
 
-#: app/templates/user/_profile.html:28
+#: app/templates/user/_profile.html:31
 msgid ", "
 msgstr "，"
 
-#: app/templates/user/_profile.html:31
+#: app/templates/user/_profile.html:34
 #, python-format
 msgid "<b id=\"followers\">%(followers)d</b> follower"
 msgid_plural "<b id=\"followers\">%(followers)d</b> followers"
 msgstr[0] "粉丝 <b id=\"followers\">%(followers)d</b> 人"
 
-#: app/templates/user/_profile.html:37
+#: app/templates/user/_profile.html:40
 #, python-format
 msgid "Joined Wave since %(time)s."
 msgstr "于%(time)s加入Wave。"
 
-#: app/templates/user/_profile.html:38
+#: app/templates/user/_profile.html:41
 #, python-format
 msgid "Last seen %(time)s."
 msgstr "最近一次出现在%(time)s。"
 
-#: app/templates/user/_profile.html:44 app/templates/user/edit_profile.html:4
+#: app/templates/user/_profile.html:47 app/templates/user/edit_profile.html:4
 #: app/templates/user/edit_profile.html:11
 msgid "Edit Profile"
 msgstr "编辑个人信息"
-
-#: app/templates/user/articles.html:11
-msgid "Drafts"
-msgstr "草稿"
 
 #: app/templates/user/base_profile.html:5
 #: app/templates/user/base_profile.html:7
 #, python-format
 msgid "%(name)s's profile"
 msgstr "%(name)s的个人信息"
-
-#: app/templates/user/base_profile.html:25
-#: app/templates/user/profile_comments.html:9
-msgid "Comments"
-msgstr "评论"
 
 #: app/templates/user/followed_posts.html:3
 #, python-format

@@ -2,8 +2,8 @@
 {#    <a href="#"><span class="glyphicon glyphicon-eye-open" aria-hidden="true"></span>{{ post.clicked }}</a>#}
 
 {# hearts counts#}
-    {% if current_user.is_authenticated %}
-        {% with user_hearts = current_user.hearts_amount(post) %}
+{#    {% if current_user.is_authenticated %}#}
+        {% with user_hearts = current_user.hearts_amount(post) if current_user.is_authenticated else 0 %}
             <a href="" class="btn-text hearts" data-id="{{ post.id }}" data-toggle="tooltip" data-placement="bottom"
                title="{{ _('Like') }}">
                 {% if user_hearts > 0 %}
@@ -14,13 +14,13 @@
                 <span data-user-hearts={{ user_hearts }}> {{ post.hearts }}</span>
             </a>
         {% endwith %}
-    {% else %}
-        <a href="{{ url_for('auth.login') }}" class="btn-text" data-toggle="tooltip" data-placement="bottom"
-           title="{{ _('Like') }}">
-            <i class="material-icons">favorite_border</i>
-            <span> {{ post.hearts }}</span>
-        </a>
-    {% endif %}
+{#    {% else %}#}
+{#        <a href="{{ url_for('auth.login') }}" class="btn-text" data-toggle="tooltip" data-placement="bottom"#}
+{#           title="{{ _('Like') }}">#}
+{#            <i class="material-icons">favorite_border</i>#}
+{#            <span> {{ post.hearts }}</span>#}
+{#        </a>#}
+{#    {% endif %}#}
 
     {# go to comments fragment#}
     <a class="btn-text" href="{{ url_for('post.article', id=post.id) }}#write-comment" data-toggle="tooltip"

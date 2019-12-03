@@ -1,4 +1,4 @@
-from flask import jsonify
+from flask import jsonify, url_for
 from flask_login import login_required, current_user
 from flask_babel import gettext as _
 
@@ -8,17 +8,32 @@ from . import api
 
 
 @api.route('/follow/<username>', methods=['POST'])
-@login_required
 def follow(username):
+    result = 'error'
     status = _('Follow')
-    u = User.query.filter_by(username=username).first()
-    if u and current_user != u:
-        current_user.follows(u)
-        db.session.commit()
-        status = _('Following')
+    next = None
+    message = {
+        "text": None,
+        "type": 'danger'
+    }
+    # TODO: Use other authentication
+    if current_user.is_anonymous:
+        next = url_for('auth.login')
+        message['text'] = _('Please sign in first.')
+        message['type'] = 'info'
+    else:
+        u = User.query.filter_by(username=username).first()
+        if u and current_user != u:
+            current_user.follows(u)
+            db.session.commit()
+            result = 'success'
+            status = _('Following')
 
     return jsonify({
-        'status': status
+        "result": result,
+        "status": status,
+        "next": next,
+        "message": message
     })
 
 

@@ -1,5 +1,6 @@
 from flask import request, jsonify, url_for
 from flask_login import login_required, current_user
+from flask_babel import gettext as _
 
 from app import db
 from app.models import Post, User, Tag
@@ -65,18 +66,32 @@ def hearts_amount(id):
 
 
 @api.route('/hearts/<int:id>', methods=['POST'])
-@login_required
 def hearts(id):
     status = 'error'
-    post = Post.query.get(int(id))
-    if post:
-        amount = request.json.get('amount', 1)
-        user = User.query.get(current_user.id)
-        user.like(post, amount=amount)
-        db.session.add(user)
-        db.session.commit()
-        status = 'success'
-    return jsonify({'status': status})
+    next = None
+    message = {
+        "text": None,
+        "type": None,
+    }
+    # TODO: Use other authentication
+    if current_user.is_anonymous:
+        next = url_for('auth.login')
+        message['text'] = _('Please sign in first.')
+        message['type'] = 'info'
+    else:
+        post = Post.query.get(int(id))
+        if post:
+            amount = request.json.get('amount', 1)
+            user = User.query.get(current_user.id)
+            user.like(post, amount=amount)
+            db.session.add(user)
+            db.session.commit()
+            status = 'success'
+    return jsonify({
+        'status': status,
+        'next': next,
+        'message': message
+    })
 
 
 @api.route('/hearts/<int:id>', methods=['DELETE'])
@@ -94,17 +109,30 @@ def un_hearts(id):
 
 
 @api.route('/bookmarks/<int:id>', methods=['POST'])
-@login_required
+# @login_required
 def add_bookmark(id):
     status = 'error'
-    post = Post.query.get(int(id))
-    if post:
-        user = User.query.get(current_user.id)
-        user.add_bookmark(post)
-        db.session.commit()
-        status = 'success'
+    next = None
+    message = {
+        "text": None,
+        "type": 'danger'
+    }
+    # TODO: Use other authentication
+    if current_user.is_anonymous:
+        next = url_for('auth.login')
+        message['text'] = _('Please sign in first.')
+        message['type'] = 'info'
+    else:
+        post = Post.query.get(int(id))
+        if post:
+            user = User.query.get(current_user.id)
+            user.add_bookmark(post)
+            db.session.commit()
+            status = 'success'
     return jsonify({
-        'status': status
+        'status': status,
+        'next': next,
+        'message': message
     })
 
 

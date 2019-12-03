@@ -66,14 +66,14 @@ def edit_profile():
 def following(username):
     u = User.query.filter_by(username=username).first_or_404()
     users = u.following_desc_by_time()
-    return render_template('user/following.html', username=username, users=users)
+    return render_template('user/following.html', name=u.name, users=users)
 
 
 @user.route('/<username>/followers')
 def followers(username):
     u = User.query.filter_by(username=username).first_or_404()
     users = u.followers_desc_by_time()
-    return render_template('user/followers.html', username=username, users=users)
+    return render_template('user/followers.html', name=u.name, users=users)
 
 
 @user.route('/follow', methods=['POST'])
