@@ -1,7 +1,7 @@
 from datetime import datetime, timedelta
 import unittest
 from app import db
-from Wave import app
+from wave import app
 from app.models import User, Post
 
 

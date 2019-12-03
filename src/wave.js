@@ -311,6 +311,7 @@ $(document).ready(function () {
 });
 
 window.flash_message = function (message, type = "info", next = null) {
+    if (!message && !next) return false;
     const $button = $("<button/>", {
         "type": "button",
         "class": "close",

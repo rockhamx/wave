@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2019-12-03 23:09+0800\n"
+"POT-Creation-Date: 2019-12-04 04:50+0800\n"
 "PO-Revision-Date: 2019-12-03 17:13+0800\n"
 "Last-Translator: \n"
 "Language: zh\n"
@@ -18,56 +18,106 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Generated-By: Babel 2.7.0\n"
 
-#: app/__init__.py:36 app/templates/base.html:6
+#: app/__init__.py:37 app/templates/base.html:6
 msgid "Home"
 msgstr "主页"
 
 #: app/__init__.py:60
+msgid "Users"
+msgstr "用户"
+
+#: app/__init__.py:61
 msgid "Posts"
 msgstr "文章"
 
-#: app/__init__.py:61 app/templates/user/articles.html:11
+#: app/__init__.py:62 app/templates/user/articles.html:11
 msgid "Drafts"
 msgstr "草稿"
 
-#: app/__init__.py:62 app/templates/user/base_profile.html:25
+#: app/__init__.py:63 app/templates/user/base_profile.html:25
 #: app/templates/user/profile_comments.html:9
 msgid "Comments"
 msgstr "评论"
 
-#: app/__init__.py:63 app/templates/base.html:137
+#: app/__init__.py:64 app/templates/base.html:137
 #: app/templates/base_search.html:34 app/templates/user/publications.html:4
 #: app/templates/user/publications.html:13
 msgid "Publications"
 msgstr "专栏"
 
-#: app/__init__.py:64 app/templates/base_search.html:37
+#: app/__init__.py:65 app/templates/base_search.html:37
 #: app/templates/user/tags.html:3 app/templates/user/tags.html:9
 msgid "Tags"
 msgstr "标签"
 
-#: app/__init__.py:65 app/templates/base.html:112
+#: app/__init__.py:66 app/templates/base.html:112
 #: app/templates/user/messages.html:4
 msgid "Messages"
 msgstr "私信"
 
-#: app/admin_views.py:36
-msgid "Users"
-msgstr "用户"
-
-#: app/admin_views.py:37 app/auth/forms.py:10
+#: app/admin_views.py:39 app/auth/forms.py:11
 msgid "Username"
 msgstr "用户名"
+
+#: app/admin_views.py:40 app/frontend/forms.py:14
+msgid "Name"
+msgstr "名称"
+
+#: app/admin_views.py:41 app/auth/forms.py:10 app/auth/forms.py:31
+#: app/auth/forms.py:62
+msgid "Email"
+msgstr "电子邮箱"
+
+#: app/admin_views.py:42 app/user/forms.py:44
+msgid "Location"
+msgstr "地区"
+
+#: app/admin_views.py:43 app/frontend/forms.py:16 app/post/forms.py:26
+msgid "Description"
+msgstr "描述"
+
+#: app/admin_views.py:44
+msgid "Confirmed"
+msgstr "认证状态"
+
+#: app/admin_views.py:45
+msgid "Locale"
+msgstr "语言"
+
+#: app/admin_views.py:46
+msgid "Timezone"
+msgstr "时区"
+
+#: app/admin_views.py:47
+msgid "Member_since"
+msgstr "加入时间"
+
+#: app/admin_views.py:48
+msgid "Last_seen"
+msgstr "最近一次在线"
+
+#: app/admin_views.py:49
+msgid "Password Hash"
+msgstr "密码散列值"
+
+#: app/admin_views.py:50
+msgid "Email Hash"
+msgstr "邮箱散列值"
+
+#: app/admin_views.py:60 app/auth/forms.py:15 app/auth/forms.py:32
+#: app/auth/forms.py:50
+msgid "Password"
+msgstr "密码"
 
 #: app/validators.py:10
 msgid "Images only"
 msgstr ""
 
-#: app/api/comments.py:14 app/api/drafts.py:49
+#: app/api/comments.py:13 app/api/drafts.py:49
 msgid "Internal Error."
 msgstr ""
 
-#: app/api/comments.py:24 app/api/drafts.py:58
+#: app/api/comments.py:23 app/api/drafts.py:58
 msgid "Delete success."
 msgstr "删除成功"
 
@@ -76,7 +126,7 @@ msgid "Saved"
 msgstr "已保存"
 
 #: app/api/posts.py:79 app/api/posts.py:123 app/api/publications.py:28
-#: app/api/users.py:22
+#: app/api/users.py:22 app/post/views.py:148
 msgid "Please sign in first."
 msgstr "请先登录。"
 
@@ -104,75 +154,67 @@ msgstr "未读"
 msgid "Read"
 msgstr "已读"
 
-#: app/auth/forms.py:9 app/auth/forms.py:30 app/auth/forms.py:61
-msgid "Email"
-msgstr "电子邮箱"
-
-#: app/auth/forms.py:13
+#: app/auth/forms.py:14
 msgid "Username must have only letters, numbers, dots or underscores."
 msgstr "用户名只能包括字母，数字，点和下划线。"
 
-#: app/auth/forms.py:14 app/auth/forms.py:31 app/auth/forms.py:49
-msgid "Password"
-msgstr "密码"
-
-#: app/auth/forms.py:15 app/auth/forms.py:68
+#: app/auth/forms.py:16 app/auth/forms.py:69
 msgid "Confirm password"
 msgstr "确认密码"
 
-#: app/auth/forms.py:16
+#: app/auth/forms.py:17
 msgid "Passwords must match."
 msgstr "两次输入的密码不一致。"
 
-#: app/auth/forms.py:17
+#: app/auth/forms.py:18
 msgid "Register"
 msgstr "注册"
 
-#: app/auth/forms.py:21 app/auth/forms.py:54
+#: app/auth/forms.py:22 app/auth/forms.py:55
 msgid "Email already registered."
 msgstr "电子邮箱已被注册。"
 
-#: app/auth/forms.py:25
+#: app/auth/forms.py:26
 msgid "Username already in use."
 msgstr "用户名已被使用。"
 
-#: app/auth/forms.py:32
+#: app/auth/forms.py:33
 msgid "Keep me logged in"
 msgstr "让我保持登录"
 
-#: app/auth/forms.py:34
+#: app/auth/forms.py:35
 msgid "Log In"
 msgstr "登录"
 
-#: app/auth/forms.py:38
+#: app/auth/forms.py:39
 msgid "Old password"
 msgstr "旧密码"
 
-#: app/auth/forms.py:39
+#: app/auth/forms.py:40
 msgid "New password"
 msgstr "新密码"
 
-#: app/auth/forms.py:41
+#: app/auth/forms.py:42
 msgid "Confirm new password"
 msgstr "确认新密码"
 
-#: app/auth/forms.py:43
+#: app/auth/forms.py:44
 msgid "Update Password"
 msgstr "更改密码"
 
-#: app/auth/forms.py:47 app/auth/forms.py:66
+#: app/auth/forms.py:48 app/auth/forms.py:67
 msgid "New Email"
 msgstr "新电子邮箱"
 
-#: app/auth/forms.py:50
+#: app/auth/forms.py:51
 msgid "Update Email Address"
 msgstr "更新电子邮箱地址"
 
-#: app/auth/forms.py:56
+#: app/auth/forms.py:57
 msgid "Your are using the old email address."
 msgstr "您输入的电子邮箱与之前的相同。"
 
-#: app/auth/forms.py:62 app/auth/forms.py:69
+#: app/auth/forms.py:63 app/auth/forms.py:70
 msgid "Reset Password"
 msgstr "重置密码"
 
@@ -252,17 +294,9 @@ msgstr "验证链接无效或已过期。"
 msgid "Upload image"
 msgstr "上传图片"
 
-#: app/frontend/forms.py:14
-msgid "Name"
-msgstr "名称"
-
 #: app/frontend/forms.py:15
 msgid "Publication name, required."
 msgstr "专栏名称，必填"
-
-#: app/frontend/forms.py:16 app/post/forms.py:26
-msgid "Description"
-msgstr "描述"
 
 #: app/frontend/forms.py:17
 msgid "Description, this is optional."
@@ -330,7 +364,7 @@ msgstr "您的文章已发布"
 msgid "Your post has been updated."
 msgstr "您的文章已更新。"
 
-#: app/post/views.py:154
+#: app/post/views.py:155
 msgid "Your comment has been published."
 msgstr "您的评论已发布"
 
@@ -783,10 +817,6 @@ msgstr "更改头像"
 #: app/user/forms.py:43
 msgid "Nickname"
 msgstr "昵称"
-
-#: app/user/forms.py:44
-msgid "Location"
-msgstr "地区"
 
 #: app/user/forms.py:45
 msgid "description"

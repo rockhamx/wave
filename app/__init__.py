@@ -3,15 +3,15 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 from flask_bootstrap import Bootstrap
 from flask_login import LoginManager
-from flask_babelex import Babel, gettext as _, lazy_gettext as _l
+from flask_babelex import Babel, lazy_gettext as _l
 from flask_mail import Mail
 from flask_moment import Moment
-from flask_admin import Admin, translations
+from flask_admin import Admin
 from flask_pagedown import PageDown
 from sqlalchemy import MetaData
 
 from app.admin_views import WaveModelView, WaveAdminIndexView
-from config import config
+from config import config, Config
 
 convention = {
     "ix": 'ix_%(column_0_label)s',
@@ -32,6 +32,7 @@ moment = Moment()
 login_manager = LoginManager()
 login_manager.login_view = 'auth.login'
 babel = Babel()
+root_path = None
 
 admin = Admin(name='wave', template_mode='bootstrap3', index_view=WaveAdminIndexView(name=_l('Home')))
 pagedown = PageDown()

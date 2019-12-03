@@ -1,5 +1,5 @@
 from flask import render_template, flash, redirect, url_for, request, current_app, abort, jsonify
-from flask_babel import gettext as _
+from flask_babelex import gettext as _
 from flask_login import login_required, current_user
 
 from . import publication

@@ -1,6 +1,7 @@
 import os
 from dotenv import load_dotenv
 
+
 base_dir = os.path.abspath(os.path.dirname(__file__))
 load_dotenv()
 
@@ -9,6 +10,7 @@ class Config:
     # website global
     SECRET_KEY = os.environ.get('SECRET_KEY')
     SERVER_NAME = os.environ.get('SERVER_NAME')
+    # WAVE_APP_FOLDER = ''
     WAVE_INSTANCE_FOLDER = 'instance'
     WAVE_POSTS_PER_PAGE = 10
     WAVE_AVATAR_REQUIRED_SIZE = [30, 42, 60, 80, 100, 256]

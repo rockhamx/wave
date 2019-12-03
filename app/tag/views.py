@@ -1,5 +1,5 @@
 from flask import render_template, request
-from flask_babel import gettext as _
+from flask_babelex import gettext as _
 
 from . import tag
 from app import db

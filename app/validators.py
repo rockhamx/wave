@@ -1,5 +1,5 @@
 from flask_uploads import IMAGES
-from flask_babel import lazy_gettext as _l
+from flask_babelex import lazy_gettext as _l
 from wtforms import ValidationError
 
 

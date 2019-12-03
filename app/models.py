@@ -1,5 +1,4 @@
 from threading import Thread
-from urllib.parse import urljoin
 
 from PIL import Image
 from langdetect import detect
@@ -19,6 +18,7 @@ from config import Config
 from datetime import datetime
 from time import time
 from hashlib import md5
+
 
 follows = db.Table('follows',
                    db.Column('follower_id', db.Integer, db.ForeignKey('users.id'), primary_key=True),
@@ -58,8 +58,11 @@ class User(UserMixin, db.Model):
             self.name = self.username
         if self.email and self.email_hash is None:
             self.email_hash = self.gravatar_hash()
-        for size in Config.WAVE_AVATAR_REQUIRED_SIZE:
-            self.download_gravatar_async(size=size)
+            for size in Config.WAVE_AVATAR_REQUIRED_SIZE:
+                self.download_gravatar_async(size=size)
+
+    def __repr__(self):
+        return '<User {}>'.format(self.username)
 
     @property
     def password(self):
@@ -124,7 +127,9 @@ class User(UserMixin, db.Model):
         return 'https://www.gravatar.com/avatar/{}?d=identicon&s={}'.format(self.email_hash, size)
 
     def avatar_dir(self):
-        return os.path.join(current_app.root_path, 'static', 'images', 'users', self.email_hash, 'avatar')
+        from wave import app
+        root = app.root_path
+        return os.path.join(root, 'static', 'images', 'users', self.email_hash, 'avatar')
 
     def avatar_path(self, dirname=None, size=None):
         if not dirname:
@@ -416,6 +421,28 @@ class User(UserMixin, db.Model):
         ).all()
 
 
+@db.event.listens_for(User, 'before_insert')
+def before_insert(mapper, connection, target):
+    if not target.name:
+        target.name = target.username
+    target.email_hash = target.gravatar_hash()
+
+
+# @db.event.listens_for(User.email, 'set')
+# def on_changed_email(target, value, oldvalue, initiator):
+#     target.email = value
+#     target.email_hash = target.gravatar_hash()
+
+#
+# @staticmethod
+# def on_changed_email(target, value, oldvalue, initiator):
+#     target.email_hash = target.gravatar_hash()
+
+
+# db.event.listen(User.email, 'modified', User.on_changed_email)
+# db.event.listen(User.password_hash, 'modified', User.on_changed_email)
+
+
 class AnonymousUser(AnonymousUserMixin):
     is_administrator = False
 
@@ -454,6 +481,9 @@ class Post(db.Model):
 
     def __init__(self, **kwargs):
         super(Post, self).__init__(**kwargs)
+
+    def __repr__(self):
+        return '<Post {}>'.format(self.title[:10])
 
     def click(self):
         self.clicked += 1

@@ -1,6 +1,6 @@
 from flask import request, jsonify, url_for
 from flask_login import login_required, current_user
-from flask_babel import gettext as _
+from flask_babelex import gettext as _
 
 from app import db
 from app.models import Post, User, Tag

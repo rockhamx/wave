@@ -1,5 +1,5 @@
 from flask import render_template, flash, redirect, url_for, request, current_app, abort, jsonify
-from flask_babel import gettext as _
+from flask_babelex import gettext as _
 from flask_login import login_required, current_user
 # from sqlalchemy import inspect
 from sqlalchemy.orm.util import object_state
@@ -144,8 +144,9 @@ def article(id):
     post = Post.query.filter_by(id=id).first_or_404()
     comments = post.comments_desc_by_time()
     if form.validate_on_submit():
-        if not current_user.is_authenticated:
-            redirect(url_for('frontend.login'))
+        if current_user.is_anonymous:
+            flash(_('Please sign in first.'), 'warning')
+            return redirect(url_for('auth.login'))
         comment = Comment(content=form.content.data,
                           author_id=current_user.id,
                           post_id=id)

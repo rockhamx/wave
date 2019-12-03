@@ -1,4 +1,4 @@
-from flask_babel import lazy_gettext as _l
+from flask_babelex import lazy_gettext as _l
 from flask_wtf import FlaskForm
 from flask_uploads import IMAGES
 from wtforms import StringField, SubmitField, TextAreaField, SelectField, FileField, Label

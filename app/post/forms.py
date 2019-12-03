@@ -1,4 +1,4 @@
-from flask_babel import lazy_gettext as _l
+from flask_babelex import lazy_gettext as _l
 from flask_pagedown.fields import PageDownField
 from flask_wtf import FlaskForm
 from wtforms import StringField, SubmitField, BooleanField, TextAreaField, HiddenField, SelectField, Label
