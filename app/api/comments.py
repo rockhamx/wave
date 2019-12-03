@@ -9,15 +9,22 @@ from . import api
 
 @api.route('/comment/<int:id>', methods=['DELETE'])
 def delete_comment(id):
-    result = 'failed'
+    result = 'error'
+    message = {
+        "text": _('Internal Error.'),
+        "type": 'danger'
+    }
     if id:
         c = Comment.query.get(int(id))
         if c:
             db.session.delete(c)
             db.session.commit()
-            status = "success"
             # next_url = url_for('user.profile', username=current_user.username)
             result = 'success'
+            message['text'] = _(u'Delete success.')
+            message['type'] = result
+
     return jsonify({
-        "result": result
+        "result": result,
+        "message": message
     })

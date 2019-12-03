@@ -107,7 +107,7 @@ def draft(id):
         db.session.commit()
         flash(_(u'Your post has been updated.'))
         return redirect(url_for('post.article', id=p.id))
-
+    # !!NOTE!! this is not right.
     # form = RichTextEditorForm(id=id, reference_id=d.reference_id, type=d.type, title=d.title, subtitle=d.title,
     #                           description=d.description, content=d.content, tags=d.tags, private=not d.is_public)
     form.id.data = d.id
@@ -144,7 +144,7 @@ def article(id):
         db.session.add(comment)
         db.session.commit()
         flash(_(u'Your comment has been published.'))
-        return redirect(url_for('post.article', id=id))
+        return redirect(url_for('post.article', id=id, _anchor='write-comment'))
     return render_template('article.html', post=post, comments=comments, form=form)
 
 # @post.route('/delete_post', methods=['POST'])

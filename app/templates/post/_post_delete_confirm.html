@@ -18,6 +18,6 @@
 {#    </div>#}
 {#</div>#}
 
-{% with type = _('post') %}
+{% with type = 'article' or _('article')%}
     {% include 'modal/_confirm_delete.html' %}
 {% endwith %}

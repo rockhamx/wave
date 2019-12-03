@@ -1,6 +1,6 @@
 // Editor
 import React, { useEffect, useRef, useState } from "react";
-import { Block } from "slate"
+import { Block } from "slate";
 import { Editor, getEventTransfer } from "slate-react";
 // import { initialValue, existingValue } from "./slateInitialValue";
 import { html } from "./htmlSerializer";
@@ -9,18 +9,102 @@ import { cx, css } from "emotion";
 import { isKeyHotkey } from "is-hotkey";
 import imageExtensions from "image-extensions";
 import isUrl from "is-url";
+// import { saveDraft } from "./draft";
 
 const DEFAULT_NODE = "paragraph";
 const isBoldHotkey = isKeyHotkey("mod+b");
 const isItalicHotkey = isKeyHotkey("mod+i");
 const isUnderlinedHotkey = isKeyHotkey("mod+u");
 const isCodeHotkey = isKeyHotkey("mod+`");
+
+const draftId = $("input#id");
+const draftReferenceId = $("input#reference_id");
+const draftType = $("input#type");
+const draftTitle = $("input#title");
+const draftSubtitle = $("input#subtitle");
+const draftDescription = $("textarea#description");
+const draftContent = $("input#content");
+const draftPublication = $("select#publication");
+const draftTags = $("input#tags");
+const draftIsPublic = $("input#private");
+const draft_progress = $("span#draft_progress")[0];
+let draft = {};
+if (draftId.length > 0) {
+  draft = {
+    id: draftId.val(),
+    reference_id: draftReferenceId.val(),
+    type: draftType.val(),
+    title: draftTitle.val(),
+    subtitle: draftSubtitle.val(),
+    description: draftDescription.val(),
+    publication: draftPublication.val(),
+    tags: draftTags.val(),
+    content: draftContent.val(),
+    is_public: draftIsPublic[0].checked === false
+  };
+}
+
+const saveDraft = () => {
+  const json_draft = JSON.stringify(draft);
+  console.log(draft);
+
+  draft_progress.innerText = "Saving...";
+  const url = "/api/v0/drafts/";
+  $.ajax({
+    url: url,
+    type: "POST",
+    data: json_draft,
+    contentType: "application/json; charset=utf-8",
+    dataType: "json",
+    success: data => {
+      if (data.result === "success") {
+        if (!draft.id) {
+          draft.id = data.id;
+          window.history.replaceState({}, "", `/d/${data.id}/edit`);
+        }
+        draft_progress.innerText = data.status;
+        console.log(data.status + draft);
+      }
+    }
+  });
+};
+
+const onChange = event => {
+  switch (event.target.id) {
+    case "title":
+      draft.title = event.target.value;
+      break;
+    case "subtitle":
+      draft.subtitle = event.target.value;
+      break;
+    case "description":
+      draft.description = event.target.value;
+      break;
+    case "publication":
+      draft.publication = event.target.value;
+      break;
+    case "tags":
+      draft.tags = event.target.value;
+      break;
+    case "private":
+      draft.is_public = event.target.checked === false;
+      break;
+  }
+  saveDraft();
+};
+
+draftTitle.change(onChange);
+draftSubtitle.change(onChange);
+draftDescription.change(onChange);
+draftPublication.change(onChange);
+draftTags.change(onChange);
+draftIsPublic.change(onChange);
+
 /**
  * The editor's schema.
  *
  * @type {Object}
  */
-
 const schema = {
   document: {
     last: { type: "paragraph" },
@@ -42,91 +126,15 @@ const schema = {
 
 const WaveEditor = props => {
   const editor = useRef(null);
-  const draftId = $("input#id");
-  const draftReferenceId = $("input#reference_id");
-  const draftType = $("input#type");
-  const draftTitle = $("input#title");
-  const draftSubtitle = $("input#subtitle");
-  const draftDescription = $("textarea#description");
-  const draftContent = $("input#content");
-  const draftPublication = $("select#publication");
-  const draftTags = $("input#tags");
-  const draftIsPublic = $("input#private")[0];
   const initialValue = draftContent.val() || "<p></p>";
   const [value, setValue] = useState(html.deserialize(initialValue));
-  let interval;
-
-  const get_draft = () => {
-    const id = draftId.val();
-    const referenceId = draftReferenceId.val();
-    const type = draftType.val();
-    const title = draftTitle.val();
-    const subtitle = draftSubtitle.val();
-    const description = draftDescription.val();
-    const publication = draftPublication.val();
-    const tags = draftTags.val();
-    const content = html.serialize(value);
-    const isPublic = draftIsPublic.checked === false;
-    return {
-      id: id,
-      reference_id: referenceId,
-      type: type,
-      title: title,
-      subtitle: subtitle,
-      description: description,
-      publication: publication,
-      tags: tags,
-      content: content,
-      is_public: isPublic
-    };
-  };
-  const [lastSaveDraft, setLastSaveDraft] = useState(
-    JSON.stringify(get_draft())
-  );
-
-  useEffect(() => {
-    interval = setInterval(function() {
-      const draft = JSON.stringify(get_draft());
-      // console.log(JSON.parse(draft));
-      // console.log(JSON.parse(lastSaveDraft));
-      if (lastSaveDraft && lastSaveDraft === draft) return;
-      console.log("content changed");
-
-      const draft_progress = $("span#draft_progress")[0];
-      draft_progress.innerText = "Saving...";
-      const url = "/api/v0/drafts/";
-      $.ajax({
-        url: url,
-        type: "POST",
-        data: draft,
-        contentType: "application/json; charset=utf-8",
-        dataType: "json",
-        success: data => {
-          if (data.result === "success") {
-            if (!draftId.val()) {
-              draftId.val(data.id);
-              window.history.replaceState({}, "", `/d/${data.id}/edit`);
-            }
-            setLastSaveDraft(draft);
-            draft_progress.innerText = data.status;
-            console.log(data.status + draft);
-          }
-        }
-      });
-    }, 1000);
-
-    return () => {
-      clearInterval(interval);
-    };
-  });
+  const [count, setCount] = useState(0);
 
   // modal show event
   $("#publishModalForRichText").on("show.bs.modal", function(event) {
     // event.preventDefault();
-    // const $modal = $(this);
-    // TODO: refurnish this dumb trick
-    const content = $("input#content");
-    content.val(html.serialize(value));
+    const $modal = $(this);
+    draftContent.val(html.serialize(value));
   });
 
   const onClickMark = (event, type) => {
@@ -221,12 +229,18 @@ const WaveEditor = props => {
   };
 
   const handleChange = obj => {
-    // if (obj.value.document !== value.document) {
-    //   const content = html.serialize(obj.value);
-    //   localStorage.setItem("content", content);
-    // }
+    if (obj.value.document !== value.document) {
+      // localStorage.setItem("content", content);
+      setCount(count + 1);
+      console.log(count);
+      if (count > 2) {
+        draft.content = html.serialize(obj.value);
+        saveDraft();
+        setCount(0);
+      }
+    }
 
-    console.log(value);
+    // console.log(value);
     setValue(obj.value);
   };
 
@@ -322,6 +336,7 @@ const WaveEditor = props => {
     </div>
   );
 };
+
 /**
  * A function to determine whether a URL has an image extension.
  *
@@ -413,7 +428,9 @@ const renderBlock = (props, editor, next) => {
             display: block;
             max-width: 100%;
             max-height: 20em;
-            box-shadow: ${isFocused ? "rgb(180, 213, 255) 0px 0px 0px 3px" : "none"};
+            box-shadow: ${isFocused
+              ? "rgb(180, 213, 255) 0px 0px 0px 3px"
+              : "none"};
           `}
         />
       );

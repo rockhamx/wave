@@ -5,7 +5,7 @@
 
 {% block content %}
 
-    <div class="container">
+    <div class="container distance">
 
         <div class="page-header">
             <h1>{{ _('Sign in') }}</h1>
@@ -13,9 +13,15 @@
 
         {{ super() }}
 
-        <div class="col-xs-12 col-md-6">
-        {#      TODO: add placeholder#}
-          {{ wtf.quick_form(form) }}
+        <div class="row">
+
+            <div class="col-xs-12 col-md-6">
+                {{ wtf.quick_form(form) }}
+            </div>
+
+            <div class="col-xs-12 col-md-6">
+                <a href="{{ url_for('auth.password_reset_request') }}">{{ _('Forget your password? Click here!') }}</a>
+            </div>
         </div>
 
     </div>

@@ -789,9 +789,7 @@ class Draft(db.Model):
         if draft.get('id', None):
             return Draft.query.get(draft['id'])
         else:
-            if not draft.get('reference_id', None):
-                reference_id = None
-            return Draft(reference_id=reference_id,
+            return Draft(reference_id=None if not draft.get('reference_id', '') else draft.get('reference_id'),
                          type=draft.get('type'),
                          title=draft.get('title', None),
                          subtitle=draft.get('subtitle', None),

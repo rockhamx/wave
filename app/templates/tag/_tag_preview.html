@@ -1,5 +1,5 @@
 <p>
-    <a href="#">
+    <a href="{{ url_for('tag.home', name=tag.name) }}">
         <span class="glyphicon glyphicon-tag" aria-hidden="true"></span> {{ tag.name }}
     </a>
     <span>{{ _('description: %(d)s', d=tag.description) }}</span>

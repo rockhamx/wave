@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2019-12-02 00:13+0800\n"
+"POT-Creation-Date: 2019-12-03 14:17+0800\n"
 "PO-Revision-Date: 2019-11-05 16:23+0800\n"
 "Last-Translator: \n"
 "Language: zh\n"
@@ -22,25 +22,43 @@ msgstr ""
 msgid "Images only"
 msgstr ""
 
+#: app/api/comments.py:14 app/api/drafts.py:49
+msgid "Internal Error."
+msgstr ""
+
+#: app/api/comments.py:24 app/api/drafts.py:58
+msgid "Delete success."
+msgstr "删除成功"
+
 #: app/api/drafts.py:35
 msgid "Saved"
 msgstr "已保存"
 
 #: app/api/publications.py:19 app/api/publications.py:41 app/api/users.py:13
-#: app/api/users.py:33 app/templates/publication/_publication_preview.html:18
+#: app/api/users.py:33 app/templates/publication/_publication_float.html:21
+#: app/templates/publication/_publication_preview.html:21
 #: app/templates/user/_follow_buttons.html:12
-#: app/templates/user/_profile.html:55 app/user/views.py:101
+#: app/templates/user/_profile.html:55 app/user/views.py:98
 msgid "Follow"
 msgstr "关注"
 
 #: app/api/publications.py:25 app/api/publications.py:35 app/api/users.py:18
-#: app/api/users.py:28 app/templates/publication/_publication_preview.html:13
+#: app/api/users.py:28 app/templates/publication/_publication_float.html:16
+#: app/templates/publication/_publication_preview.html:16
 #: app/templates/user/_follow_buttons.html:7
-#: app/templates/user/_profile.html:50 app/user/views.py:89
+#: app/templates/user/_profile.html:50 app/user/views.py:86
 msgid "Following"
 msgstr "已关注"
 
-#: app/auth/forms.py:9 app/auth/forms.py:29 app/auth/forms.py:58
+#: app/api/users.py:56 app/templates/user/_messages.html:22
+msgid "Unread"
+msgstr "未读"
+
+#: app/api/users.py:64 app/templates/user/_messages.html:22
+msgid "Read"
+msgstr "已读"
+
+#: app/auth/forms.py:9 app/auth/forms.py:30 app/auth/forms.py:61
 msgid "Email"
 msgstr "电子邮箱"
 
@@ -52,11 +70,11 @@ msgstr "用户名"
 msgid "Username must have only letters, numbers, dots or underscores."
 msgstr "用户名只能包括字母，数字，点和下划线。"
 
-#: app/auth/forms.py:14 app/auth/forms.py:30 app/auth/forms.py:47
+#: app/auth/forms.py:14 app/auth/forms.py:31 app/auth/forms.py:49
 msgid "Password"
 msgstr "密码"
 
-#: app/auth/forms.py:15 app/auth/forms.py:65
+#: app/auth/forms.py:15 app/auth/forms.py:68
 msgid "Confirm password"
 msgstr "确认密码"
 
@@ -68,7 +86,7 @@ msgstr "两次输入的密码不一致。"
 msgid "Register"
 msgstr "注册"
 
-#: app/auth/forms.py:21 app/auth/forms.py:52
+#: app/auth/forms.py:21 app/auth/forms.py:54
 msgid "Email already registered."
 msgstr "电子邮箱已被注册。"
 
@@ -76,43 +94,43 @@ msgstr "电子邮箱已被注册。"
 msgid "Username already in use."
 msgstr "用户名已被使用。"
 
-#: app/auth/forms.py:31
+#: app/auth/forms.py:32
 msgid "Keep me logged in"
 msgstr "让我保持登录"
 
-#: app/auth/forms.py:32
+#: app/auth/forms.py:34
 msgid "Log In"
 msgstr "登录"
 
-#: app/auth/forms.py:36
+#: app/auth/forms.py:38
 msgid "Old password"
 msgstr "旧密码"
 
-#: app/auth/forms.py:37
+#: app/auth/forms.py:39
 msgid "New password"
 msgstr "新密码"
 
-#: app/auth/forms.py:39
+#: app/auth/forms.py:41
 msgid "Confirm new password"
 msgstr "确认新密码"
 
-#: app/auth/forms.py:41
+#: app/auth/forms.py:43
 msgid "Update Password"
 msgstr "更改密码"
 
-#: app/auth/forms.py:45 app/auth/forms.py:63
+#: app/auth/forms.py:47 app/auth/forms.py:66
 msgid "New Email"
 msgstr "新电子邮箱"
 
-#: app/auth/forms.py:48
+#: app/auth/forms.py:50
 msgid "Update Email Address"
 msgstr "更新电子邮箱地址"
 
-#: app/auth/forms.py:54
+#: app/auth/forms.py:56
 msgid "Your are using the old email address."
 msgstr "您输入的电子邮箱与之前的相同。"
 
-#: app/auth/forms.py:59 app/auth/forms.py:66
+#: app/auth/forms.py:62 app/auth/forms.py:69
 msgid "Reset Password"
 msgstr "重置密码"
 
@@ -220,11 +238,11 @@ msgstr "标题"
 msgid "Enter your Markdown"
 msgstr "输入Markdown"
 
-#: app/post/forms.py:11 app/post/forms.py:30
+#: app/post/forms.py:11 app/post/forms.py:33
 msgid "Only visible for myself"
 msgstr "只对我可见"
 
-#: app/post/forms.py:14 app/post/forms.py:31
+#: app/post/forms.py:14 app/post/forms.py:34
 msgid "Publish now"
 msgstr "现在发布"
 
@@ -240,19 +258,25 @@ msgstr "子标题"
 msgid "Optional."
 msgstr "可选"
 
-#: app/post/forms.py:28
-msgid "Add or change tags (up to 5) so readers know what your article is about."
-msgstr ""
+#: app/post/forms.py:30
+msgid "Publish on publication"
+msgstr "发布到专栏"
 
-#: app/post/forms.py:29
+#: app/post/forms.py:31
+msgid ""
+"Add or change tags (separate by space) so readers know what your article "
+"is about."
+msgstr "添加或更改标签(用空格分隔)，让读者更清楚你的文章是关于什么的。"
+
+#: app/post/forms.py:32
 msgid "Add a tag..."
 msgstr "添加标签..."
 
-#: app/post/forms.py:35
+#: app/post/forms.py:45
 msgid "What's in your mind?"
 msgstr "说说你的想法："
 
-#: app/post/forms.py:36
+#: app/post/forms.py:46
 msgid "Publish"
 msgstr "发布"
 
@@ -260,15 +284,15 @@ msgstr "发布"
 msgid "Your post has been published."
 msgstr "您的文章已发布"
 
-#: app/post/views.py:60 app/post/views.py:103
+#: app/post/views.py:65 app/post/views.py:108
 msgid "Your post has been updated."
 msgstr "您的文章已更新。"
 
-#: app/post/views.py:138
+#: app/post/views.py:146
 msgid "Your comment has been published."
 msgstr "您的评论已发布"
 
-#: app/templates/about.html:3 app/templates/base.html:67
+#: app/templates/about.html:3 app/templates/base.html:68
 msgid "About"
 msgstr "关于"
 
@@ -288,85 +312,85 @@ msgstr "最新"
 msgid "My Followed Article"
 msgstr "我关注的文章"
 
-#: app/templates/base.html:64 app/templates/base.html:165
+#: app/templates/base.html:64 app/templates/base.html:166
 msgid "Profile"
 msgstr "个人信息"
 
-#: app/templates/base.html:81
+#: app/templates/base.html:67
+msgid "Features"
+msgstr "功能"
+
+#: app/templates/base.html:82
 #, python-format
 msgid "Signed in as %(name)s"
 msgstr "登录用户为：%(name)s"
 
-#: app/templates/base.html:88 app/templates/user/write.html:4
+#: app/templates/base.html:89 app/templates/user/write.html:4
 msgid "Writing"
 msgstr "写作"
 
-#: app/templates/base.html:95 app/templates/base_search.html:28
-#: app/templates/user/articles.html:17 app/templates/user/base_profile.html:19
+#: app/templates/base.html:96 app/templates/base_search.html:28
+#: app/templates/user/articles.html:20 app/templates/user/base_profile.html:19
 msgid "Articles"
 msgstr "文章"
 
-#: app/templates/base.html:102
-msgid "Notifications"
-msgstr "提醒"
-
-#: app/templates/base.html:110 app/templates/user/messages.html:4
+#: app/templates/base.html:111 app/templates/user/messages.html:4
 msgid "Messages"
 msgstr "私信"
 
-#: app/templates/base.html:121 app/templates/user/base_profile.html:22
-#: app/templates/user/hearts.html:3 app/templates/user/hearts.html:9
+#: app/templates/base.html:122 app/templates/user/base_profile.html:22
+#: app/templates/user/hearts.html:3 app/templates/user/hearts.html:13
 #: app/templates/user/profile_hearts.html:9
 msgid "Hearts"
 msgstr "喜欢"
 
-#: app/templates/base.html:128 app/templates/user/bookmarks.html:3
-#: app/templates/user/bookmarks.html:9
+#: app/templates/base.html:129 app/templates/user/bookmarks.html:3
+#: app/templates/user/bookmarks.html:11
 msgid "Bookmarks"
 msgstr "书签"
 
-#: app/templates/base.html:135 app/templates/base_search.html:34
+#: app/templates/base.html:136 app/templates/base_search.html:34
 #: app/templates/user/publications.html:4
-#: app/templates/user/publications.html:12
+#: app/templates/user/publications.html:13
 msgid "Publications"
 msgstr "专栏"
 
 #: app/templates/auth/change_password.html:4
-#: app/templates/auth/change_password.html:11 app/templates/base.html:151
+#: app/templates/auth/change_password.html:11 app/templates/base.html:152
 msgid "Change password"
 msgstr "更改密码"
 
 #: app/templates/auth/change_email.html:4
-#: app/templates/auth/change_email.html:11 app/templates/base.html:156
+#: app/templates/auth/change_email.html:11 app/templates/base.html:157
 msgid "Change email"
 msgstr "更改邮箱"
 
-#: app/templates/base.html:171
+#: app/templates/base.html:172
 msgid "Help"
 msgstr "帮助"
 
-#: app/templates/base.html:178
+#: app/templates/base.html:179
 msgid "Preference"
 msgstr "设置"
 
-#: app/templates/base.html:185
+#: app/templates/base.html:186
 msgid "Sign out"
 msgstr "登出"
 
-#: app/templates/base.html:191
+#: app/templates/base.html:192
 msgid "Get started"
 msgstr "加入"
 
 #: app/templates/auth/login.html:4 app/templates/auth/login.html:11
-#: app/templates/base.html:192
+#: app/templates/base.html:193
 msgid "Sign in"
 msgstr "登录"
 
-#: app/templates/base.html:201
+#: app/templates/base.html:202
 msgid "Search for..."
 msgstr "搜索..."
 
-#: app/templates/base.html:203
+#: app/templates/base.html:204
 msgid "Go!"
 msgstr ""
 
@@ -401,30 +425,33 @@ msgstr "新文章"
 msgid "Draft"
 msgstr "草稿"
 
-#: app/templates/new.html:24 app/templates/new.html:53
+#: app/templates/new.html:24 app/templates/new.html:47
 msgid "Revise article"
 msgstr "修订文章"
 
-#: app/templates/new.html:26 app/templates/new.html:55
-#: app/templates/user/write.html:10
+#: app/templates/new.html:26 app/templates/user/write.html:10
 msgid "Ready to publish?"
 msgstr "准备发布?"
 
-#: app/templates/new.html:62 app/templates/user/write.html:47
+#: app/templates/new.html:49 app/templates/user/write.html:44
+msgid "Ready to publish"
+msgstr "准备发布"
+
+#: app/templates/new.html:58 app/templates/user/write.html:47
 msgid "Article Preview"
 msgstr "文章预览"
 
-#: app/templates/new.html:89
+#: app/templates/new.html:66
 msgid ""
 "Note: Changes here will affect how your article appears in public places "
 "like Wave’s homepage — not the article itself."
 msgstr "注意：改变这里只会影响到文章预览时的效果，并不会影响到文章的内容。"
 
-#: app/templates/new.html:94
+#: app/templates/new.html:71
 msgid "Additions"
 msgstr "额外选项"
 
-#: app/templates/new.html:113 app/templates/user/write.html:52
+#: app/templates/new.html:84 app/templates/user/write.html:52
 msgid "Close"
 msgstr "关闭"
 
@@ -441,17 +468,20 @@ msgstr "我们找不到任何文章"
 msgid "Getting on board"
 msgstr "加入Wave"
 
+#: app/templates/auth/login.html:23
+msgid "Forget your password? Click here!"
+msgstr "忘了你的密码？猛击这里！"
+
 #: app/templates/auth/reset_password.html:4
 #: app/templates/auth/reset_password.html:11
 msgid "Reset password"
 msgstr "重置密码"
 
-#: app/templates/comment/_comment_menu.html:8
-#: app/templates/post/_draft_menu.html:8 app/templates/post/_post_menu.html:8
-msgid "Edit"
-msgstr "编辑"
+#: app/templates/comment/_comment_delete_confirm.html:4
+msgid "comment"
+msgstr "评论"
 
-#: app/templates/comment/_comment_menu.html:13
+#: app/templates/comment/_comment_menu.html:8
 #: app/templates/post/_draft_menu.html:10 app/templates/post/_post_menu.html:13
 msgid "Delete"
 msgstr "删除"
@@ -463,10 +493,6 @@ msgstr "找不到你想要的"
 #: app/templates/errors/404.html:11
 msgid "Looks like you have reached a no mans land"
 msgstr "看起来你来到了一个没人的地方"
-
-#: app/templates/errors/404.html:16
-msgid "..."
-msgstr ""
 
 #: app/templates/errors/500.html:3
 msgid "Internal Server Error"
@@ -480,36 +506,42 @@ msgstr ""
 msgid "The administrator has been notified. Sorry for the inconvenience!"
 msgstr ""
 
-#: app/templates/post/_draft_delete_confirm.html:8
-#: app/templates/post/_post_delete_confirm.html:8
+#: app/templates/modal/_confirm_delete.html:8
 msgid "Confirm your deletion"
 msgstr "确认删除"
 
-#: app/templates/post/_draft_delete_confirm.html:11
+#: app/templates/modal/_confirm_delete.html:12
+#, python-format
 msgid ""
-"Are you really sure to delete this draft? This operation is not "
+"Are you really sure to delete this %(type)s? This operation is not "
 "reversible!"
-msgstr "您确定要删除这篇草稿吗？这个操作将不可逆转！"
+msgstr "您确定要删除这篇%(type)s吗？这个操作将不可逆转！"
 
-#: app/templates/post/_draft_delete_confirm.html:14
-#: app/templates/post/_post_delete_confirm.html:14
-#: app/templates/user/publications.html:70
+#: app/templates/modal/_confirm_delete.html:16
+#: app/templates/user/publications.html:72
 msgid "Cancel"
 msgstr "取消"
 
-#: app/templates/post/_draft_delete_confirm.html:15
-#: app/templates/post/_post_delete_confirm.html:15
+#: app/templates/modal/_confirm_delete.html:17
 msgid "Confirm"
 msgstr "确认"
 
-#: app/templates/post/_draft_preview.html:8
+#: app/templates/post/_draft_delete_confirm.html:22
+msgid "draft"
+msgstr "草稿"
+
+#: app/templates/post/_draft_menu.html:8 app/templates/post/_post_menu.html:8
+msgid "Edit"
+msgstr "编辑"
+
+#: app/templates/post/_draft_preview.html:13
 #, python-format
 msgid "Last edited %(time)s"
 msgstr "在%(time)s修改过"
 
-#: app/templates/post/_post_delete_confirm.html:11
-msgid "Are you really sure to delete this post? This operation is not reversible!"
-msgstr "您确定要删除这篇文章吗？这个操作将不可逆转！"
+#: app/templates/post/_post_delete_confirm.html:22
+msgid "article"
+msgstr "文章"
 
 #: app/templates/post/_post_statusbar.html:8
 #: app/templates/post/_post_statusbar.html:19
@@ -552,6 +584,19 @@ msgstr ""
 msgid "description: %(d)s"
 msgstr "描述：%(d)s"
 
+#: app/templates/tag/home.html:3 app/templates/user/articles.html:3
+msgid "Your articles"
+msgstr "我的文章"
+
+#: app/templates/tag/home.html:11
+#, python-format
+msgid "Articles related to %(name)s"
+msgstr "有关%(name)s的文章"
+
+#: app/templates/tag/home.html:17 app/templates/user/_messages.html:53
+msgid "Nothing here."
+msgstr "这里空空如也。"
+
 #: app/templates/tag/search.html:18
 msgid "We couldn’t find any tags."
 msgstr ""
@@ -570,27 +615,15 @@ msgstr "，"
 msgid "Last edited on %(date)s"
 msgstr "最近一次修改于%(date)s"
 
-#: app/templates/user/_messages.html:15
+#: app/templates/user/_messages.html:16
 #, python-format
 msgid "Sent to %(name)s at "
 msgstr "发送给%(name)s的私信"
 
-#: app/templates/user/_messages.html:18
+#: app/templates/user/_messages.html:19
 #, python-format
 msgid "Sent from %(name)s at "
 msgstr "来自%(name)s的私信"
-
-#: app/templates/user/_messages.html:20
-msgid "Read"
-msgstr "已读"
-
-#: app/templates/user/_messages.html:20
-msgid "Unread"
-msgstr "未读"
-
-#: app/templates/user/_messages.html:49
-msgid "Nothing here."
-msgstr "这里空空如也。"
 
 #: app/templates/user/_profile.html:26
 #, python-format
@@ -622,11 +655,7 @@ msgstr "最近一次出现在%(time)s。"
 msgid "Edit Profile"
 msgstr "编辑个人信息"
 
-#: app/templates/user/articles.html:3
-msgid "Your articles"
-msgstr "我的文章"
-
-#: app/templates/user/articles.html:10
+#: app/templates/user/articles.html:11
 msgid "Drafts"
 msgstr "草稿"
 
@@ -686,20 +715,20 @@ msgstr "最近"
 msgid "Private articles"
 msgstr "私人文章"
 
-#: app/templates/user/publications.html:14
-#: app/templates/user/publications.html:42
+#: app/templates/user/publications.html:16
+#: app/templates/user/publications.html:44
 msgid "New publication"
 msgstr "创建专栏"
 
-#: app/templates/user/publications.html:18
+#: app/templates/user/publications.html:20
 msgid "Followed"
 msgstr "关注"
 
-#: app/templates/user/publications.html:24
+#: app/templates/user/publications.html:26
 msgid "You have not followed any publications"
 msgstr "您还没有关注任何专栏"
 
-#: app/templates/user/publications.html:47
+#: app/templates/user/publications.html:49
 msgid "Please fill out the publication information"
 msgstr "请填写专栏信息"
 
@@ -717,75 +746,71 @@ msgstr "给%(name)s发送私信"
 msgid "Sending message to @%(name)s"
 msgstr "给 @%(name)s 发送私信"
 
-#: app/templates/user/write.html:44
-msgid "Ready to publish"
-msgstr "准备发布"
-
-#: app/user/forms.py:24
+#: app/user/forms.py:18
 msgid "Original - Default"
 msgstr "原始 - 默认"
 
-#: app/user/forms.py:34
+#: app/user/forms.py:39
 msgid "Change avatar"
 msgstr "更改头像"
 
-#: app/user/forms.py:38
+#: app/user/forms.py:43
 msgid "Nickname"
 msgstr "昵称"
 
-#: app/user/forms.py:39
+#: app/user/forms.py:44
 msgid "Location"
 msgstr "地区"
 
-#: app/user/forms.py:40
+#: app/user/forms.py:45
 msgid "description"
 msgstr "描述"
 
-#: app/user/forms.py:42
+#: app/user/forms.py:47
 msgid "Save profile"
 msgstr "保存"
 
-#: app/user/forms.py:46
+#: app/user/forms.py:51
 msgid "Message"
 msgstr "私信"
 
-#: app/user/forms.py:48
+#: app/user/forms.py:53
 msgid "What would you like to say?"
 msgstr "你想说点什么？"
 
-#: app/user/forms.py:49
+#: app/user/forms.py:54
 msgid "Send"
 msgstr "发送"
 
-#: app/user/forms.py:54
+#: app/user/forms.py:59
 msgid "Language"
 msgstr "语言"
 
-#: app/user/forms.py:55
+#: app/user/forms.py:60
 msgid "Theme"
 msgstr "主题"
 
-#: app/user/forms.py:56
+#: app/user/forms.py:61
 msgid "Save preference"
 msgstr "保存设置"
 
-#: app/user/views.py:59
+#: app/user/views.py:56
 msgid "Your profile has been updated."
 msgstr "您的个人信息已更新。"
 
-#: app/user/views.py:146
-msgid "Already exist."
+#: app/user/views.py:143
+msgid "This publication is already existed."
 msgstr ""
 
-#: app/user/views.py:156
+#: app/user/views.py:153
 msgid "You have been successfully created a publication."
 msgstr ""
 
-#: app/user/views.py:188
+#: app/user/views.py:185
 msgid "Your message has been sent."
 msgstr "您的私信已发送。"
 
-#: app/user/views.py:203
+#: app/user/views.py:200
 msgid "Your preference has been changed."
 msgstr "您的偏好设置已更改。"
 
@@ -1036,4 +1061,37 @@ msgstr ""
 
 #~ msgid "Interests"
 #~ msgstr "兴趣"
+
+#~ msgid ""
+#~ "Add or change tags (up to 5) "
+#~ "so readers know what your article "
+#~ "is about."
+#~ msgstr ""
+
+#~ msgid "Notifications"
+#~ msgstr "提醒"
+
+#~ msgid "..."
+#~ msgstr ""
+
+#~ msgid ""
+#~ "Are you really sure to delete this"
+#~ " draft? This operation is not "
+#~ "reversible!"
+#~ msgstr ""
+
+#~ msgid ""
+#~ "Are you really sure to delete this"
+#~ " post? This operation is not "
+#~ "reversible!"
+#~ msgstr "您确定要删除这篇文章吗？这个操作将不可逆转！"
+
+#~ msgid "Already exist."
+#~ msgstr ""
+
+#~ msgid "draft"
+#~ msgstr "草稿"
+
+#~ msgid "article"
+#~ msgstr "文章"
 

@@ -4,9 +4,14 @@
 
 {% block content %}
     {{ super() }}
+
+
     <div class="row">
         <div class="col-xs-12 col-md-12 articles">
-            <h1>{{ _('Hearts') }}</h1>
+
+            <div class="page-header">
+                <h1>{{ _('Hearts') }}</h1>
+            </div>
 
             {% for post in posts %}
                 {% include 'post/_post_preview.html' %}

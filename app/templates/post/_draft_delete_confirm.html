@@ -18,6 +18,6 @@
 {#        </div>#}
 {#    </div>#}
 {#</div>#}
-{% with type = _('draft') %}
+{% with type = 'draft' or _('draft') %}
     {% include 'modal/_confirm_delete.html' %}
 {% endwith %}

@@ -96,14 +96,14 @@
                                         <span>{{ _('Articles') }}</span>
                                     </a>
                                 </li>
-                                <li>
-                                    <a href="{{ url_for('user.profile', username=current_user.username) }}">
-                                        <span class="glyphicon glyphicon-bell"
-                                              aria-hidden="true"></span>
-                                        <span>{{ _('Notifications') }}</span>
-                                        <span class="badge"></span>
-                                    </a>
-                                </li>
+{#                                <li>#}
+{#                                    <a href="{{ url_for('user.profile', username=current_user.username) }}">#}
+{#                                        <span class="glyphicon glyphicon-bell"#}
+{#                                              aria-hidden="true"></span>#}
+{#                                        <span>{{ _('Notifications') }}</span>#}
+{#                                        <span class="badge"></span>#}
+{#                                    </a>#}
+{#                                </li>#}
                                 <li id="messages">
                                     <a href="{{ url_for('user.messages') }}">
                                         <span class="glyphicon glyphicon-envelope"
@@ -216,9 +216,9 @@
 
 {% block content %}
 
-    <div class="container">
+    <div class="container alerts">
         {% for message in get_flashed_messages() %}
-            <div class="alert alert-info fade in">
+            <div class="alert alert-success fade in">
                 <button class="close" type="button" data-dismiss="alert">x</button>
                 {{ message }}
             </div>

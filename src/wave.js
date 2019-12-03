@@ -191,7 +191,7 @@ $(document).ready(function () {
     });
 
     // Delete post confirmation modal
-    $("#postConfirmModal").on("show.bs.modal", function (event) {
+    $("#articleConfirmModal").on("show.bs.modal", function (event) {
         let $modal = $(this);
         let $btn = $(event.relatedTarget);
         $modal.find("button.btn-primary").click(function (event) {
@@ -233,8 +233,8 @@ $(document).ready(function () {
                 dataType: "json",
                 success: data => {
                     if (data.result === "success") {
-                        // TODO: flash a message here
-                        window.location.reload();
+                        $btn.parents("div.article-preview").fadeOut().remove();
+                        flash_message(data.message.text, data.message.type)
                     }
                 }
             });
@@ -256,23 +256,14 @@ $(document).ready(function () {
                 success: data => {
                     if (data.result === "success") {
                         // TODO: flash a message here
-                        window.location.reload();
+                        $btn.parents("div.comment-preview").fadeOut().remove();
+                        flash_message(data.message.text, data.message.type)
+                        // window.location.reload();
                     }
                 }
             });
         });
     });
-
-    // log
-    if (window.location.pathname === "/new") {
-        // on change
-        $("input#title, input#subtitle, textarea#description, input#tags").change(function (event) {
-            console.log(this.value);
-        });
-        $("input#is_public").change(function (event) {
-            console.log(this.checked);
-        });
-    }
 
     // publish button click event
     $("button#publishNow").click(function (event) {
@@ -308,6 +299,24 @@ $(document).ready(function () {
     });
 
 });
+
+window.flash_message = function (message, type="info") {
+    const $button = $("<button/>", {
+        "type": "button",
+        "class": "close",
+        "data-dismiss": "alert",
+        "aria-label": "Close"
+    }).append($("<span/>", {
+        "aria-hidden": "true",
+        text: "x"
+    }));
+    const $div = $("<div/>", {
+        "class": `alert alert-${type} fade in`,
+        "role": "alert",
+        text: message
+    }).append($button);
+    $(".alerts").append($div);
+};
 
 window.add_bookmark = function (event) {
     event.preventDefault();

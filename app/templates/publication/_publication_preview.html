@@ -11,7 +11,7 @@
         </div>
     </div>
     <div>
-        {% if status and status == 'following' %}
+        {% if current_user.is_followed_publication(pub) %}
             <button class="btn-text unfollow_publication" data-id="{{ pub.id }}">
                 <span class="status">{{ _('Following') }}</span>
                 <i class="material-icons">keyboard_arrow_down</i>

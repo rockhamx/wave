@@ -7,14 +7,18 @@
     <div class="row">
         <div class="col-xs-12 col-md-12 articles">
 
-            <h1>{{ _('Drafts') }}</h1>
+            <div class="page-header">
+                <h1>{{ _('Drafts') }}</h1>
+            </div>
 
             {% for draft in drafts %}
                 {% include 'post/_draft_preview.html' %}
             {% endfor %}
             {% include "post/_draft_delete_confirm.html" %}
 
-            <h1>{{ _('Articles') }}</h1>
+            <div class="page-header">
+                <h1>{{ _('Articles') }}</h1>
+            </div>
 
             {% for post in posts %}
                 {% include 'post/_post_preview.html' %}

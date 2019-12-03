@@ -29,6 +29,7 @@ def save_draft():
             d.update_from_json(request.json)
         else:
             d.author_id = current_user.id
+            db.session.add(d)
         db.session.commit()
         result = 'success'
         status = _(u'Saved')
@@ -44,12 +45,20 @@ def save_draft():
 @login_required
 def delete_draft(id):
     result = 'error'
+    message = {
+        "text": _('Internal Error.'),
+        "type": 'danger'
+    }
     if id:
         d = Draft.query.filter_by(id=id).first()
         if d:
             db.session.delete(d)
             db.session.commit()
-            result = "success"
+            result = 'success'
+            message['text'] = _(u'Delete success.')
+            message['type'] = result
+
     return jsonify({
         "result": result,
+        "message": message
     })

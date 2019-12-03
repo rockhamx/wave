@@ -140,7 +140,7 @@ def publications():
     if form.validate_on_submit():
         name = form.name.data
         if Publication.exist(name):
-            flash(_('Already exist.'))
+            flash(_('This publication is already existed.'))
         else:
             description = form.description.data
             creator = current_user._get_current_object()

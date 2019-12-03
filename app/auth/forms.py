@@ -1,5 +1,5 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, PasswordField, SubmitField, BooleanField
+from wtforms import StringField, PasswordField, SubmitField, BooleanField, Label
 from wtforms.validators import InputRequired, Length, Email, Regexp, EqualTo, ValidationError
 from flask_babel import lazy_gettext as _l
 from ..models import User
@@ -26,9 +26,11 @@ class RegistrationForm(FlaskForm):
 
 
 class LoginForm(FlaskForm):
+    # TODO: add placeholder
     email = StringField(_l(u'Email'), validators=[InputRequired(), Length(1, 64)])
     password = PasswordField(_l(u'Password'), validators=[InputRequired(), Length(1, 64)])
     remember = BooleanField(_l(u'Keep me logged in'))
+    # forgot_password = Label('', _l(u'Forget your password? Click here!'))
     submit = SubmitField(_l(u'Log In'))
 
 
@@ -55,6 +57,7 @@ class ChangeEmailForm(FlaskForm):
 
 
 class PasswordResetRequestForm(FlaskForm):
+    # TODO: add placeholder
     email = StringField(_l(u'Email'), validators=[InputRequired(), Length(1, 64), Email()])
     submit = SubmitField(_l(u'Reset Password'))  # 发送重置密码邮件
 
