@@ -9,7 +9,6 @@ import { cx, css } from "emotion";
 import { isKeyHotkey } from "is-hotkey";
 import imageExtensions from "image-extensions";
 import isUrl from "is-url";
-// import { saveDraft } from "./draft";
 
 const DEFAULT_NODE = "paragraph";
 const isBoldHotkey = isKeyHotkey("mod+b");
@@ -229,20 +228,25 @@ const WaveEditor = props => {
   };
 
   const handleChange = obj => {
-    if (draft.content && obj.value.document !== value.document) {
+    if (draft.content == '') draft.content = '<p></p>';
+    if (obj.value.document !== value.document) {
+        setValue(obj.value);
       // localStorage.setItem("content", content);
       // setCount(count + 1);
       // console.log(count);
-      // if (count > 2) {
+      // if (count > 1) {
+        // setCount(0)
         const content = html.serialize(obj.value);
-        if (draft.content !== content)
+        if ((window.location.pathname === '/new' && content !== '<p></p>') || draft.content !== content) {
+          // draftContent.val(content);
+          // setCount(0);
+          draft.content = content;
           saveDraft();
-        // setCount(0);
+        }
       // }
     }
 
     // console.log(value);
-    setValue(obj.value);
   };
 
   const handleKeyDown = (event, editor, next) => {
@@ -306,7 +310,7 @@ const WaveEditor = props => {
         {renderMarkButton("code", "code")}
         {renderBlockButton("heading-one", "looks_one")}
         {renderBlockButton("heading-two", "looks_two")}
-        {renderBlockButton("block-quote", "format_quote")}
+        {/*{renderBlockButton("block-quote", "format_quote")}*/}
         {renderBlockButton("numbered-list", "format_list_numbered")}
         {renderBlockButton("bulleted-list", "format_list_bulleted")}
         {/*{renderBlockButton("insert-image", "insert_image")}*/}
@@ -315,7 +319,7 @@ const WaveEditor = props => {
         ref={editor}
         spellCheck
         autoFocus
-        placeholder="Enter some text..."
+        placeholder="说点什么..."
         className={cx(css`
           & > * + * {
             margin-top: 1rem;

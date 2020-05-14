@@ -8,6 +8,7 @@
                title="{{ _('Like') }}">
                 {% if user_hearts > 0 %}
                     <i class="material-icons">favorite</i>
+{#                    <i>{{ _('%(count) people liked this post.', count=) }}</i>#}
                 {% else %}
                     <i class="material-icons">favorite_border</i>
                 {% endif %}

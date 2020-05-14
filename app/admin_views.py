@@ -5,11 +5,12 @@ from flask_admin.model.template import EndpointLinkRowAction, LinkRowAction
 from flask_login import current_user
 from flask_babelex import lazy_gettext as _l
 from wtforms import PasswordField
-from wtforms.validators import InputRequired
+from wtforms.validators import InputRequired, Length
 
 
 class WaveModelView(ModelView):
     page_size = 10
+    can_set_page_size = True
 
     def is_accessible(self):
         return current_user.is_administrator
@@ -37,6 +38,7 @@ class WaveAdminIndexView(AdminIndexView):
 
 class UserView(WaveModelView):
     can_view_details = True
+    # can_delete = False
     # can_export = True
     column_labels = {'username': _l('Username'),
                      'name': _l('Name'),
@@ -49,31 +51,46 @@ class UserView(WaveModelView):
                      'member_since': _l('Member_since'),
                      'last_seen': _l('Last_seen'),
                      'password_hash': _l('Password Hash'),
-                     'email_hash': _l('Email Hash')
+                     'email_hash': _l('Email Hash'),
+                     'theme': _l('Theme'),
+                     'is_administrator': _l('is administrator')
                      }
-    column_exclude_list = ['password_hash', 'email_hash', 'theme', 'timezone', 'is_administrator']
+    # column_list = ('username', 'name', 'email', 'location', 'description', 'confirmed', 'locale', 'timezone', )
+    column_exclude_list = ['password_hash', 'email_hash', 'theme', 'timezone', 'is_administrator', "member_since"]
     column_filters = ['confirmed', 'member_since', 'last_seen']
     column_searchable_list = ['username', 'name', 'location']
     column_editable_list = ['name', 'confirmed']
-    form_excluded_columns = ['password_hash', 'posts', 'comments', 'drafts', 'hearted', 'bookmarks',
-                             'followed_publications', 'message_sent', 'message_received',
-                             'email_hash', 'timezone', 'is_administrator']
-    form_extra_fields = {
-        'password': PasswordField(_l('Password'))
-    }
-    form_args = dict(
-        password=dict(validators=[InputRequired()])
-    )
     # column_extra_row_actions = [
         # LinkRowAction('glyphicon glyphicon-user', lambda link, row, row_id: 'http://127.0.0.1/{}'.format(row)),
         # EndpointLinkRowAction('glyphicon glyphicon-test', 'my_view.index_view')
     # ]
-    # column_list = ['username', 'name', 'email', 'location', 'description', 'confirmed', 'locale', 'timezone']
+
+    form_columns = ['email', 'username', 'password', 'name', 'confirmed', 'description', 'location', 'locale']
+    # form_excluded_columns = ['posts', 'comments', 'drafts', 'hearted', 'bookmarks', 'member_since', 'last_seen',
+    #                          'followers', 'following', 'followed_publications', 'message_sent', 'message_received',
+    #                          'password_hash', 'email_hash', 'theme', 'timezone', 'is_administrator']
+    form_extra_fields = {
+        'password': PasswordField(_l(u'Password'), validators=[InputRequired(), Length(1, 64)])
+    }
+    # form_args = dict(
+    #     password=dict(validators=[InputRequired()])
+    # )
 
 
 class PostView(WaveModelView):
     can_view_details = True
     can_export = True
+
+    # column_labels = {'Author': '',
+    #                  'Description': '',
+    #                  'Hearts': '',
+    #                  'Language': '',
+    #                  'Is_Public': '',
+    #                  'Publication': '',
+    #                  'Subtitle': '',
+    #                  'Pub_Timestamp': '',
+    #                  'Edit_Timestamp': '',
+    #                  'Title': ''}
     # column_list = ['author', 'title', 'subtitle', 'description', 'hearts', 'language', 'is_public', 'publication',
     #                'pub_timestamp', 'edit_timestamp', ]
     column_exclude_list = ['clicked', 'body', 'html', 'preview']

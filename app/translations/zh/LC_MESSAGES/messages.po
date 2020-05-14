@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2019-12-04 04:50+0800\n"
+"POT-Creation-Date: 2020-05-11 15:02+0800\n"
 "PO-Revision-Date: 2019-12-03 17:13+0800\n"
 "Last-Translator: \n"
 "Language: zh\n"
@@ -41,7 +41,7 @@ msgstr "评论"
 
 #: app/__init__.py:64 app/templates/base.html:137
 #: app/templates/base_search.html:34 app/templates/user/publications.html:4
-#: app/templates/user/publications.html:13
+#: app/templates/user/publications.html:17
 msgid "Publications"
 msgstr "专栏"
 
@@ -55,63 +55,71 @@ msgstr "标签"
 msgid "Messages"
 msgstr "私信"
 
-#: app/admin_views.py:39 app/auth/forms.py:11
+#: app/admin_views.py:42 app/auth/forms.py:11
 msgid "Username"
 msgstr "用户名"
 
-#: app/admin_views.py:40 app/frontend/forms.py:14
+#: app/admin_views.py:43 app/frontend/forms.py:14
 msgid "Name"
-msgstr "名称"
+msgstr "昵称"
 
-#: app/admin_views.py:41 app/auth/forms.py:10 app/auth/forms.py:31
+#: app/admin_views.py:44 app/auth/forms.py:10 app/auth/forms.py:31
 #: app/auth/forms.py:62
 msgid "Email"
 msgstr "电子邮箱"
 
-#: app/admin_views.py:42 app/user/forms.py:44
+#: app/admin_views.py:45 app/user/forms.py:44
 msgid "Location"
 msgstr "地区"
 
-#: app/admin_views.py:43 app/frontend/forms.py:16 app/post/forms.py:26
+#: app/admin_views.py:46 app/frontend/forms.py:16 app/post/forms.py:26
 msgid "Description"
 msgstr "描述"
 
-#: app/admin_views.py:44
+#: app/admin_views.py:47
 msgid "Confirmed"
 msgstr "认证状态"
 
-#: app/admin_views.py:45
+#: app/admin_views.py:48
 msgid "Locale"
 msgstr "语言"
 
-#: app/admin_views.py:46
+#: app/admin_views.py:49
 msgid "Timezone"
 msgstr "时区"
 
-#: app/admin_views.py:47
+#: app/admin_views.py:50
 msgid "Member_since"
 msgstr "加入时间"
 
-#: app/admin_views.py:48
+#: app/admin_views.py:51
 msgid "Last_seen"
 msgstr "最近一次在线"
 
-#: app/admin_views.py:49
+#: app/admin_views.py:52
 msgid "Password Hash"
 msgstr "密码散列值"
 
-#: app/admin_views.py:50
+#: app/admin_views.py:53
 msgid "Email Hash"
 msgstr "邮箱散列值"
 
-#: app/admin_views.py:60 app/auth/forms.py:15 app/auth/forms.py:32
+#: app/admin_views.py:54 app/user/forms.py:60
+msgid "Theme"
+msgstr "主题"
+
+#: app/admin_views.py:55
+msgid "is administrator"
+msgstr "是否是管理员"
+
+#: app/admin_views.py:66 app/auth/forms.py:15 app/auth/forms.py:32
 #: app/auth/forms.py:50
 msgid "Password"
 msgstr "密码"
 
 #: app/validators.py:10
 msgid "Images only"
-msgstr ""
+msgstr "只允许上传图片格式的文件"
 
 #: app/api/comments.py:13 app/api/drafts.py:49
 msgid "Internal Error."
@@ -234,7 +242,7 @@ msgstr "欢迎回来，%(name)s！"
 
 #: app/auth/views.py:57
 msgid "Invalid username or password."
-msgstr "非常抱歉，您输入的用户名或密码不正确。"
+msgstr "很抱歉，您输入的用户名或密码不正确。"
 
 #: app/auth/views.py:65
 msgid "You have been logout. See you around!"
@@ -270,7 +278,7 @@ msgstr "一封包含重置密码说明的电子邮件已经发送到您的邮箱
 
 #: app/auth/views.py:160
 msgid "Confirm your email address"
-msgstr "认证您的电子邮箱"
+msgstr "验证您的电子邮箱"
 
 #: app/auth/views.py:163
 msgid ""
@@ -356,11 +364,11 @@ msgstr "说说你的想法："
 msgid "Publish"
 msgstr "发布"
 
-#: app/post/views.py:35
+#: app/post/views.py:35 app/post/views.py:116
 msgid "Your post has been published."
 msgstr "您的文章已发布"
 
-#: app/post/views.py:68 app/post/views.py:116
+#: app/post/views.py:68
 msgid "Your post has been updated."
 msgstr "您的文章已更新。"
 
@@ -372,7 +380,7 @@ msgstr "您的评论已发布"
 msgid "About"
 msgstr "关于"
 
-#: app/templates/base.html:54
+#: app/templates/auth/email/confirm.html:2 app/templates/base.html:54
 msgid "Wave"
 msgstr ""
 
@@ -437,7 +445,7 @@ msgstr "设置"
 
 #: app/templates/base.html:187
 msgid "Sign out"
-msgstr "登出"
+msgstr "退出"
 
 #: app/templates/base.html:193
 msgid "Get started"
@@ -518,7 +526,7 @@ msgstr "最新文章"
 
 #: app/templates/search.html:18
 msgid "We couldn’t find any posts."
-msgstr "我们找不到任何文章"
+msgstr "我们找不到任何文章。"
 
 #: app/templates/admin/index.html:20
 msgid "Admin"
@@ -542,6 +550,66 @@ msgstr "忘记你的密码？猛击这里！"
 #: app/templates/auth/reset_password.html:11
 msgid "Reset password"
 msgstr "重置密码"
+
+#: app/templates/auth/unconfirmed.html:15
+msgid "Hello"
+msgstr "您好"
+
+#: app/templates/auth/unconfirmed.html:16
+msgid "You have not confirm your registration yet."
+msgstr "您还没验证你的邮箱呢！"
+
+#: app/templates/auth/unconfirmed.html:17
+msgid "Before you can access this site you need to confirm your registration."
+msgstr "在您能访问Wave的其他功能之前，你需要先验证你的邮箱。"
+
+#: app/templates/auth/unconfirmed.html:18
+msgid ""
+"Check your inbox,you should have receive an email with a confirmation "
+"link."
+msgstr "请检查你的收件箱，会有一封Wave发送的含有验证链接的邮件。"
+
+#: app/templates/auth/unconfirmed.html:20
+msgid "Need another confirmation email?"
+msgstr "需要再来一封吗？"
+
+#: app/templates/auth/unconfirmed.html:21
+msgid "Click here."
+msgstr "点这儿。"
+
+#: app/templates/auth/email/confirm.html:1
+msgid "Dear"
+msgstr "亲爱的"
+
+#: app/templates/auth/email/confirm.html:2
+msgid "Welcome to"
+msgstr "欢迎加入到"
+
+#: app/templates/auth/email/confirm.html:3
+msgid "To confirm your account please"
+msgstr "为了认证您的账号，请"
+
+#: app/templates/auth/email/confirm.html:4
+msgid "click here"
+msgstr "点击这里"
+
+#: app/templates/auth/email/confirm.html:5
+msgid ""
+"Alternatively, you can paste the following link in your browser's address"
+" bar:"
+msgstr "您也可以粘贴下面这段链接到你的浏览器："
+
+#: app/templates/auth/email/confirm.html:7
+msgid "Sincerely,"
+msgstr "诚挚的，"
+
+#: app/templates/auth/email/confirm.html:8
+msgid "The Wave Team"
+msgstr "Wave 团队"
+
+#: app/templates/auth/email/confirm.html:9
+msgid "Note: replies to this email address are not monitored."
+msgstr "请不要回复这封邮件。"
 
 #: app/templates/comment/_comment_delete_confirm.html:3
 msgid "comment"
@@ -642,7 +710,7 @@ msgstr "添加到书签"
 
 #: app/templates/publication/search.html:18
 msgid "We couldn’t find any publications."
-msgstr ""
+msgstr "我们找不到任何专栏。"
 
 #: app/templates/tag/_tag_preview.html:5
 #, python-format
@@ -664,7 +732,7 @@ msgstr "这里空空如也。"
 
 #: app/templates/tag/search.html:18
 msgid "We couldn’t find any tags."
-msgstr ""
+msgstr "我们找不到任何标签。"
 
 #: app/templates/user/_author_bar.html:29
 #, python-format
@@ -755,11 +823,15 @@ msgstr "这些人被%(name)s关注"
 msgid "%(name)s Follows"
 msgstr "%(name)s关注了"
 
-#: app/templates/user/messages.html:14
+#: app/templates/user/messages.html:15
+msgid "New Message"
+msgstr ""
+
+#: app/templates/user/messages.html:18
 msgid "Sent messages"
 msgstr "发送的私信"
 
-#: app/templates/user/messages.html:24
+#: app/templates/user/messages.html:28
 msgid "Received messages"
 msgstr "收到的私信"
 
@@ -775,7 +847,7 @@ msgstr "最近"
 msgid "Private articles"
 msgstr "私人文章"
 
-#: app/templates/user/publications.html:16
+#: app/templates/user/publications.html:14
 #: app/templates/user/publications.html:44
 msgid "New publication"
 msgstr "创建专栏"
@@ -794,7 +866,7 @@ msgstr "请填写专栏信息"
 
 #: app/templates/user/search.html:18
 msgid "We couldn’t find any people."
-msgstr "我们找不到任何人"
+msgstr "我们找不到任何人。"
 
 #: app/templates/user/send_message.html:4
 #, python-format
@@ -842,10 +914,6 @@ msgstr "发送"
 msgid "Language"
 msgstr "语言"
 
-#: app/user/forms.py:60
-msgid "Theme"
-msgstr "主题"
-
 #: app/user/forms.py:61
 msgid "Save preference"
 msgstr "保存设置"
@@ -856,11 +924,11 @@ msgstr "您的个人信息已更新。"
 
 #: app/user/views.py:143
 msgid "This publication is already existed."
-msgstr ""
+msgstr "这个专栏已存在。"
 
 #: app/user/views.py:153
 msgid "You have been successfully created a publication."
-msgstr ""
+msgstr "创建专栏成功。"
 
 #: app/user/views.py:185
 msgid "Your message has been sent."
@@ -870,179 +938,179 @@ msgstr "您的私信已发送。"
 msgid "Your preference has been changed."
 msgstr "您的偏好设置已更改。"
 
-#: venv/lib/python3.7/site-packages/flask_wtf/file.py:51
-#: venv/lib/python3.7/site-packages/wtforms/validators.py:205
-#: venv/lib/python3.7/site-packages/wtforms/validators.py:245
+#: venv/Lib/site-packages/flask_wtf/file.py:51
+#: venv/Lib/site-packages/wtforms/validators.py:205
+#: venv/Lib/site-packages/wtforms/validators.py:245
 msgid "This field is required."
 msgstr "该项为必填"
 
-#: venv/lib/python3.7/site-packages/flask_wtf/file.py:85
+#: venv/Lib/site-packages/flask_wtf/file.py:85
 msgid "File does not have an approved extension: {extensions}"
 msgstr ""
 
-#: venv/lib/python3.7/site-packages/flask_wtf/file.py:90
+#: venv/Lib/site-packages/flask_wtf/file.py:90
 msgid "File does not have an approved extension."
 msgstr ""
 
-#: venv/lib/python3.7/site-packages/wtforms/validators.py:58
+#: venv/Lib/site-packages/wtforms/validators.py:58
 #, python-format
 msgid "Invalid field name '%s'."
 msgstr ""
 
-#: venv/lib/python3.7/site-packages/wtforms/validators.py:66
+#: venv/Lib/site-packages/wtforms/validators.py:66
 #, python-format
 msgid "Field must be equal to %(other_name)s."
 msgstr ""
 
-#: venv/lib/python3.7/site-packages/wtforms/validators.py:99
+#: venv/Lib/site-packages/wtforms/validators.py:99
 #, python-format
 msgid "Field must be at least %(min)d character long."
 msgid_plural "Field must be at least %(min)d characters long."
 msgstr[0] ""
 
-#: venv/lib/python3.7/site-packages/wtforms/validators.py:102
+#: venv/Lib/site-packages/wtforms/validators.py:102
 #, python-format
 msgid "Field cannot be longer than %(max)d character."
 msgid_plural "Field cannot be longer than %(max)d characters."
 msgstr[0] ""
 
-#: venv/lib/python3.7/site-packages/wtforms/validators.py:105
+#: venv/Lib/site-packages/wtforms/validators.py:105
 #, python-format
 msgid "Field must be between %(min)d and %(max)d characters long."
 msgstr ""
 
-#: venv/lib/python3.7/site-packages/wtforms/validators.py:141
+#: venv/Lib/site-packages/wtforms/validators.py:141
 #, python-format
 msgid "Number must be at least %(min)s."
 msgstr ""
 
-#: venv/lib/python3.7/site-packages/wtforms/validators.py:143
+#: venv/Lib/site-packages/wtforms/validators.py:143
 #, python-format
 msgid "Number must be at most %(max)s."
 msgstr ""
 
-#: venv/lib/python3.7/site-packages/wtforms/validators.py:145
+#: venv/Lib/site-packages/wtforms/validators.py:145
 #, python-format
 msgid "Number must be between %(min)s and %(max)s."
 msgstr ""
 
-#: venv/lib/python3.7/site-packages/wtforms/validators.py:277
+#: venv/Lib/site-packages/wtforms/validators.py:277
 msgid "Invalid input."
 msgstr ""
 
-#: venv/lib/python3.7/site-packages/wtforms/validators.py:311
+#: venv/Lib/site-packages/wtforms/validators.py:311
 msgid "Invalid email address."
 msgstr ""
 
-#: venv/lib/python3.7/site-packages/wtforms/validators.py:352
+#: venv/Lib/site-packages/wtforms/validators.py:352
 msgid "Invalid IP address."
 msgstr ""
 
-#: venv/lib/python3.7/site-packages/wtforms/validators.py:403
+#: venv/Lib/site-packages/wtforms/validators.py:403
 msgid "Invalid Mac address."
 msgstr ""
 
-#: venv/lib/python3.7/site-packages/wtforms/validators.py:432
+#: venv/Lib/site-packages/wtforms/validators.py:432
 msgid "Invalid URL."
 msgstr ""
 
-#: venv/lib/python3.7/site-packages/wtforms/validators.py:452
+#: venv/Lib/site-packages/wtforms/validators.py:452
 msgid "Invalid UUID."
 msgstr ""
 
-#: venv/lib/python3.7/site-packages/wtforms/validators.py:482
+#: venv/Lib/site-packages/wtforms/validators.py:482
 #, python-format
 msgid "Invalid value, must be one of: %(values)s."
 msgstr ""
 
-#: venv/lib/python3.7/site-packages/wtforms/validators.py:514
+#: venv/Lib/site-packages/wtforms/validators.py:514
 #, python-format
 msgid "Invalid value, can't be any of: %(values)s."
 msgstr ""
 
-#: venv/lib/python3.7/site-packages/wtforms/csrf/core.py:98
-#: venv/lib/python3.7/site-packages/wtforms/ext/csrf/form.py:47
+#: venv/Lib/site-packages/wtforms/csrf/core.py:98
+#: venv/Lib/site-packages/wtforms/ext/csrf/form.py:47
 msgid "Invalid CSRF Token"
 msgstr ""
 
-#: venv/lib/python3.7/site-packages/wtforms/csrf/session.py:61
-#: venv/lib/python3.7/site-packages/wtforms/ext/csrf/session.py:58
+#: venv/Lib/site-packages/wtforms/csrf/session.py:61
+#: venv/Lib/site-packages/wtforms/ext/csrf/session.py:58
 msgid "CSRF token missing"
 msgstr ""
 
-#: venv/lib/python3.7/site-packages/wtforms/csrf/session.py:69
-#: venv/lib/python3.7/site-packages/wtforms/ext/csrf/session.py:66
+#: venv/Lib/site-packages/wtforms/csrf/session.py:69
+#: venv/Lib/site-packages/wtforms/ext/csrf/session.py:66
 msgid "CSRF failed"
 msgstr ""
 
-#: venv/lib/python3.7/site-packages/wtforms/csrf/session.py:74
-#: venv/lib/python3.7/site-packages/wtforms/ext/csrf/session.py:71
+#: venv/Lib/site-packages/wtforms/csrf/session.py:74
+#: venv/Lib/site-packages/wtforms/ext/csrf/session.py:71
 msgid "CSRF token expired"
 msgstr ""
 
-#: venv/lib/python3.7/site-packages/wtforms/ext/appengine/fields.py:87
-#: venv/lib/python3.7/site-packages/wtforms/ext/appengine/fields.py:164
-#: venv/lib/python3.7/site-packages/wtforms/ext/appengine/fields.py:166
-#: venv/lib/python3.7/site-packages/wtforms/ext/django/fields.py:95
-#: venv/lib/python3.7/site-packages/wtforms/ext/sqlalchemy/fields.py:125
-#: venv/lib/python3.7/site-packages/wtforms/ext/sqlalchemy/fields.py:127
-#: venv/lib/python3.7/site-packages/wtforms/ext/sqlalchemy/fields.py:180
-#: venv/lib/python3.7/site-packages/wtforms/ext/sqlalchemy/fields.py:185
-#: venv/lib/python3.7/site-packages/wtforms/fields/core.py:475
+#: venv/Lib/site-packages/wtforms/ext/appengine/fields.py:87
+#: venv/Lib/site-packages/wtforms/ext/appengine/fields.py:164
+#: venv/Lib/site-packages/wtforms/ext/appengine/fields.py:166
+#: venv/Lib/site-packages/wtforms/ext/django/fields.py:95
+#: venv/Lib/site-packages/wtforms/ext/sqlalchemy/fields.py:125
+#: venv/Lib/site-packages/wtforms/ext/sqlalchemy/fields.py:127
+#: venv/Lib/site-packages/wtforms/ext/sqlalchemy/fields.py:180
+#: venv/Lib/site-packages/wtforms/ext/sqlalchemy/fields.py:185
+#: venv/Lib/site-packages/wtforms/fields/core.py:475
 msgid "Not a valid choice"
 msgstr "无效的选择"
 
-#: venv/lib/python3.7/site-packages/wtforms/ext/appengine/fields.py:185
+#: venv/Lib/site-packages/wtforms/ext/appengine/fields.py:185
 msgid "Not a valid list"
 msgstr ""
 
-#: venv/lib/python3.7/site-packages/wtforms/ext/appengine/fields.py:204
+#: venv/Lib/site-packages/wtforms/ext/appengine/fields.py:204
 msgid "Not a valid integer list"
 msgstr ""
 
-#: venv/lib/python3.7/site-packages/wtforms/ext/dateutil/fields.py:63
+#: venv/Lib/site-packages/wtforms/ext/dateutil/fields.py:63
 msgid "Please input a date/time value"
 msgstr ""
 
-#: venv/lib/python3.7/site-packages/wtforms/ext/dateutil/fields.py:75
-#: venv/lib/python3.7/site-packages/wtforms/ext/dateutil/fields.py:83
+#: venv/Lib/site-packages/wtforms/ext/dateutil/fields.py:75
+#: venv/Lib/site-packages/wtforms/ext/dateutil/fields.py:83
 msgid "Invalid date/time input"
 msgstr ""
 
-#: venv/lib/python3.7/site-packages/wtforms/fields/core.py:468
+#: venv/Lib/site-packages/wtforms/fields/core.py:468
 msgid "Invalid Choice: could not coerce"
 msgstr ""
 
-#: venv/lib/python3.7/site-packages/wtforms/fields/core.py:501
+#: venv/Lib/site-packages/wtforms/fields/core.py:501
 msgid "Invalid choice(s): one or more data inputs could not be coerced"
 msgstr ""
 
-#: venv/lib/python3.7/site-packages/wtforms/fields/core.py:508
+#: venv/Lib/site-packages/wtforms/fields/core.py:508
 #, python-format
 msgid "'%(value)s' is not a valid choice for this field"
 msgstr ""
 
-#: venv/lib/python3.7/site-packages/wtforms/fields/core.py:591
+#: venv/Lib/site-packages/wtforms/fields/core.py:591
 msgid "Not a valid integer value"
 msgstr ""
 
-#: venv/lib/python3.7/site-packages/wtforms/fields/core.py:657
+#: venv/Lib/site-packages/wtforms/fields/core.py:657
 msgid "Not a valid decimal value"
 msgstr ""
 
-#: venv/lib/python3.7/site-packages/wtforms/fields/core.py:684
+#: venv/Lib/site-packages/wtforms/fields/core.py:684
 msgid "Not a valid float value"
 msgstr ""
 
-#: venv/lib/python3.7/site-packages/wtforms/fields/core.py:745
+#: venv/Lib/site-packages/wtforms/fields/core.py:745
 msgid "Not a valid datetime value"
 msgstr ""
 
-#: venv/lib/python3.7/site-packages/wtforms/fields/core.py:762
+#: venv/Lib/site-packages/wtforms/fields/core.py:762
 msgid "Not a valid date value"
 msgstr ""
 
-#: venv/lib/python3.7/site-packages/wtforms/fields/core.py:779
+#: venv/Lib/site-packages/wtforms/fields/core.py:779
 msgid "Not a valid time value"
 msgstr ""
 

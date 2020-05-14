@@ -29,9 +29,9 @@
     "react": "^16.11.0",
     "react-bootstrap": "^1.0.0-beta.14",
     "react-dom": "^16.11.0",
-    "slate": "^0.47.9",
+    "slate": "0.47.9",
     "slate-html-serializer": "^0.8.11",
-    "slate-react": "^0.22.10"
+    "slate-react": "0.22.10"
   },
   "devDependencies": {
     "@babel/cli": "^7.7.0",

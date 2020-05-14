@@ -93,7 +93,7 @@ def draft(id):
             p = Post.query.filter_by(id=form.reference_id.data, author_id=current_user.id).first_or_404()
         else:
             p = Post()
-            # Notice: using p.author = current_user._get_current_object() will causing instance(in here <p>) pending,
+            # Notice: using p.author = current_user._get_current_object() will causing instance(in here, "p") pending,
             # So, the following query will trigger auto-flush mechanism
             # (https://docs.sqlalchemy.org/en/13/orm/session_api.html#sqlalchemy.orm.session.Session.params.autoflush),
             #  but since p.title is empty and that field in the database has notNull constrain, this is unwanted.
@@ -113,9 +113,9 @@ def draft(id):
         db.session.add(p)
         db.session.delete(d)
         db.session.commit()
-        flash(_(u'Your post has been updated.'))
+        flash(_(u'Your post has been published.'))
         return redirect(url_for('post.article', id=p.id))
-    # !!NOTE!! this is not right.
+    # !!NOTE!! this is a wrong example.
     # form = RichTextEditorForm(id=id, reference_id=d.reference_id, type=d.type, title=d.title, subtitle=d.title,
     #                           description=d.description, content=d.content, tags=d.tags, private=not d.is_public)
     form.id.data = d.id

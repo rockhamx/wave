@@ -7,14 +7,14 @@
     {{ super() }}
     <div class="row">
         <div class="col-xs-12 col-md-12 publications">
-            {#                TODO: bug, height not consistent with others#}
-            <div class="flex-box page-header">
 
-                <h1 class="flex-grow-1">{{ _('Publications') }}</h1>
+            <div class="page-header">
 
-                <button id="newPublication" class="btn btn-default" data-toggle="modal" data-target="#newPubModal">
+                <button id="newPublication" class="float-right btn btn-default" data-toggle="modal" data-target="#newPubModal">
                     {{ _('New publication') }}
                 </button>
+
+                <h1>{{ _('Publications') }}</h1>
             </div>
 
             <h3>{{ _('Followed') }}</h3>

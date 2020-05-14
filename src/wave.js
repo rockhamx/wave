@@ -11,7 +11,7 @@ $(document).ready(function () {
     $("ul.nav a[href=\"" + href + "\"]").parent().addClass("active");
 
     // profile nav-tabs activation
-    const profileNavTab = $("ul.nav-tabs a[href=\"" + href + "\"]");
+    const profileNavTab = $("ul.nav-tabs a[href^=\"" + href + "?\"]");
     if (profileNavTab[0]) {
         profileNavTab.parent().addClass("active");
     } else {
@@ -67,6 +67,11 @@ $(document).ready(function () {
             }
         }
     });
+
+    // newMessage button
+    $("#newMessage").click(function (event) {
+        location.href = "/send_message"
+    })
 
     // Follow and Un_follow buttons click event
     $("button.btn-follow").each(function () {

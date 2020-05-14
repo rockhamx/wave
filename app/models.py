@@ -44,7 +44,8 @@ class User(UserMixin, db.Model):
     email_hash = db.Column(db.String(32))
     theme = db.Column(db.String(256))
     is_administrator = db.Column(db.Boolean, default=False)
-    posts = db.relationship('Post', lazy='dynamic', backref=db.backref('author', lazy='select'))
+    posts = db.relationship('Post', lazy='dynamic', cascade="all, delete-orphan",
+                            backref=db.backref('author', lazy='select'))
     comments = db.relationship('Comment', lazy='dynamic',
                                backref=db.backref('author', lazy='select'))
     following = db.relationship('User', secondary='follows', lazy='dynamic',
@@ -451,8 +452,8 @@ login_manager.anonymous_user = AnonymousUser
 
 
 @login_manager.user_loader
-def load_user(id):
-    return User.query.get(int(id))
+def load_user(user_id):
+    return User.query.get(int(user_id))
 
 
 class Post(db.Model):
@@ -462,6 +463,7 @@ class Post(db.Model):
     subtitle = db.Column(db.String(128), nullable=True)
     description = db.Column(db.String(256), nullable=True)
     hearts = db.Column(db.Integer, default=0)
+    # hearted_people = db.Column(db.Integer, default=0)
     language = db.Column(db.String(8), default='en')
     is_public = db.Column(db.Boolean(), nullable=False, default=1)
     body = db.Column(db.Text())
@@ -790,9 +792,9 @@ class Draft(db.Model):
     publication = db.relationship('Publication', lazy='select',
                                   backref=db.backref('drafts', lazy='dynamic', uselist=True))
     author = db.relationship('User', lazy='select',
-                             backref=db.backref('drafts', lazy='dynamic'))
+                             backref=db.backref('drafts', lazy='dynamic', cascade="all, delete-orphan"))
     post = db.relationship('Post', lazy=True,
-                           backref=db.backref('drafts', lazy='dynamic'))
+                           backref=db.backref('drafts', lazy='dynamic', cascade="all, delete-orphan"))
 
     def bleach(self, content):
         return bleach.clean(content, tags=[], strip=True)

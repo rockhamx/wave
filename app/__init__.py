@@ -59,11 +59,11 @@ def create_app(config_name):
         from app.models import User, Post, Draft, Comment, Publication, Tag, Message
         admin.add_view(UserView(User, db.session, name=_l(u'Users'), endpoint='users'))
         admin.add_view(PostView(Post, db.session, name=_l(u'Posts'), endpoint='posts'))
-        admin.add_view(DraftView(Draft, db.session, name=_l(u'Drafts'), endpoint='drafts'))
+        # admin.add_view(DraftView(Draft, db.session, name=_l(u'Drafts'), endpoint='drafts'))
         admin.add_view(CommentView(Comment, db.session, name=_l(u'Comments'), endpoint='comments'))
         admin.add_view(PublicationView(Publication, db.session, name=_l(u'Publications'), endpoint='publications'))
         admin.add_view(TagView(Tag, db.session, name=_l(u'Tags'), endpoint='Tags'))
-        admin.add_view(MessageView(Message, db.session, name=_l(u'Messages'), endpoint='messages'))
+        # admin.add_view(MessageView(Message, db.session, name=_l(u'Messages'), endpoint='messages'))
 
     from .frontend import frontend
     from .auth import auth

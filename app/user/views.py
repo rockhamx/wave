@@ -8,7 +8,7 @@ from . import user, EditProfileForm, PreferenceForm, MessageForm
 from ..frontend.forms import NewPublicationForm
 
 
-# User Profile
+# User profile
 @user.route('/<username>')
 def profile(username):
     u = User.query.filter_by(username=username).first_or_404()
