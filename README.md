@@ -5,16 +5,21 @@
 ## Install libraries or dependencies
 1. `pip install -r requirement/requirements.txt` or `pip install -r requirement/development.txt`
 2. `npm install --only=prod` for production or `npm install` for development
+3. install some mysqlclient [prerequisites](https://pypi.org/project/mysqlclient/)
 
 ## Create .env file in the root directory and set up some enviroment variables
-1. $`cp .env_example .env`
-2. $`vim .env`
-3. Enter `FLASK_APP=wave` and `FLASK_ENV=development` or `FLASK_ENV=production`
+1. `cp .env_example .env`
+2. `vim .env`
 
-## Create and update database
-- `flask db update`
+## Create the database
+1. `mysqladmin -u <> -p create wave`
+2. `flask shell`
+3. In Python Interpreter enter `db.create_all()`
 
-## Compile flask_babel
+## (optional)Initiate Flask-Migration
+1. `flask db init`
+
+## (optional)Compile translation files
 - `flask trans compile`
 
 ## Run application
