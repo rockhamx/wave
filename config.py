@@ -17,6 +17,8 @@ class Config:
     WAVE_ALLOWED_TAGS = ['h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'div', 'p', 'a', 'img',
                          'ol', 'ul', 'li', 'pre', 'code', 'blockquote',
                          'i', 'abbr', 'acronym', 'b', 'strong', 'em', 'u']
+    DEBUG = True
+    SQLALCHEMY_DATABASE_URI = os.environ.get('DATABASE_URL') or f'sqlite:///' + os.path.join(base_dir, 'data-dev.sqlite')
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     # mail settings
     MAIL_SERVER = os.environ.get('MAIL_SERVER')
@@ -36,25 +38,3 @@ class Config:
     FLASK_ADMIN_SWATCH = 'paper'
     # the following comment will be deprecated due to the insecurity
     # SQLALCHEMY_COMMIT_ON_TEARDOWN = True
-
-
-class DevelopmentConfig(Config):
-    DEBUG = True
-    SQLALCHEMY_DATABASE_URI = f'sqlite:///' + os.path.join(base_dir, 'data-dev.sqlite')
-
-
-class TestingConfig(Config):
-    Testing = True
-    SQLALCHEMY_DATABASE_URI = 'sqlite:///'
-
-
-class ProductionConfig(Config):
-    SQLALCHEMY_DATABASE_URI = os.environ.get('DATABASE_URL')
-
-
-config = {
-    'development': DevelopmentConfig,
-    'testing': TestingConfig,
-    'production': ProductionConfig,
-    'default': DevelopmentConfig
-}

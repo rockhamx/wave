@@ -11,7 +11,7 @@ from flask_pagedown import PageDown
 from sqlalchemy import MetaData
 
 from app.admin_views import WaveModelView, WaveAdminIndexView
-from config import config, Config
+from config import Config
 
 convention = {
     "ix": 'ix_%(column_0_label)s',
@@ -39,7 +39,7 @@ pagedown = PageDown()
 
 def create_app(config_name):
     app = Flask(__name__, static_folder="./static/")
-    app.config.from_object(config[config_name])
+    app.config.from_object(Config)
 
     db.init_app(app)
     bootstrap.init_app(app)

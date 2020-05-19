@@ -135,3 +135,4 @@ node_modules/
 
 # cache
 images/
+migrations/
