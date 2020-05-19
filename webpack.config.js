@@ -8,7 +8,7 @@ module.exports = {
     // mode: "development",
     output: {
         path: __dirname + "/app/static/js",
-        filename: "wave.js",
+        filename: "newWave.js",
     },
     resolve: {
         extensions: [".js", ".jsx", ".css"]
@@ -23,6 +23,21 @@ module.exports = {
                     presets: ["@babel/preset-env", "@babel/preset-react"],
                     plugins: ["@babel/plugin-proposal-class-properties"]
                 }
+            },
+            {
+                test: /\.css$/,
+                use: [
+                    "style-loader",
+                    "css-loader",
+                ],
+            },
+            {
+                test: /\.s[ac]ss$/i,
+                use: [
+                    "style-loader",
+                    "css-loader",
+                    "sass-loader",
+                ]
             }
         ]
     }

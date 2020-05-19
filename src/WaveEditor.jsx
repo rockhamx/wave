@@ -1,5 +1,5 @@
 // Editor
-import React, { useEffect, useRef, useState } from "react";
+import React, { useRef, useState } from "react";
 import { Block } from "slate";
 import { Editor, getEventTransfer } from "slate-react";
 // import { initialValue, existingValue } from "./slateInitialValue";
@@ -9,6 +9,7 @@ import { cx, css } from "emotion";
 import { isKeyHotkey } from "is-hotkey";
 import imageExtensions from "image-extensions";
 import isUrl from "is-url";
+import $ from "jquery"
 
 const DEFAULT_NODE = "paragraph";
 const isBoldHotkey = isKeyHotkey("mod+b");
@@ -107,7 +108,7 @@ draftIsPublic.change(onChange);
 const schema = {
   document: {
     last: { type: "paragraph" },
-    normalize: (editor, { code, node, child }) => {
+    normalize: (editor, { code, node }) => {
       switch (code) {
         case "last_child_type_invalid": {
           const paragraph = Block.create("paragraph");
@@ -127,12 +128,10 @@ const WaveEditor = props => {
   const editor = useRef(null);
   const initialValue = draftContent.val() || "<p></p>";
   const [value, setValue] = useState(html.deserialize(initialValue));
-  const [count, setCount] = useState(0);
+  const [] = useState(0);
 
   // modal show event
-  $("#publishModalForRichText").on("show.bs.modal", function(event) {
-    // event.preventDefault();
-    const $modal = $(this);
+  $("#publishModalForRichText").on("show.bs.modal", function() {
     draftContent.val(html.serialize(value));
   });
 

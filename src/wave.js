@@ -1,5 +1,7 @@
 "use strict";
 
+import $ from "jquery"
+
 $(document).ready(function () {
     // progress bar
     let progressBar = $("#progress-bar");

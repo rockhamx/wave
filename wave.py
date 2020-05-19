@@ -1,10 +1,11 @@
 import os, click
+from dotenv import load_dotenv
 from app import create_app, bootstrap, db, mail, migrate, babel, moment
 from app.models import User, Tag, Post, Posts_Tags, Comment, Heart, Publication, Bookmark, FollowedPublication
 from app.email import send_email
 
+load_dotenv()
 app = create_app(os.getenv('FLASK_ENV'))
-
 
 @app.shell_context_processor
 def shell():

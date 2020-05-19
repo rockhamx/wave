@@ -74,7 +74,7 @@ def confirm(token):
         return redirect(url_for('frontend.index'))
     if current_user.confirm(token):
         flash(_(u'You have confirmed your account.Thanks!'))
-        return redirect(url_for('auth.unconfirmed'))
+        return redirect(url_for('user.profile', username=current_user.username))
     else:
         flash(_(u'The confirmation link is invalid or expired.'))
         return redirect(url_for('auth.unconfirmed'))

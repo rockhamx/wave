@@ -41,7 +41,7 @@ def about():
 
 @frontend.route('/react')
 def react():
-    return render_template('react.html')
+    return render_template('react/index.html')
 
 
 @frontend.route('/search')

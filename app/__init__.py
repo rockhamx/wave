@@ -34,7 +34,6 @@ login_manager.login_view = 'auth.login'
 babel = Babel()
 root_path = None
 
-admin = Admin(name='wave', template_mode='bootstrap3', index_view=WaveAdminIndexView(name=_l('Home')))
 pagedown = PageDown()
 
 
@@ -50,6 +49,7 @@ def create_app(config_name):
     login_manager.init_app(app)
     # admin_domain = Domain(translations.__path__[0])
     babel.init_app(app)
+    admin = Admin(name='wave', template_mode='bootstrap3', index_view=WaveAdminIndexView(name=_l('Home')))
     admin.init_app(app)
     pagedown.init_app(app)
 
