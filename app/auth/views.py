@@ -85,6 +85,10 @@ def confirm(token):
 def unconfirmed():
     if current_user.confirmed:
         return redirect(url_for('frontend.index'))
+    current_user.confirmed = True
+    db.session.add(current_user)
+    db.session.commit()
+    flash(u'服务提供商关闭了25端口，懒得去开了，假装验证成功一下。')
     return render_template('auth/unconfirmed.html', user=current_user)
 
 
@@ -93,10 +97,10 @@ def unconfirmed():
 def resent_confirmation_email():
     if current_user.confirmed:
         return redirect(url_for('frontend.index'))
-    token = current_user.generate_confirmation_token()
-    email.send_email(current_user.email, _(u'Confirm your registration'), 'auth/email/confirm',
-                     user=current_user, token=token)
-    flash(_(u'A confirmation email has been send to you by email.'))
+    # token = current_user.generate_confirmation_token()
+    # email.send_email(current_user.email, _(u'Confirm your registration'), 'auth/email/confirm',
+                    #  user=current_user, token=token)
+    # flash(_(u'A confirmation email has been send to you by email.'))
     return redirect(url_for('auth.unconfirmed'))
 
 

@@ -12,7 +12,7 @@ class RegistrationForm(FlaskForm):
                            validators=[InputRequired(), Length(1, 64),
                                        Regexp('^[A-Za-z][A-Za-z0-9_.]*$', 0,
                                               _l(u'Username must have only letters, numbers, dots or underscores.'))])
-    password = PasswordField(_l(u'Password'), validators=[InputRequired(), Length(1, 64)])
+    password = PasswordField(_l(u'Password'), validators=[InputRequired(), Length(8, 64)])
     confirmed = PasswordField(_l(u'Confirm password'),
                               validators=[InputRequired(), EqualTo('password', _l(u'Passwords must match.'))])
     submit = SubmitField(_l(u'Register'))
