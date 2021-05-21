@@ -3,44 +3,52 @@
 ## Frameworks
 
 - Flask
+- SQLAlchemy
 - React
+- Slate
 
 ## Get things started
 
 ### Prerequisites
 
 - Python3
+- Mysql
 
-### Create a virtual environment
+Create a virtual environment.
+`python3 -m venv venv`
 
-1. `python3 -m venv venv`
-2. `. venv/bin/activate`(linux)
+Activative it.
+`. venv/bin/activate`(linux)
 
-## Install dependencies
+Install python dependencies for development.
+`pip install -r requirements/dev.txt` 
+otherwise
+`pip install -r requirements/prod.txt`
 
-1. `pip install -r requirements/prod.txt` or `pip install -r requirements/dev.txt`
-2. `npm install --only=prod` for production or `npm install` for development
-3. install mysqlclient [prerequisites](https://pypi.org/project/mysqlclient/)
+Install frontend dependencies for development.
+`npm install` 
+or
+`npm install --only=prod` for production
 
-### Create .env file in the root directory and set up some enviroment variables
+Duplicate the dot env file.
+`cp .env_example .env`
 
-1. `cp .env_example .env`
-2. `vim .env`
+### (optional)Use mysql database.
+Install [mysqlclient](https://pypi.org/project/mysqlclient/)
+Create database.
+`mysqladmin -u <> -p create wave`
+Put your database url on `DATABASE_URL` field inside `.env` file.
 
-### Create the database
+Open a flask shell to initialize SQLAlchemy.
+`flask shell`
+In the opened Python Interpreter enter:
+`db.create_all()`
 
-1. `mysqladmin -u <> -p create wave`
-2. `flask shell`
-3. In Python Interpreter enter `db.create_all()`
+(optional)Initiate Flask-Migration.
+`flask db init`
 
-### (optional)Initiate Flask-Migration
+Compile translation files.
+`flask trans compile`
 
-1. `flask db init`
-
-### (optional)Compile translation files
-
-- `flask trans compile`
-
-### Run application
-
-- `flask run`
+Run application
+`flask run`
